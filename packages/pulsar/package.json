@@ -1,0 +1,127 @@
+{
+  "name": "pulsar",
+  "version": "0.6.0-alpha",
+  "description": "A modern reactive framework for building web applications",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./jsx-runtime": {
+      "import": "./dist/jsx-runtime.js",
+      "types": "./dist/jsx-runtime.d.ts"
+    },
+    "./jsx-dev-runtime": {
+      "import": "./dist/jsx-runtime.js",
+      "types": "./dist/jsx-runtime.d.ts"
+    },
+    "./bootstrap": {
+      "import": "./dist/bootstrap.js",
+      "types": "./dist/bootstrap.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/hooks.js",
+      "types": "./dist/hooks.d.ts"
+    },
+    "./reactivity": {
+      "import": "./dist/reactivity.js",
+      "types": "./dist/reactivity.d.ts"
+    },
+    "./router": {
+      "import": "./dist/router.js",
+      "types": "./dist/router.d.ts"
+    },
+    "./events": {
+      "import": "./dist/events.js",
+      "types": "./dist/events.d.ts"
+    },
+    "./lifecycle": {
+      "import": "./dist/lifecycle.js",
+      "types": "./dist/lifecycle.d.ts"
+    },
+    "./context": {
+      "import": "./dist/context.js",
+      "types": "./dist/context.d.ts"
+    },
+    "./di": {
+      "import": "./dist/di.js",
+      "types": "./dist/di.d.ts"
+    },
+    "./control-flow": {
+      "import": "./dist/control-flow.js",
+      "types": "./dist/control-flow.d.ts"
+    },
+    "./error-boundary": {
+      "import": "./dist/error-boundary.js",
+      "types": "./dist/error-boundary.d.ts"
+    },
+    "./portal": {
+      "import": "./dist/portal.js",
+      "types": "./dist/portal.d.ts"
+    },
+    "./resource": {
+      "import": "./dist/resource.js",
+      "types": "./dist/resource.d.ts"
+    },
+    "./state": {
+      "import": "./dist/state.js",
+      "types": "./dist/state.d.ts"
+    },
+    "./testing": {
+      "import": "./dist/testing/index.js",
+      "types": "./dist/testing/index.d.ts"
+    },
+    "./lazy-loading": {
+      "import": "./dist/lazy-loading/index.js",
+      "types": "./dist/lazy-loading/index.d.ts"
+    },
+    "./build-tools": {
+      "import": "./dist/build-tools/index.js",
+      "types": "./dist/build-tools/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "pulsar.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "tsc && vite build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "framework",
+    "reactive",
+    "signals",
+    "ui",
+    "components",
+    "pulsar"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.9.3",
+    "vite": "^6.0.11",
+    "vite-plugin-dts": "^4.4.1",
+    "vitest": "^3.0.0"
+  }
+}

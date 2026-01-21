@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <defs>
+        <linearGradient id="tsGradient">
+            <stop offset="0%" style="stop-color:#4A90E2" />
+            <stop offset="100%" style="stop-color:#00CED1" />
+        </linearGradient>
+    </defs>
+    <rect x="40" y="40" width="120" height="120" rx="10" fill="url(#tsGradient)" />
+    <text x="100" y="135" font-family="monospace" font-size="90" font-weight="bold" fill="white"
+        text-anchor="middle">TS</text>
+</svg>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="serverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ac7ee" />
+      <stop offset="100%" style="stop-color:#263b96" />
+    </linearGradient>
+  </defs>
+  <rect x="50" y="50" width="100" height="30" rx="6" fill="none" stroke="url(#serverGradient)" stroke-width="6" />
+  <rect x="50" y="90" width="100" height="30" rx="6" fill="none" stroke="url(#serverGradient)" stroke-width="6" />
+  <rect x="50" y="130" width="100" height="30" rx="6" fill="none" stroke="url(#serverGradient)" stroke-width="6" />
+  <circle cx="70" cy="65" r="4" fill="url(#serverGradient)" />
+  <circle cx="70" cy="105" r="4" fill="url(#serverGradient)" />
+  <circle cx="70" cy="145" r="4" fill="url(#serverGradient)" />
+  <line x1="85" y1="65" x2="130" y2="65" stroke="url(#serverGradient)" stroke-width="4" stroke-linecap="round" />
+  <line x1="85" y1="105" x2="130" y2="105" stroke="url(#serverGradient)" stroke-width="4" stroke-linecap="round" />
+  <line x1="85" y1="145" x2="130" y2="145" stroke="url(#serverGradient)" stroke-width="4" stroke-linecap="round" />
+</svg>

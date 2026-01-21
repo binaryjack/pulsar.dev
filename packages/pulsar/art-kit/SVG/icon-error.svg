@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="errorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ee4a4a" />
+      <stop offset="100%" style="stop-color:#963b26" />
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="70" fill="none" stroke="url(#errorGradient)" stroke-width="8" />
+  <g stroke="url(#errorGradient)" stroke-width="10" stroke-linecap="round">
+    <line x1="70" y1="70" x2="130" y2="130" />
+    <line x1="130" y1="70" x2="70" y2="130" />
+  </g>
+</svg>

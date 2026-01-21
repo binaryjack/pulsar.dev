@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="editGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ac7ee" />
+      <stop offset="100%" style="stop-color:#263b96" />
+    </linearGradient>
+  </defs>
+  <path d="M 40,160 L 40,130 L 120,50 L 150,80 L 70,160 Z" fill="none" stroke="url(#editGradient)" stroke-width="6"
+    stroke-linejoin="round" />
+  <line x1="110" y1="60" x2="140" y2="90" stroke="url(#editGradient)" stroke-width="4" />
+  <rect x="130" y="40" width="20" height="20" rx="3" fill="url(#editGradient)" transform="rotate(45 140 50)" />
+</svg>

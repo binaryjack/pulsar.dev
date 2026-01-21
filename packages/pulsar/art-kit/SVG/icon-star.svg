@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ac7ee" />
+      <stop offset="100%" style="stop-color:#263b96" />
+    </linearGradient>
+  </defs>
+  <path d="M 100,40 L 115,85 L 160,90 L 125,120 L 135,165 L 100,140 L 65,165 L 75,120 L 40,90 L 85,85 Z" fill="none"
+    stroke="url(#starGradient)" stroke-width="6" stroke-linejoin="round" />
+  <path d="M 100,40 L 115,85 L 160,90 L 125,120 L 135,165 L 100,140 L 65,165 L 75,120 L 40,90 L 85,85 Z"
+    fill="url(#starGradient)" opacity="0.2" />
+</svg>

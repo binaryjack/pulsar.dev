@@ -1,0 +1,28 @@
+{
+  "name": "pulsar.dev",
+  "version": "1.0.0",
+  "description": "Pulsar - A modern reactive framework for building web applications",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @pulsar/demo dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test"
+  },
+  "keywords": [
+    "pulsar",
+    "reactive",
+    "framework",
+    "typescript",
+    "jsx"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binaryjack/pulsar.dev"
+  },
+  "author": "binaryjack",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

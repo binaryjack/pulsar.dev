@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="warningGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eec74a" />
+      <stop offset="100%" style="stop-color:#966b26" />
+    </linearGradient>
+  </defs>
+  <path d="M 100,30 L 170,170 L 30,170 Z" fill="none" stroke="url(#warningGradient)" stroke-width="8"
+    stroke-linejoin="round" />
+  <line x1="100" y1="80" x2="100" y2="120" stroke="url(#warningGradient)" stroke-width="10" stroke-linecap="round" />
+  <circle cx="100" cy="145" r="6" fill="url(#warningGradient)" />
+</svg>

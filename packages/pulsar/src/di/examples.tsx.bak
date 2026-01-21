@@ -1,0 +1,770 @@
+/**
+ * Dependency Injection Usage Examples
+ * Demonstrates various DI patterns with Uranium
+ */
+
+import { bootstrapApp } from '@core/bootstrap'
+import { ServiceManager } from '@core/di/service-manager'
+import { Tryer, Catcher } from '@core/error-boundary'
+
+// ====================
+// 1. Service Definitions
+// ====================
+
+// Service symbols (unique identifiers)
+export const SConfigurationService = Symbol.for('IConfigurationService')
+export const SNotificationService = Symbol.for('INotificationService')
+export const SApiService = Symbol.for('IApiService')
+export const SLoggerService = Symbol.for('ILoggerService')
+
+// Service interfaces
+export interface IConfigurationService {
+    get<T>(key: string): T
+    set(key: string, value: any): void
+    mode: 'development' | 'production'
+}
+
+export interface INotificationService {
+    info(message: string): void
+    error(message: string): void
+    success(message: string): void
+}
+
+export interface IApiService {
+    fetchData<T>(endpoint: string): Promise<T>
+    postData<T>(endpoint: string, data: any): Promise<T>
+}
+
+export interface ILoggerService {
+    log(message: string): void
+    warn(message: string): void
+    error(message: string): void
+}
+
+// ====================
+// 2. Service Implementations
+// ====================
+
+class ConfigurationService implements IConfigurationService {
+    private config: Map<string, any> = new Map()
+    
+    constructor(public mode: 'development' | 'production' = 'development') {
+        console.log(`[ConfigService] Initialized in ${mode} mode`)
+    }
+    
+    get<T>(key: string): T {
+        return this.config.get(key) as T
+    }
+    
+    set(key: string, value: any): void {
+        this.config.set(key, value)
+    }
+}
+
+class NotificationService implements INotificationService {
+    constructor() {
+        console.log('[NotificationService] Initialized')
+    }
+    
+    info(message: string): void {
+        console.log(`ℹ️ ${message}`)
+    }
+    
+    error(message: string): void {
+        console.error(`❌ ${message}`)
+    }
+    
+    success(message: string): void {
+        console.log(`✅ ${message}`)
+    }
+}
+
+class ApiService implements IApiService {
+    constructor(
+        private config: IConfigurationService,
+        private notifications: INotificationService
+    ) {
+        console.log('[ApiService] Initialized with dependencies')
+        console.log(`[ApiService] Config mode: ${this.config.mode}`)
+    }
+    
+    async fetchData<T>(endpoint: string): Promise<T> {
+        this.notifications.info(`Fetching from ${endpoint}`)
+        
+        try {
+            const response = await fetch(endpoint)
+            const data = await response.json()
+            this.notifications.success('Data fetched successfully')
+            return data as T
+        } catch (error: any) {
+            this.notifications.error(`Failed to fetch: ${error.message}`)
+            throw error
+        }
+    }
+    
+    async postData<T>(endpoint: string, data: any): Promise<T> {
+        this.notifications.info(`Posting to ${endpoint}`)
+        
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            const result = await response.json()
+            this.notifications.success('Data posted successfully')
+            return result as T
+        } catch (error: any) {
+            this.notifications.error(`Failed to post: ${error.message}`)
+            throw error
+        }
+    }
+}
+
+class LoggerService implements ILoggerService {
+    constructor(private config: IConfigurationService) {
+        console.log('[LoggerService] Initialized')
+    }
+    
+    log(message: string): void {
+        if (this.config.mode === 'development') {
+            console.log(`[LOG] ${message}`)
+        }
+    }
+    
+    warn(message: string): void {
+        console.warn(`[WARN] ${message}`)
+    }
+    
+    error(message: string): void {
+        console.error(`[ERROR] ${message}`)
+    }
+}
+
+// ====================
+// 3. Example 1: Basic Setup
+// ====================
+
+export function example1_BasicSetup() {
+    console.log('\n=== Example 1: Basic Setup ===\n')
+    
+    // Create service manager
+    const serviceManager = new ServiceManager()
+    
+    // Register services
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('production'),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    // Resolve and use
+    const config = serviceManager.resolve<IConfigurationService>(SConfigurationService)
+    config.set('apiUrl', 'https://api.example.com')
+    
+    const notifications = serviceManager.resolve<INotificationService>(SNotificationService)
+    notifications.info('Application initialized')
+}
+
+// ====================
+// 4. Example 2: Dependency Injection
+// ====================
+
+export function example2_DependencyInjection() {
+    console.log('\n=== Example 2: Dependency Injection ===\n')
+    
+    const serviceManager = new ServiceManager()
+    
+    // Register base services
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('development'),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    // Register service with dependencies
+    serviceManager.register<IApiService>(
+        SApiService,
+        (sm) => new ApiService(
+            sm.resolve<IConfigurationService>(SConfigurationService),
+            sm.resolve<INotificationService>(SNotificationService)
+        ),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService, SNotificationService]
+        }
+    )
+    
+    // Resolve and use
+    const apiService = serviceManager.resolve<IApiService>(SApiService)
+    console.log('[Example 2] ApiService resolved with dependencies:', apiService)
+}
+
+// ====================
+// 5. Example 3: Bootstrap Integration
+// ====================
+
+export function example3_BootstrapIntegration() {
+    console.log('\n=== Example 3: Bootstrap Integration ===\n')
+    
+    // Create and configure service manager
+    const serviceManager = new ServiceManager()
+    
+    // Register services
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('production'),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<IApiService>(
+        SApiService,
+        (sm) => new ApiService(
+            sm.resolve(SConfigurationService),
+            sm.resolve(SNotificationService)
+        ),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService, SNotificationService]
+        }
+    )
+    
+    // Build application with DI
+    const appRoot = bootstrapApp()
+        .ioc(serviceManager)
+        .root('#app')
+        .onMount((element) => {
+            console.log('[App] Mounted with DI support on element:', element.tagName)
+            
+            // Access services from root
+            if (appRoot.serviceManager) {
+                const notifications = appRoot.serviceManager.resolve<INotificationService>(
+                    SNotificationService
+                )
+                notifications.success('Application ready!')
+            }
+        })
+        .build()
+    
+    return appRoot
+}
+
+// ====================
+// 6. Example 4: Fluent Registration
+// ====================
+
+export function example4_FluentRegistration() {
+    console.log('\n=== Example 4: Fluent Registration ===\n')
+    
+    const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development'
+    const serviceManager = new ServiceManager()
+    
+    // Configure all services first
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService(mode),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<IApiService>(
+        SApiService,
+        (sm) => new ApiService(
+            sm.resolve(SConfigurationService),
+            sm.resolve(SNotificationService)
+        ),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService, SNotificationService]
+        }
+    )
+    
+    // Build with fluent API
+    const appRoot = bootstrapApp()
+        .ioc(serviceManager)
+        .register<ILoggerService>(
+            SLoggerService,
+            new LoggerService(serviceManager.resolve(SConfigurationService))
+        )
+        .root('#app')
+        .onMount(() => {
+            const logger = appRoot.serviceManager?.resolve<ILoggerService>(SLoggerService)
+            logger?.log('Application started')
+        })
+        .build()
+    
+    return appRoot
+}
+
+// ====================
+// 7. Example 5: Lazy Resolution
+// ====================
+
+export function example5_LazyResolution() {
+    console.log('\n=== Example 5: Lazy Resolution ===\n')
+    
+    const serviceManager = new ServiceManager()
+    
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('development'),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    // Create lazy resolvers
+    const lazyConfig = serviceManager.lazy<IConfigurationService>(SConfigurationService)
+    const lazyNotifications = serviceManager.lazy<INotificationService>(SNotificationService)
+    
+    console.log('Lazy resolvers created (services not instantiated yet)')
+    
+    // Services are only created when called
+    const config = lazyConfig()
+    console.log('Config service instantiated on first call. Mode:', config.mode)
+    
+    const notifications = lazyNotifications()
+    notifications.info('Lazy loading works!')
+}
+
+// ====================
+// 8. Example 6: Scoped Services
+// ====================
+
+export function example6_ScopedServices() {
+    console.log('\n=== Example 6: Scoped Services ===\n')
+    
+    const rootContainer = new ServiceManager()
+    
+    // Singleton service (shared across scopes)
+    rootContainer.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('production'),
+        { lifetime: 'singleton' }
+    )
+    
+    // Create request scope
+    const requestScope1 = rootContainer.createScope()
+    requestScope1.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'scoped' }
+    )
+    
+    const requestScope2 = rootContainer.createScope()
+    requestScope2.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'scoped' }
+    )
+    
+    // Same config (singleton from root)
+    const config1 = requestScope1.resolve<IConfigurationService>(SConfigurationService)
+    const config2 = requestScope2.resolve<IConfigurationService>(SConfigurationService)
+    console.log('Same config instance:', config1 === config2)
+    
+    // Different notifications (scoped)
+    const notif1 = requestScope1.resolve<INotificationService>(SNotificationService)
+    const notif2 = requestScope2.resolve<INotificationService>(SNotificationService)
+    console.log('Different notification instances:', notif1 !== notif2)
+}
+
+// ====================
+// 9. Example 7: Validation
+// ====================
+
+export function example7_Validation() {
+    console.log('\n=== Example 7: Validation ===\n')
+    
+    const serviceManager = new ServiceManager()
+    
+    // Register services with dependencies
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('development'),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<IApiService>(
+        SApiService,
+        (sm) => new ApiService(
+            sm.resolve(SConfigurationService),
+            sm.resolve(SNotificationService)
+        ),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService, SNotificationService]
+        }
+    )
+    
+    // Validate no circular dependencies
+    try {
+        serviceManager.validateNoCycles()
+        console.log('✅ No circular dependencies detected')
+    } catch (error: any) {
+        console.error('❌ Circular dependency:', error.message)
+    }
+}
+
+// ====================
+// 8. Example 8: Error Boundaries with DI (TSX)
+// ====================
+
+export function example8_ErrorBoundariesWithDI() {
+    console.log('\n=== Example 8: Error Boundaries with DI ===\n')
+    
+    const serviceManager = new ServiceManager()
+    
+    // Register services
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('development'),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<IApiService>(
+        SApiService,
+        (sm) => new ApiService(
+            sm.resolve(SConfigurationService),
+            sm.resolve(SNotificationService)
+        ),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService, SNotificationService]
+        }
+    )
+    
+    // TSX: Component that uses API service with error boundary
+    const DataLoader = () => {
+        const api = serviceManager.resolve<IApiService>(SApiService)
+        
+        return (
+            <Tryer
+                onError={(error) => {
+                    console.log('[Tryer] Caught error:', error.message)
+                }}
+                fallback={<div>Error loading data. Please try again.</div>}
+            >
+                <div>
+                    <h2>User Data</h2>
+                    <button
+                        onClick={async () => {
+                            try {
+                                const data = await api.fetchData('/api/users')
+                                console.log('Data loaded:', data)
+                            } catch (error: any) {
+                                throw new Error(`API Error: ${error.message}`)
+                            }
+                        }}
+                    >
+                        Load Users
+                    </button>
+                </div>
+            </Tryer>
+        )
+    }
+    
+    // Build app with DI and error boundary
+    const appRoot = bootstrapApp()
+        .ioc(serviceManager)
+        .root('#app')
+        .onMount(() => {
+            console.log('[Example 8] App with error boundaries mounted')
+        })
+        .build()
+    
+    return appRoot
+}
+
+// ====================
+// 9. Example 9: Catcher with Custom Error Display (TSX)
+// ====================
+
+export function example9_CatcherWithCustomDisplay() {
+    console.log('\n=== Example 9: Catcher with Custom Display ===\n')
+    
+    const serviceManager = new ServiceManager()
+    
+    // Register services
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('production'),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<IApiService>(
+        SApiService,
+        (sm) => new ApiService(
+            sm.resolve(SConfigurationService),
+            sm.resolve(SNotificationService)
+        ),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService, SNotificationService]
+        }
+    )
+    
+    serviceManager.register<ILoggerService>(
+        SLoggerService,
+        (sm) => new LoggerService(sm.resolve(SConfigurationService)),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService]
+        }
+    )
+    
+    // TSX: Component with custom error rendering
+    const UserProfile = () => {
+        const api = serviceManager.resolve<IApiService>(SApiService)
+        const logger = serviceManager.resolve<ILoggerService>(SLoggerService)
+        
+        return (
+            <Tryer
+                onError={(error) => {
+                    logger.error(`User profile error: ${error.message}`)
+                }}
+            >
+                <div class="user-profile">
+                    <h2>User Profile</h2>
+                    
+                    {/* Custom error display with Catcher */}
+                    <Catcher
+                        showRetry={true}
+                        render={(errorInfo) => (
+                            <div class="custom-error">
+                                <h3>⚠️ Something went wrong</h3>
+                                <p>Error: {errorInfo.error.message}</p>
+                                <p>Component: {errorInfo.componentStack || 'Unknown'}</p>
+                                <button onClick={() => errorInfo.retry()}>
+                                    🔄 Retry Loading
+                                </button>
+                            </div>
+                        )}
+                    />
+                    
+                    <button
+                        onClick={async () => {
+                            const userData = await api.fetchData('/api/user/123')
+                            console.log('User data:', userData)
+                        }}
+                    >
+                        Load Profile
+                    </button>
+                </div>
+            </Tryer>
+        )
+    }
+    
+    const appRoot = bootstrapApp()
+        .ioc(serviceManager)
+        .root('#app')
+        .onMount(() => {
+            console.log('[Example 9] App with custom error display mounted')
+        })
+        .build()
+    
+    return appRoot
+}
+
+// ====================
+// 10. Example 10: Nested Boundaries with DI (TSX)
+// ====================
+
+export function example10_NestedBoundariesWithDI() {
+    console.log('\n=== Example 10: Nested Boundaries with DI ===\n')
+    
+    const serviceManager = new ServiceManager()
+    
+    // Register all services
+    serviceManager.register<IConfigurationService>(
+        SConfigurationService,
+        () => new ConfigurationService('development'),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<INotificationService>(
+        SNotificationService,
+        () => new NotificationService(),
+        { lifetime: 'singleton' }
+    )
+    
+    serviceManager.register<IApiService>(
+        SApiService,
+        (sm) => new ApiService(
+            sm.resolve(SConfigurationService),
+            sm.resolve(SNotificationService)
+        ),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService, SNotificationService]
+        }
+    )
+    
+    serviceManager.register<ILoggerService>(
+        SLoggerService,
+        (sm) => new LoggerService(sm.resolve(SConfigurationService)),
+        { 
+            lifetime: 'singleton',
+            dependencies: [SConfigurationService]
+        }
+    )
+    
+    // TSX: Nested error boundaries for different error scopes
+    const Dashboard = () => {
+        const api = serviceManager.resolve<IApiService>(SApiService)
+        const logger = serviceManager.resolve<ILoggerService>(SLoggerService)
+        const notifications = serviceManager.resolve<INotificationService>(SNotificationService)
+        
+        return (
+            <Tryer
+                onError={(error) => {
+                    logger.error(`Dashboard error: ${error.message}`)
+                    notifications.error('Dashboard failed to load')
+                }}
+                fallback={<div>Dashboard unavailable</div>}
+            >
+                <div class="dashboard">
+                    <h1>Application Dashboard</h1>
+                    
+                    {/* User section with its own error boundary */}
+                    <Tryer
+                        onError={(error) => logger.warn(`User section error: ${error.message}`)}
+                        propagate={false}
+                    >
+                        <section class="user-section">
+                            <h2>User Information</h2>
+                            <Catcher showRetry={true} />
+                            <button
+                                onClick={async () => {
+                                    await api.fetchData('/api/user')
+                                }}
+                            >
+                                Load User
+                            </button>
+                        </section>
+                    </Tryer>
+                    
+                    {/* Analytics section with its own error boundary */}
+                    <Tryer
+                        onError={(error) => logger.warn(`Analytics error: ${error.message}`)}
+                        propagate={false}
+                    >
+                        <section class="analytics-section">
+                            <h2>Analytics</h2>
+                            <Catcher 
+                                showRetry={true}
+                                render={(errorInfo) => (
+                                    <div class="analytics-error">
+                                        <p>Analytics temporarily unavailable</p>
+                                        <small>{errorInfo.error.message}</small>
+                                    </div>
+                                )}
+                            />
+                            <button
+                                onClick={async () => {
+                                    await api.fetchData('/api/analytics')
+                                }}
+                            >
+                                Load Analytics
+                            </button>
+                        </section>
+                    </Tryer>
+                    
+                    {/* Critical section - errors propagate to dashboard */}
+                    <Tryer
+                        onError={(error) => logger.error(`Critical error: ${error.message}`)}
+                        propagate={true}
+                    >
+                        <section class="critical-section">
+                            <h2>Critical Data</h2>
+                            <Catcher showRetry={false} />
+                            <button
+                                onClick={async () => {
+                                    await api.fetchData('/api/critical')
+                                }}
+                            >
+                                Load Critical
+                            </button>
+                        </section>
+                    </Tryer>
+                </div>
+            </Tryer>
+        )
+    }
+    
+    const appRoot = bootstrapApp()
+        .ioc(serviceManager)
+        .root('#app')
+        .onMount(() => {
+            console.log('[Example 10] Nested boundaries app mounted')
+            notifications.info('Dashboard initialized with isolated error boundaries')
+        })
+        .build()
+    
+    return appRoot
+}
+
+// ====================
+// 11. Run All Examples
+// ====================
+
+export function runAllExamples() {
+    example1_BasicSetup()
+    example2_DependencyInjection()
+    example3_BootstrapIntegration()
+    example4_FluentRegistration()
+    example5_LazyResolution()
+    example6_ScopedServices()
+    example7_Validation()
+    example8_ErrorBoundariesWithDI()
+    example9_CatcherWithCustomDisplay()
+    example10_NestedBoundariesWithDI()
+}
+
+// Uncomment to run examples
+// runAllExamples()

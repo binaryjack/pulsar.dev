@@ -1,0 +1,42 @@
+{
+  "name": "@pulsar/design-tokens",
+  "version": "0.1.0",
+  "description": "Framework-agnostic design tokens for Pulsar ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./tokens": {
+      "import": "./dist/tokens/index.js",
+      "types": "./dist/tokens/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:css": "tsx build/cli.ts ./dist",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "prepublishOnly": "pnpm build && pnpm build:css"
+  },
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "css-variables",
+    "typescript",
+    "pulsar"
+  ],
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+}

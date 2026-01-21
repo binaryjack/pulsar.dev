@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="databaseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ac7ee" />
+      <stop offset="100%" style="stop-color:#263b96" />
+    </linearGradient>
+  </defs>
+  <ellipse cx="100" cy="60" rx="60" ry="20" fill="none" stroke="url(#databaseGradient)" stroke-width="6" />
+  <path d="M 40,60 L 40,140 Q 40,160 100,160 T 160,140 L 160,60" fill="none" stroke="url(#databaseGradient)"
+    stroke-width="6" />
+  <ellipse cx="100" cy="100" rx="60" ry="20" fill="none" stroke="url(#databaseGradient)" stroke-width="6" />
+  <ellipse cx="100" cy="140" rx="60" ry="20" fill="none" stroke="url(#databaseGradient)" stroke-width="6" />
+</svg>
