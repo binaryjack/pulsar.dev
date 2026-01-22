@@ -117,6 +117,23 @@ export * from './router';
 // Export state management
 export * from './state';
 
+// Export HTTP client
+export { HttpClient, createHttpClient, useHttp, useHttpGet, useHttpPost } from './http';
+export type {
+  ErrorInterceptor,
+  ICacheEntry,
+  IHttpClient,
+  IHttpClientConfig,
+  IHttpError,
+  IHttpRequestConfig,
+  IHttpResponse,
+  IRetryConfig,
+  IUseHttpResult,
+  IUseHttpState,
+  RequestInterceptor,
+  ResponseInterceptor,
+} from './http';
+
 // Testing utilities (separate import path: 'pulsar/testing')
 // export * from './testing';
 

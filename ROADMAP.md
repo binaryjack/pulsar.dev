@@ -2,7 +2,7 @@
 
 **Current Version**: v0.7.0-alpha  
 **Next Release**: v0.8.0-alpha (March-April 2026)  
-**Last Updated**: January 22, 2026
+**Last Updated**: January 23, 2026 - HTTP Client Complete ✅
 
 ---
 
@@ -136,16 +136,24 @@
 
 ### v0.8.0-alpha (March-April 2026) - Production Infrastructure
 
-**Focus**: HTTP client, CLI, SSR foundation
+**Focus**: HTTP client, CLI, SSR foundation  
+**Progress**: 25% → In Progress
 
 **Critical Features**:
 
-- 🚀 **HTTP Client** (HIGHEST PRIORITY)
-  - `useHttp()` hook with interceptors
-  - Request/response caching
-  - TypeScript-safe endpoints
-  - Retry logic and error handling
-- 🚀 **CLI Tool** (HIGHEST PRIORITY)
+- ✅ **HTTP Client** (COMPLETE - January 23, 2026) 🎉
+  - Core HTTP client with fetch-based API
+  - Request/response/error interceptors
+  - Automatic caching with TTL (GET requests)
+  - Retry logic with exponential backoff
+  - `useHttp()` reactive hook with signals
+  - Convenience hooks (`useHttpGet`, `useHttpPost`)
+  - Full TypeScript support (no `any` types)
+  - 25+ passing tests (http-client.test.ts, use-http.test.ts)
+  - Production-ready documentation
+  - 20+ implementation files following Feature Slice Pattern
+  
+- 🚀 **CLI Tool** (NEXT PRIORITY)
   - `pulsar create app` - Project scaffolding
   - `pulsar generate component` - Code generation
   - `pulsar add formular.dev` - Pre-configured integrations
@@ -155,6 +163,10 @@
   - Server-side rendering setup
   - Basic hydration
   - Static site generation (SSG)
+
+- ⚪ **`produce()` utility** (LOW PRIORITY)
+  - Immer-style API for immutable updates
+  - Deferred from v0.7.0
 
 **Success Criteria**: Production-ready tooling for client-side apps
 
