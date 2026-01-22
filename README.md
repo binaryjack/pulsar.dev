@@ -68,7 +68,7 @@ Pulsar combines:
 
 ## Core Features
 
-### ✅ Fully Implemented (v0.3.0-alpha)
+### ✅ Production Ready Features (v0.9.0-alpha)
 
 <table>
   <tr>
@@ -90,14 +90,15 @@ Pulsar combines:
     </td>
   </tr>
   <tr>
-    <td><strong>🗃️ State Management</strong> 🆕 v0.3.0</td>
+    <td><strong>🗃️ State Management</strong></td>
     <td>
       • Redux-style stores with signals<br/>
       • <code>createStore</code>, <code>dispatch</code>, <code>subscribe</code><br/>
       • Undo/redo middleware (time-travel debugging)<br/>
       • Persistence (localStorage/sessionStorage)<br/>
       • Redux DevTools integration<br/>
-      • Memoized selectors with <code>select()</code>
+      • Memoized selectors with <code>select()</code><br/>
+      • <code>reconcile()</code> - Immutable reconciliation
     </td>
   </tr>
   <tr>
@@ -143,7 +144,9 @@ Pulsar combines:
     <td><strong>⚡ Control Flow</strong></td>
     <td>
       • <code>&lt;Show&gt;</code> - Conditional rendering<br/>
-      • <code>&lt;For&gt;</code> - List rendering with keying<br/>
+      • <code>&lt;For&gt;</code> - Keyed list rendering<br/>
+      • <code>&lt;Index&gt;</code> - Non-keyed list rendering<br/>
+      • <code>&lt;Dynamic&gt;</code> - Dynamic component resolution<br/>
       • Reactive updates only where needed
     </td>
   </tr>
@@ -281,17 +284,24 @@ Pulsar combines:
       • 25+ formular tests passing (100%)
   </tr>
   <tr>
-    <td><strong>⚙️ Server-Side Rendering</strong></td>
+    <td><strong>🌐 HTTP Client</strong> ✅ v0.8.0</td>
     <td>
-      • <strong>Status:</strong> Not implemented - client-only for now
+      • <code>useHttp()</code> - Reactive HTTP hook<br/>
+      • Request/response/error interceptors<br/>
+      • Automatic caching with TTL<br/>
+      • Retry logic with exponential backoff<br/>
+      • Full TypeScript support<br/>
+      • 25+ passing tests (100%)
     </td>
   </tr>
   <tr>
-    <td><strong>🧪 Testing Utilities</strong></td>
+    <td><strong>🛠️ CLI Tool</strong> ✅ v0.8.0</td>
     <td>
-      • Unit tests exist for core features<br/>
-      • <strong>Missing:</strong> Component testing utilities, test renderer<br/>
-      • <strong>Status:</strong> Internal testing works, public API planned
+      • <code>pulsar create</code> - Project scaffolding<br/>
+      • <code>pulsar generate</code> - Code generation<br/>
+      • <code>pulsar add</code> - Integration setup<br/>
+      • <code>pulsar build</code> - Production builds<br/>
+      • Interactive prompts and templates
     </td>
   </tr>
 </table>
@@ -513,13 +523,13 @@ Pulsar + formular.dev aims to differentiate through four core pillars:
 | **Updates**         | Re-render tree  | Re-render component | Compile to updates | Update specific nodes | **Update specific nodes** |
 | **State Syntax**    | `count`         | `count.value`       | `$count`           | `count()`             | **`count()`**             |
 | **Virtual DOM**     | Yes             | Yes                 | No                 | No                    | **No**                    |
-| **Bundle Size**     | ~45KB           | ~34KB               | ~2KB               | ~7KB                  | **~5-10KB**               |
+| **Bundle Size**     | ~45KB           | ~34KB               | ~2KB               | ~7KB                  | **~10KB**                 |
 | **Component Model** | Function reruns | Function reruns     | Compile away       | Run once              | **Run once**              |
 | **TypeScript**      | Good            | Good                | Good               | Excellent             | **Excellent**             |
 | **JSX/Templates**   | JSX             | Templates/JSX       | Templates          | JSX                   | **JSX (transformed)**     |
-| **SSR**             | Yes             | Yes                 | Yes                | Yes                   | **Planned (v0.3)**        |
-| **DevTools**        | Excellent       | Excellent           | Good               | Good                  | **Planned (v0.2)**        |
-| **Ecosystem**       | Huge            | Large               | Growing            | Growing               | **New (v0.1)**            |
+| **SSR**             | Yes             | Yes                 | Yes                | Yes                   | **Yes (v0.8.0)**          |
+| **DevTools**        | Excellent       | Excellent           | Good               | Good                  | **Good (v0.9.0)**         |
+| **Ecosystem**       | Huge            | Large               | Growing            | Growing               | **New (v0.9.0)**          |
 
 ### When to Choose Pulsar
 
@@ -527,12 +537,14 @@ Pulsar + formular.dev aims to differentiate through four core pillars:
 
 - ✅ React-like hooks API without virtual DOM overhead
 - ✅ Fine-grained reactivity with automatic dependency tracking
-- ✅ **TypeScript-first with deepest compiler integration** (coming v0.2)
-- ✅ **Enterprise DI patterns built-in** (enhanced in v1.0)
+- ✅ **TypeScript-first with deep compiler integration**
+- ✅ **Enterprise DI patterns built-in**
 - ✅ Compile-time optimizations with no runtime JSX
-- ✅ Minimal bundle size (~5-10KB vs React's 45KB)
-- ✅ **Design system support with type-safe tokens** (coming v0.3)
-- ✅ **Production observability and telemetry** (coming v1.0)
+- ✅ Minimal bundle size (~10KB vs React's 45KB)
+- ✅ **Server-side rendering (SSR/SSG) support** ✅
+- ✅ **formular.dev integration for reactive forms** ✅
+- ✅ **Production-ready HTTP client with caching** ✅
+- ✅ **CLI tools for scaffolding and code generation** ✅
 - ✅ To learn cutting-edge reactive patterns
 
 **Choose Pulsar OVER SolidJS if you:**
@@ -759,14 +771,14 @@ packages/
 
 ## Performance Characteristics
 
-### Benchmarks (Beta v0.1.0)
+### Benchmarks (v0.9.0-alpha)
 
 | Metric             | Pulsar         | React  | SolidJS | Notes                           |
 | ------------------ | -------------- | ------ | ------- | ------------------------------- |
 | **Initial Render** | Fast ⚡        | Medium | Fast    | No VDOM creation overhead       |
 | **Updates**        | Fastest ⚡⚡⚡ | Medium | Fastest | Surgical DOM updates only       |
 | **Memory**         | Low 💚         | High   | Low     | No fiber tree or VDOM           |
-| **Bundle Size**    | ~5-10KB        | ~45KB  | ~7KB    | Transformer at build time       |
+| **Bundle Size**    | ~10KB          | ~45KB  | ~7KB    | Transformer at build time       |
 | **Large Lists**    | Fastest ⚡⚡⚡ | Slower | Fastest | Fine-grained updates with `For` |
 
 **Note:** Formal benchmarks pending. These are qualitative assessments based on architecture.
@@ -818,30 +830,40 @@ Born from 15+ years of building with jQuery, Knockout, Angular, Vue, and React, 
 - ✅ IoC/DI patterns that inspired Pulsar's architecture
 - ✅ 45KB core (12KB gzipped), zero dependencies
 
-**Be aware that Pulsar is in active beta (v0.1.0):**
+**Pulsar v0.9.0-alpha Status:**
 
-- ⚠️ **No SSR/SSG** - Client-side only (for now)
-- ⚠️ **Limited Router** - Basic hash routing, missing params/guards
-- ⚠️ **No DevTools** - Console logging only (extension planned)
-- ⚠️ **Small Ecosystem** - Few third-party libraries
-- ⚠️ **Breaking Changes** - API not stable until v1.0
-- ⚠️ **Limited Documentation** - Core docs exist, examples growing
-- ⚠️ **Not Production Ready** - Use for experiments and learning
+- ✅ **SSR/SSG Support** - Full server-side rendering implemented (v0.8.0)
+- ✅ **Enhanced Router** - Path params, guards, nested routes complete
+- ✅ **DevTools Integration** - Redux DevTools + browser extension (separate repo)
+- ✅ **Forms Integration** - formular.dev integration with full validation
+- ✅ **HTTP Client** - Production-ready with caching and interceptors
+- ✅ **CLI Tools** - Scaffolding, generation, and integration commands
+- ✅ **Testing Utilities** - Component testing and form helpers
+- ⚠️ **Small Ecosystem** - Few third-party libraries (growing)
+- ⚠️ **Breaking Changes Possible** - API stabilizing for v1.0
+- ⚠️ **Documentation Growing** - Core docs complete, more examples needed
+
+**Production Readiness:**
+
+- ✅ **Suitable for production** with stable APIs (core, router, state, forms, SSR)
+- ✅ Core features battle-tested with 300+ passing tests
+- ⚠️ Monitor releases for breaking changes until v1.0.0
+- ✅ Enterprise patterns (DI, state management) production-ready
 
 **Best for:**
 
-- 🎓 Learning reactive programming patterns
+- 🚀 Production applications (with caution for API changes)
+- 🏭 Enterprise internal tools and dashboards
+- 📚 Learning modern reactive patterns
+- 🔬 Building type-safe, reactive UIs
 - 🧪 Prototyping and experiments
-- 🔬 Exploring signal-based reactivity
-- 🚀 Building internal tools
-- 📚 Contributing to open-source frameworks
+- 💻 Contributing to open-source frameworks
 
 **Not recommended for:**
 
-- ❌ Production enterprise applications
-- ❌ Projects needing extensive third-party libraries
-- ❌ Teams requiring stable APIs
-- ❌ SEO-critical websites (no SSR yet)
+- ❌ Mission-critical applications requiring 100% API stability (wait for v1.0.0)
+- ❌ Projects heavily dependent on extensive third-party React/Vue ecosystems
+- ❌ Teams unable to monitor and adapt to breaking changes
 
 ---
 
