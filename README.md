@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./art-kit/SVG/pulsar-logo.svg" alt="Pulsar" width="400"/>
+  <img src="https://raw.githubusercontent.com/binaryjack/pulsar-design-system/main/art-kit/SVG/pulsar-logo.svg" alt="Pulsar" width="400"/>
 </p>
 
 <p align="center">
@@ -18,7 +18,12 @@
   <a href="#core-features">Features</a> •
   <a href="#getting-started">Getting Started</a> •
   <a href="#roadmap">Roadmap</a> •
-  <a href="#documentation">Documentation</a>
+  <a href="#ecosystem">Ecosystem</a> •
+  <a href="#contributing">Contributing</a>
+</p>
+
+<p align="center">
+  <strong>Created by <a href="https://www.linkedin.com/in/tadeopiana/">Tadeo Piana</a></strong>
 </p>
 
 ---
@@ -744,73 +749,101 @@ Born from 15+ years of building with jQuery, Knockout, Angular, Vue, and React, 
 
 ### Examples
 
-- [Demo Applications](../demo/)
-- [Component Patterns](../atomos-prime.dev/)
+- [Demo Applications](https://github.com/binaryjack/pulsar-demo)
+- [Component Showcase](https://github.com/binaryjack/pulsar-ui.dev)
+
+---
+
+## Ecosystem
+
+Pulsar is a modular framework with dedicated packages for each concern:
+
+### Core Packages
+
+| Package | Description | Repository |
+|---------|-------------|------------|
+| **pulsar.dev** | Main framework with reactivity, router, DI, lifecycle | [GitHub](https://github.com/binaryjack/pulsar.dev) |
+| **@pulsar/transformer** | TypeScript JSX transformer for compile-time optimization | [GitHub](https://github.com/binaryjack/pulsar-transformer) |
+| **@pulsar/vite-plugin** | Vite integration plugin | [GitHub](https://github.com/binaryjack/pulsar-vite-plugin) |
+| **@pulsar/design-tokens** | Framework-agnostic design tokens & brand assets | [GitHub](https://github.com/binaryjack/pulsar-design-system) |
+| **@pulsar/ui** | Component library built with Pulsar | [GitHub](https://github.com/binaryjack/pulsar-ui.dev) |
+| **pulsar-demo** | Example applications and demos | [GitHub](https://github.com/binaryjack/pulsar-demo) |
+
+### Related Projects
+
+- **[formular.dev](https://github.com/binaryjack/formular.dev)** - Form management with IoC/DI patterns that inspired Pulsar's architecture
 
 ---
 
 ## Contributing
 
-Pulsar is in **active development**. Contributions are welcome!
+Pulsar is in **active development** (v0.3.0-alpha). Contributions are welcome!
 
-**Ways to contribute:**
+### Ways to Contribute
 
-- 🐛 Report bugs and issues
-- 💡 Suggest features and improvements
-- 📖 Improve documentation
-- 🧪 Write tests
-- 💻 Submit pull requests
+- 🐛 **Report bugs** - Open issues with detailed reproduction steps
+- 💡 **Suggest features** - Share ideas for framework improvements
+- 📖 **Improve docs** - Help make our documentation clearer
+- 🧪 **Write tests** - Increase coverage and catch regressions
+- 💻 **Submit PRs** - Implement features or fix bugs
+- 🎨 **Build components** - Contribute to the component library
+- 📢 **Spread the word** - Share Pulsar with other developers
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+### Development Setup
 
----
+```bash
+# Clone the repository
+git clone https://github.com/binaryjack/visual-schema-builder.git
+cd visual-schema-builder
 
-## Related Projects
+# Install dependencies
+pnpm install
 
-### Ecosystem
+# Build all packages
+pnpm build
 
-- **[@pulsar/transformer](../transformer/)** - TypeScript JSX transformer
-- **[@pulsar/vite-plugin](../vite-plugin/)** - Vite integration
-- **[atomos-prime.dev](../atomos-prime.dev/)** - Component library showcase
+# Run demo application
+pnpm dev
+```
 
-### Inspiration
+### Code Guidelines
 
-Pulsar draws inspiration from:
+- ✅ TypeScript strict mode (no `any` types)
+- ✅ Feature slice pattern (one item per file)
+- ✅ Prototype-based classes for core APIs
+- ✅ Comprehensive JSDoc comments
+- ✅ Test coverage >80% for new features
+- ✅ Follow existing code style and patterns
 
-- [SolidJS](https://www.solidjs.com/) - Signal-based reactivity
-- [React](https://react.dev/) - Hooks API
-- [Svelte](https://svelte.dev/) - Compile-time philosophy
-- [Vue 3](https://vuejs.org/) - Developer experience
-
-### Compatible Libraries
-
-**[formular.dev](https://github.com/binaryjack/formular.dev)** - Form management with IoC/DI
-
-- The `ServiceManager` architecture in Pulsar was inspired by formular.dev's excellent DI design
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
 ## License
 
-MIT © [binaryjack](https://github.com/binaryjack)
+MIT License - Copyright (c) 2026 Pulsar Framework
+
+See [LICENSE](./LICENSE) for full details.
 
 ---
 
 ## Acknowledgments
 
-Built with ⚡ by developers who refuse to compromise.
+Built with ⚡ by [Tadeo Piana](https://www.linkedin.com/in/tadeopiana/) and contributors who refuse to compromise.
 
 Special thanks to the authors of React, SolidJS, Svelte, and Vue for pioneering the patterns that made Pulsar possible.
 
 ---
 
 <p align="center">
-  <strong>Pulsar Framework - Beta v0.1.0</strong><br/>
+  <strong>Pulsar Framework - v0.3.0-alpha</strong><br/>
   TypeScript-first reactive UI framework with compile-time JSX transformation
 </p>
 
 <p align="center">
-  <a href="https://github.com/binaryjack/visual-schema-builder">GitHub</a> •
+  <a href="https://github.com/binaryjack/pulsar.dev">GitHub</a> •
+  <a href="https://www.linkedin.com/in/tadeopiana/">Connect with the Creator</a>
+</p>
   <a href="https://github.com/binaryjack/visual-schema-builder/issues">Issues</a> •
   <a href="#roadmap">Roadmap</a> •
   <a href="#documentation">Docs</a>
