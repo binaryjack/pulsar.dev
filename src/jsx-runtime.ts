@@ -3,42 +3,60 @@
  * Provides JSX transformation functions for Pulsar framework
  */
 
-export function jsx(type: any, props: any, key?: any): HTMLElement {
-  return typeof type === 'function' ? type(props) : createElement(type, props);
+import type {
+  JSXElementType,
+  JSXProps,
+  JSXKey,
+  IFragmentProps,
+  ICreateElementProps,
+  JSXSource,
+  JSXChild,
+} from './jsx-runtime.types';
+
+export function jsx<P extends JSXProps = JSXProps>(
+  type: JSXElementType<P>,
+  props: P,
+  key?: JSXKey
+): HTMLElement {
+  return typeof type === 'function' ? type(props) : createElement(type, props as ICreateElementProps);
 }
 
-export function jsxs(type: any, props: any, key?: any): HTMLElement {
+export function jsxs<P extends JSXProps = JSXProps>(
+  type: JSXElementType<P>,
+  props: P,
+  key?: JSXKey
+): HTMLElement {
   return jsx(type, props, key);
 }
 
 // Development mode JSX functions
-export function jsxDEV(
-  type: any,
-  props: any,
-  key?: any,
+export function jsxDEV<P extends JSXProps = JSXProps>(
+  type: JSXElementType<P>,
+  props: P,
+  key?: JSXKey,
   isStaticChildren?: boolean,
-  source?: any,
-  self?: any
+  source?: JSXSource,
+  self?: unknown
 ): HTMLElement {
   return jsx(type, props, key);
 }
 
-export function jsxsDEV(
-  type: any,
-  props: any,
-  key?: any,
+export function jsxsDEV<P extends JSXProps = JSXProps>(
+  type: JSXElementType<P>,
+  props: P,
+  key?: JSXKey,
   isStaticChildren?: boolean,
-  source?: any,
-  self?: any
+  source?: JSXSource,
+  self?: unknown
 ): HTMLElement {
   return jsx(type, props, key);
 }
 
-export function Fragment(props: { children?: any }): DocumentFragment {
+export function Fragment(props: IFragmentProps): DocumentFragment {
   const fragment = document.createDocumentFragment();
   if (props.children) {
     const children = Array.isArray(props.children) ? props.children : [props.children];
-    children.forEach((child) => {
+    children.forEach((child: JSXChild) => {
       if (child instanceof Node) {
         fragment.appendChild(child);
       }
@@ -47,14 +65,14 @@ export function Fragment(props: { children?: any }): DocumentFragment {
   return fragment;
 }
 
-function createElement(type: string, props: any): HTMLElement {
+function createElement(type: string, props: ICreateElementProps): HTMLElement {
   const element = document.createElement(type);
 
   if (props) {
     Object.keys(props).forEach((key) => {
       if (key === 'children') {
         const children = Array.isArray(props.children) ? props.children : [props.children];
-        children.forEach((child: any) => {
+        children.forEach((child: JSXChild) => {
           if (child instanceof Node) {
             element.appendChild(child);
           } else if (typeof child === 'string' || typeof child === 'number') {
@@ -62,16 +80,16 @@ function createElement(type: string, props: any): HTMLElement {
           }
         });
       } else if (key === 'className') {
-        element.className = props[key];
+        element.className = props[key] as string;
       } else if (key === 'innerHTML') {
-        element.innerHTML = props[key];
+        element.innerHTML = props[key] as string;
       } else if (key.startsWith('on')) {
         const eventName = key.toLowerCase().substring(2);
-        element.addEventListener(eventName, props[key]);
+        element.addEventListener(eventName, props[key] as EventListener);
       } else if (key.startsWith('aria-') || key.startsWith('data-') || key === 'role') {
-        element.setAttribute(key, props[key]);
+        element.setAttribute(key, String(props[key]));
       } else if (typeof props[key] !== 'undefined' && props[key] !== null) {
-        (element as any)[key] = props[key];
+        (element as unknown as Record<string, unknown>)[key] = props[key];
       }
     });
   }
@@ -86,10 +104,10 @@ export namespace JSX {
   export type Children = Child | Child[];
 
   export interface IntrinsicElements {
-    [elemName: string]: any;
+    [elemName: string]: Record<string, unknown>;
   }
 
   export interface ElementChildrenAttribute {
-    children: {};
+    children: Record<string, never>;
   }
 }

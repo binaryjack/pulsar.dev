@@ -60,8 +60,8 @@ export function createSpy<T extends (...args: any[]) => any>(
 /**
  * Creates a mock context provider
  */
-export function mockContext<T>(value: T): (children: any) => any {
-  return (children: any) => {
+export function mockContext<T>(value: T): (children: HTMLElement) => HTMLElement {
+  return (children: HTMLElement) => {
     // Store original context
     const originalContext = (globalThis as any).__PULSAR_CONTEXT__;
     (globalThis as any).__PULSAR_CONTEXT__ = value;

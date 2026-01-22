@@ -15,21 +15,33 @@ export {
 
 // Undo/Redo
 export {
+  UndoRedoActions,
   canRedo,
   canUndo,
   createUndoMiddleware,
   getHistoryMetadata,
   undoable,
-  UndoRedoActions,
   type IHistoryState,
   type IUndoOptions,
 } from './undo-redo';
 
 // Persistence
 export {
-  createPersistentStore,
   createPersistMiddleware,
+  createPersistentStore,
   createSessionStore,
   restoreState,
   type IPersistOptions,
 } from './persistence';
+
+// Reconcile - Efficient immutable updates
+export {
+  diffArrays,
+  diffObjects,
+  isPlainObject,
+  reconcile,
+  reconcileWith,
+  type IReconcileOptions,
+  type PlainObject,
+  type ReconcileResult,
+} from './reconcile';

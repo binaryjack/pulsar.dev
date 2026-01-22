@@ -1,6 +1,6 @@
 {
   "name": "@pulsar-framework/core",
-  "version": "0.6.0-alpha",
+  "version": "0.7.0-alpha",
   "description": "Reactive UI framework with TypeScript-first JSX transformation and fine-grained reactivity",
   "type": "module",
   "main": "./dist/index.js",

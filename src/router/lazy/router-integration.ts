@@ -13,7 +13,10 @@ import type { ILazyRoute } from './lazy-route.types';
  *
  * Integrates lazy loading with router rendering pipeline
  */
-export function renderLazyRoute(route: IRoute | ILazyRoute, props?: any): HTMLElement {
+export function renderLazyRoute(
+  route: IRoute | ILazyRoute,
+  props?: Record<string, unknown>
+): HTMLElement {
   if (!isLazyRoute(route)) {
     // Regular route - render component directly
     if (route.component) {

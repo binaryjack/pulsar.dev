@@ -4,7 +4,7 @@
 
 import type { IStoreMiddleware } from '../store/store.types';
 
-export interface IPersistOptions<T extends Record<string, any>> {
+export interface IPersistOptions<T extends Record<string, unknown>> {
   key: string;
   storage?: Storage;
   serialize?: (state: T) => string;
@@ -13,8 +13,8 @@ export interface IPersistOptions<T extends Record<string, any>> {
   whitelist?: Array<keyof T>;
   blacklist?: Array<keyof T>;
   version?: number;
-  migrate?: (state: any, version: number) => T;
+  migrate?: (state: Record<string, unknown>, version: number) => T;
   merge?: (persisted: T, initial: T) => T;
 }
 
-export type PersistMiddleware<T extends Record<string, any>> = IStoreMiddleware<T>;
+export type PersistMiddleware<T extends Record<string, unknown>> = IStoreMiddleware<T>;

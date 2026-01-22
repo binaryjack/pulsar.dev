@@ -3,8 +3,8 @@
  * React-style hooks for accessing router state
  */
 
-import { QueryParams } from './query-parser';
-import type { ILocation } from './router-context';
+import { QueryParams, type IQueryParams } from './query-parser';
+import type { ILocation } from './router-context.types';
 import { routerContext } from './router-context';
 
 /**
@@ -104,7 +104,7 @@ export const useParams = <T extends Record<string, string> = Record<string, stri
  * setSearch({ q: 'new query' })
  */
 export const useSearchParams = (): [
-  QueryParams,
+  IQueryParams,
   (query: Record<string, string | string[] | undefined>) => void,
 ] => {
   const query = routerContext.currentQuery || new QueryParams('');

@@ -15,7 +15,10 @@ export interface IStoreInternal<T> extends IStore<T> {
   reducer: IStoreReducer<T>;
   middleware?: IStoreMiddleware<T>[];
   subscribers: Set<IStoreSubscriber<T>>;
-  devtools?: any;
+  devtools?: {
+    send: (action: IStoreAction, state: T) => void;
+    init: (state: T) => void;
+  };
 }
 
 export interface IStoreAction {

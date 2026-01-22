@@ -10,9 +10,9 @@ export interface IRenderResult<T = any> {
   debug: () => void;
 }
 
-export interface IRenderOptions<T = any> {
+export interface IRenderOptions<T = Record<string, unknown>> {
   props?: T;
-  wrapper?: (children: any) => any;
+  wrapper?: (children: HTMLElement | DocumentFragment) => HTMLElement;
   container?: HTMLElement;
 }
 

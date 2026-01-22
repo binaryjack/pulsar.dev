@@ -106,8 +106,11 @@ export function prefetchRouteWithStrategy(
 /**
  * Get cached route component
  */
-export function getCachedRoute(path: string): any | undefined {
-  return routeLoaderCache.get(path);
+export function getCachedRoute(
+  path: string
+): ((props: Record<string, unknown>) => HTMLElement) | null | undefined {
+  const cached = routeLoaderCache.get(path);
+  return cached?.component;
 }
 
 /**
@@ -184,83 +187,124 @@ export function createPrefetchLink(
 }
 
 /**
+ * Smart prefetcher interface
+ */
+export interface ISmartPrefetcher {
+  recordNavigation(path: string): void;
+  getLikelyRoutes(count?: number): string[];
+  prefetchLikely(routes: ILazyRoute[], count?: number): Promise<void>;
+  reset(): void;
+}
+
+/**
+ * Internal smart prefetcher interface
+ */
+export interface ISmartPrefetcherInternal extends ISmartPrefetcher {
+  navigationHistory: string[];
+  routeScores: Map<string, number>;
+}
+
+/**
  * Smart prefetch based on navigation patterns
  * Analyzes user behavior and prefetches likely next routes
  */
-export class SmartPrefetcher {
-  private navigationHistory: string[] = [];
-  private routeScores = new Map<string, number>();
+export const SmartPrefetcher = function (this: ISmartPrefetcherInternal) {
+  Object.defineProperty(this, 'navigationHistory', {
+    value: [] as string[],
+    writable: true,
+    enumerable: false,
+    configurable: false,
+  });
 
-  /**
-   * Record navigation event
-   */
-  recordNavigation(path: string): void {
-    this.navigationHistory.push(path);
+  Object.defineProperty(this, 'routeScores', {
+    value: new Map<string, number>(),
+    writable: true,
+    enumerable: false,
+    configurable: false,
+  });
+} as unknown as { new (): ISmartPrefetcherInternal };
 
-    // Limit history size
-    if (this.navigationHistory.length > 50) {
-      this.navigationHistory.shift();
-    }
+/**
+ * Record navigation event
+ */
+SmartPrefetcher.prototype.recordNavigation = function (
+  this: ISmartPrefetcherInternal,
+  path: string
+): void {
+  this.navigationHistory.push(path);
 
-    // Update scores based on patterns
-    this.updateScores();
+  // Limit history size
+  if (this.navigationHistory.length > 50) {
+    this.navigationHistory.shift();
   }
 
-  /**
-   * Update route scores based on navigation patterns
-   */
-  private updateScores(): void {
-    // Simple scoring: routes that often follow current route get higher scores
-    const currentPath = this.navigationHistory[this.navigationHistory.length - 1];
-    const nextPaths = this.getNextPaths(currentPath);
+  // Update scores based on patterns
+  updateScores.call(this);
+};
 
-    nextPaths.forEach((path) => {
-      const score = this.routeScores.get(path) || 0;
-      this.routeScores.set(path, score + 1);
-    });
-  }
+/**
+ * Update route scores based on navigation patterns
+ * @internal
+ */
+function updateScores(this: ISmartPrefetcherInternal): void {
+  // Simple scoring: routes that often follow current route get higher scores
+  const currentPath = this.navigationHistory[this.navigationHistory.length - 1];
+  const nextPaths = getNextPaths.call(this, currentPath);
 
-  /**
-   * Get paths that typically follow a given path
-   */
-  private getNextPaths(currentPath: string): string[] {
-    const nextPaths: string[] = [];
-
-    for (let i = 0; i < this.navigationHistory.length - 1; i++) {
-      if (this.navigationHistory[i] === currentPath) {
-        nextPaths.push(this.navigationHistory[i + 1]);
-      }
-    }
-
-    return nextPaths;
-  }
-
-  /**
-   * Get likely next routes to prefetch
-   */
-  getLikelyRoutes(count: number = 3): string[] {
-    const sorted = Array.from(this.routeScores.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, count);
-
-    return sorted.map(([path]) => path);
-  }
-
-  /**
-   * Prefetch likely routes
-   */
-  async prefetchLikely(routes: ILazyRoute[], count: number = 3): Promise<void> {
-    const likelyPaths = this.getLikelyRoutes(count);
-    const routesToPrefetch = routes.filter((route) => likelyPaths.includes(route.path));
-
-    await prefetchRoutes(routesToPrefetch);
-  }
-
-  /**
-   * Reset scoring
-   */
-  reset(): void {
-    this.navigationHistory = [];
-    this.routeScores.clear();
-  }
+  nextPaths.forEach((path) => {
+    const score = this.routeScores.get(path) || 0;
+    this.routeScores.set(path, score + 1);
+  });
 }
+
+/**
+ * Get paths that typically follow a given path
+ * @internal
+ */
+function getNextPaths(this: ISmartPrefetcherInternal, currentPath: string): string[] {
+  const nextPaths: string[] = [];
+
+  for (let i = 0; i < this.navigationHistory.length - 1; i++) {
+    if (this.navigationHistory[i] === currentPath) {
+      nextPaths.push(this.navigationHistory[i + 1]);
+    }
+  }
+
+  return nextPaths;
+}
+
+/**
+ * Get likely next routes to prefetch
+ */
+SmartPrefetcher.prototype.getLikelyRoutes = function (
+  this: ISmartPrefetcherInternal,
+  count: number = 3
+): string[] {
+  const sorted = Array.from(this.routeScores.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, count);
+
+  return sorted.map(([path]) => path);
+};
+
+/**
+ * Prefetch likely routes
+ */
+SmartPrefetcher.prototype.prefetchLikely = async function (
+  this: ISmartPrefetcherInternal,
+  routes: ILazyRoute[],
+  count: number = 3
+): Promise<void> {
+  const likelyPaths = this.getLikelyRoutes(count);
+  const routesToPrefetch = routes.filter((route) => likelyPaths.includes(route.path));
+
+  await prefetchRoutes(routesToPrefetch);
+};
+
+/**
+ * Reset scoring
+ */
+SmartPrefetcher.prototype.reset = function (this: ISmartPrefetcherInternal): void {
+  this.navigationHistory = [];
+  this.routeScores.clear();
+};

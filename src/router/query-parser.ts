@@ -58,59 +58,94 @@ export const stringifyQuery = (query: Record<string, QueryValue>): string => {
 };
 
 /**
- * Type-safe query parameter getters
+ * Type-safe query parameter interface
  */
-export class QueryParams {
-  private params: Record<string, QueryValue>;
-
-  constructor(search: string) {
-    this.params = parseQuery(search);
-  }
-
-  /**
-   * Get a single query parameter
-   */
-  get(key: string): string | undefined {
-    const value = this.params[key];
-    return Array.isArray(value) ? value[0] : value;
-  }
-
-  /**
-   * Get all values for a query parameter
-   */
-  getAll(key: string): string[] {
-    const value = this.params[key];
-    if (value === undefined) return [];
-    return Array.isArray(value) ? value : [value];
-  }
-
-  /**
-   * Check if a query parameter exists
-   */
-  has(key: string): boolean {
-    return key in this.params;
-  }
-
-  /**
-   * Get all query parameters as an object
-   */
-  getAll_asObject(): Record<string, QueryValue> {
-    return { ...this.params };
-  }
-
-  /**
-   * Convert to URLSearchParams
-   */
-  toURLSearchParams(): URLSearchParams {
-    const params = new URLSearchParams();
-    Object.entries(this.params).forEach(([key, value]) => {
-      if (value === undefined) return;
-      if (Array.isArray(value)) {
-        value.forEach((v) => params.append(key, v));
-      } else {
-        params.append(key, value);
-      }
-    });
-    return params;
-  }
+export interface IQueryParams {
+  get(key: string): string | undefined;
+  getAll(key: string): string[];
+  has(key: string): boolean;
+  getAllAsObject(): Record<string, QueryValue>;
+  toURLSearchParams(): URLSearchParams;
 }
+
+/**
+ * Internal query params interface
+ */
+export interface IQueryParamsInternal extends IQueryParams {
+  params: Record<string, QueryValue>;
+}
+
+/**
+ * Type-safe query parameter constructor
+ */
+export const QueryParams = function (
+  this: IQueryParamsInternal,
+  search: string
+) {
+  Object.defineProperty(this, 'params', {
+    value: parseQuery(search),
+    writable: false,
+    enumerable: false,
+    configurable: false,
+  });
+} as unknown as { new (search: string): IQueryParamsInternal };
+
+/**
+ * Get a single query parameter
+ */
+QueryParams.prototype.get = function (
+  this: IQueryParamsInternal,
+  key: string
+): string | undefined {
+  const value = this.params[key];
+  return Array.isArray(value) ? value[0] : value;
+};
+
+/**
+ * Get all values for a query parameter
+ */
+QueryParams.prototype.getAll = function (
+  this: IQueryParamsInternal,
+  key: string
+): string[] {
+  const value = this.params[key];
+  if (value === undefined) return [];
+  return Array.isArray(value) ? value : [value];
+};
+
+/**
+ * Check if a query parameter exists
+ */
+QueryParams.prototype.has = function (
+  this: IQueryParamsInternal,
+  key: string
+): boolean {
+  return key in this.params;
+};
+
+/**
+ * Get all query parameters as an object
+ */
+QueryParams.prototype.getAllAsObject = function (
+  this: IQueryParamsInternal
+): Record<string, QueryValue> {
+  return { ...this.params };
+};
+
+/**
+ * Convert to URLSearchParams
+ */
+QueryParams.prototype.toURLSearchParams = function (
+  this: IQueryParamsInternal
+): URLSearchParams {
+  const params = new URLSearchParams();
+  Object.entries(this.params).forEach(([key, value]) => {
+    if (value === undefined) return;
+    if (Array.isArray(value)) {
+      value.forEach((v) => params.append(key, v));
+    } else {
+      params.append(key, value);
+    }
+  });
+  return params;
+};

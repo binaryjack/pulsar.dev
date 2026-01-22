@@ -9,9 +9,9 @@ import type { IRoute } from '../route.interface';
 /**
  * Lazy route with component loader
  */
-export interface ILazyRoute extends Omit<IRoute, 'component' | 'element'> {
+export interface ILazyRoute<P = Record<string, unknown>> extends Omit<IRoute, 'component' | 'element'> {
   /** Lazy component loader */
-  component: ILazyComponent<any>;
+  component: ILazyComponent<(props: P) => HTMLElement>;
 
   /** Preload strategy for this route */
   preload?: 'hover' | 'visible' | 'eager' | 'idle' | 'none';
@@ -71,10 +71,10 @@ export interface IRouteLoaderCache {
   path: string;
 
   /** Loaded component */
-  component: any;
+  component: ((props: Record<string, unknown>) => HTMLElement) | null;
 
   /** Loading promise */
-  promise: Promise<any> | null;
+  promise: Promise<(props: Record<string, unknown>) => HTMLElement> | null;
 
   /** Loading status */
   status: 'idle' | 'loading' | 'success' | 'error';

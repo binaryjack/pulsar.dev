@@ -7,17 +7,17 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.3.0--alpha-blue" alt="Version 0.3.0-alpha"/>
+  <img src="https://img.shields.io/badge/version-0.6.0--alpha-blue" alt="Version 0.6.0-alpha"/>
   <img src="https://img.shields.io/badge/TypeScript-5.0+-blue" alt="TypeScript 5.0+"/>
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"/>
-  <img src="https://img.shields.io/badge/completeness-88%25-brightgreen" alt="88% Complete"/>
+  <img src="https://img.shields.io/badge/completeness-96--98%25-brightgreen" alt="96-98% Complete"/>
 </p>
 
 <p align="center">
   <a href="#what-is-pulsar">About</a> •
   <a href="#core-features">Features</a> •
   <a href="#getting-started">Getting Started</a> •
-  <a href="#roadmap">Roadmap</a> •
+  <a href="./ROADMAP.md">Roadmap</a> •
   <a href="#ecosystem">Ecosystem</a> •
   <a href="#contributing">Contributing</a>
 </p>
@@ -341,134 +341,108 @@ export const Component = (props) => {
 
 ## Roadmap
 
-### ✅ v0.1.0 (Current Beta) - Core Foundation
+**Current Version**: v0.6.0-alpha  
+**Next Release**: v0.7.0-alpha (February 2026)
 
-**Completed:**
+### 🎯 Current Focus
 
-- ✅ Signal-based reactivity system
-- ✅ TypeScript transformer with JSX compilation
-- ✅ React-compatible hooks API
-- ✅ Control flow components (`Show`, `For`)
-- ✅ Resource management with async support
-- ✅ Context API
-- ✅ Portal system
-- ✅ Error boundaries
-- ✅ Dependency injection (IoC)
-- ✅ Bootstrap and lifecycle management
-- ✅ Event delegation system
-- ✅ Vite plugin integration
+**v0.7.0 - Core Completeness** (75% Complete)
 
-**Completion:** ~85% (Core runtime complete, ecosystem developing)
+- ✅ `<Index>` component (non-keyed iteration) - DONE
+- ✅ `<Dynamic>` component (dynamic component resolution) - DONE
+- ✅ `reconcile()` utility (immutable state updates) - DONE
+- ⏳ `produce()` utility (Immer-style API) - IN PROGRESS
 
-### 🚧 v0.2.0 - Developer Experience & TypeScript Superpowers (Q2 2026)
+### 🚀 Coming Next
 
-**Core Features:**
+**v0.8.0 - Production Infrastructure** (March-April 2026)
 
-- 🔄 Enhanced router with params, nested routes, guards
-- 🔄 Testing utilities and test renderer
-- 🔄 Component testing examples
-- 🔄 Migration guides from React/Vue/Solid
+- HTTP Client with `useHttp()` hook
+- CLI tool (`pulsar create`, `pulsar generate`)
+- SSR/SSG foundation
 
-**TypeScript Compiler API Features (NEW):**
+**v0.9.0 - Developer Experience** (May-June 2026)
 
-- 🔮 Type-safe routing with automatic param extraction
-- 🔮 Compile-time dependency validation for DI
-- 🔮 Enhanced error messages with inline suggestions
-- 🔮 Type-safe context with zero Provider boilerplate
-- 🔮 Automatic prop validation from TypeScript types
+- formular.dev integration (`useFormular()` hook)
+- DevTools browser extension
+- Testing utilities (public API)
 
-**Developer Experience Revolution:**
+**v1.0.0 - Production Ready** (Q4 2026)
 
-- 👨‍💻 AI-powered error diagnosis and suggestions
-- 👨‍💻 Improved error messages with "Did you mean?" hints
-- 👨‍💻 Performance profiling tools with automatic recommendations
-- 👨‍💻 Visual component inspector (hover preview in IDE)
+- Stable API with semver guarantees
+- Comprehensive documentation
+- Real-world example apps
+- Performance benchmarks
+- LTS commitment
 
-**Expected Completion:** ~30% (routing basics done, compiler API work needed)
+### 📊 What's Complete (v0.1.0-v0.6.0)
 
-### 📋 v0.3.0 - Advanced Features & Build-Time Optimization (Q3 2026)
+**✅ Core Runtime (100%)**
 
-**Core Features:**
+- Signal-based reactivity, hooks, control flow (`<Show>`, `<For>`, `<Index>`, `<Dynamic>`), context, error boundaries, portals
 
-- ⏳ CSS-in-JS runtime with scoped styles
-- ⏳ Animation primitives
-- ⏳ Server-side rendering (SSR) support
-- ⏳ Static site generation (SSG)
-- ⏳ Streaming server rendering
+**✅ State Management (100%)**
 
-**Design System First (NEW):**
+- Redux-style stores, undo/redo, persistence, DevTools integration
 
-- 🎨 Compile-time design tokens with type safety
-- 🎨 First-class theme support (light/dark mode)
-- 🎨 CSS variable generation at build time
-- 🎨 Figma → Code integration
-- 🎨 Zero-runtime styled components
+**✅ Router (100%)**
 
-**Aggressive Build-Time Optimization (NEW):**
+- Path params, query strings, guards, nested routes, lazy loading
 
-- ⚡ Static analysis & advanced tree shaking
-- ⚡ Compile-time constant folding
-- ⚡ Automatic code splitting with smart preloading
-- ⚡ Bundle size warnings at compile time
-- ⚡ Dead code elimination beyond standard tools
+**✅ Forms (100%)**
 
-**State Management Patterns (NEW):**
+- Via **formular.dev** (framework-agnostic, 6 languages, 12+ countries)
 
-- 🔄 Built-in Finite State Machines (FSM)
-- 🔄 Event sourcing pattern support
-- 🔄 Time-travel debugging with state replay
-- 🔄 State visualization in DevTools
+**✅ DI System (100%)**
 
-**Expected Completion:** ~5% (early research phase)
+- IoC container with multiple lifetime scopes
 
-### 🎯 v1.0.0 - Production Ready & Enterprise Features (Q4 2026)
+**➡️ For detailed roadmap**: See [ROADMAP.md](./ROADMAP.md)
 
-**Stability & Documentation:**
+---
 
-- 📝 Comprehensive documentation site
-- 📝 Real-world example applications
-- 📝 Performance benchmarks vs React/Vue/Solid/SolidJS
-- 📝 Stable API with semver guarantees
-- 📝 Long-term support commitment
-- 📝 Migration tools and codemods
+## Strategic Differentiation from Competitors
 
-**Enterprise-Grade Architecture (NEW):**
+Pulsar + formular.dev aims to differentiate through four core pillars:
 
-- 🏢 Advanced DI with decorators (@Injectable, @Inject)
-- 🏢 Interceptors & middleware system
-- 🏢 Module system (imports/exports like Angular)
-- 🏢 Request/response interceptors
-- 🏢 Scope hierarchy (request, session, singleton)
+### 1. **True Framework Agnosticism** 🌐 ⭐ UNIQUE ADVANTAGE
 
-**Observable-First Architecture (NEW):**
+- **formular.dev** works with Pulsar, React, Vue, Angular, or vanilla JS
+- Build forms once, reuse across frameworks
+- No vendor lock-in for form logic
+- Migrate frameworks without rewriting forms
+- **Competitors:** Angular Forms (Angular only), React Hook Form (React only)
 
-- 📊 Built-in telemetry and performance tracking
-- 📊 Automatic APM integration (Datadog, New Relic, Sentry)
-- 📊 Signal state debugging with named signals
-- 📊 Production observability dashboard
-- 📊 Automatic error reporting with context
+### 2. **TypeScript Powerhouse** 🔮
 
-**Specialized Performance Modes (NEW):**
+- Deepest TypeScript Compiler API integration of any framework
+- Compile-time validation and optimization beyond standard tooling
+- Type-safe everything: routing, DI, themes, state machines, forms
+- Zero-cost abstractions that compile away
 
-- 🚀 Virtual scrolling built into `<For>` component
-- 🚀 Adaptive batching (mobile vs desktop)
-- 🚀 Priority-based rendering (high/low priority)
-- 🚀 Automatic device-specific optimizations
-- 🚀 Memory vs speed optimization modes
+### 3. **Enterprise-Ready Out-of-Box** 🏢
 
-**Micro-Frontend Support (NEW):**
+- **formular.dev:** 6 languages + 12 countries built-in (vs Angular's manual setup)
+- Most sophisticated DI system in any reactive framework
+- Built-in patterns for large-scale applications
+- Micro-frontend support out of the box
+- Observable and debuggable at production scale
 
-- 🧩 Built-in module federation
-- 🧩 Type-safe remote component composition
-- 🧩 Shared state across micro-frontends
-- 🧩 Version compatibility validation
-- 🧩 Cross-team collaboration tools
+### 4. **Performance First** ⚡
 
-**Ecosystem:**
+- Smaller bundle: ~22KB (Pulsar 10KB + formular.dev 12KB gzipped)
+- **vs Angular:** ~70KB (Core + Forms)
+- **vs React + RHF:** ~59KB (React 50KB + React Hook Form 9KB)
+- Fine-grained reactivity with compile-time optimization
 
-- 📦 Official form management library
-- 📦 Official router with full features
-- 📦 Official state management patterns
+**Target Audience:**
+
+- Teams building global applications (need i18n/multi-country out-of-box)
+- TypeScript-heavy teams and organizations
+- Enterprise applications requiring advanced patterns
+- Teams migrating from Angular seeking modern DX
+- Projects prioritizing type safety and build-time optimization
+- Multi-framework teams (formular.dev portability advantage)
 - 📦 Component library ecosystem
 - 📦 CLI tools and generators
 
@@ -486,40 +460,6 @@ export const Component = (props) => {
 - 🔗 GraphQL/tRPC first-class integration
 - 🎯 Automatic accessibility (a11y) validation
 - 🌍 Built-in i18n with compile-time extraction
-
----
-
-## Strategic Differentiation from SolidJS
-
-Pulsar aims to differentiate through three core pillars:
-
-### 1. **TypeScript Powerhouse** 🔮
-
-- Deepest TypeScript Compiler API integration of any framework
-- Compile-time validation and optimization beyond standard tooling
-- Type-safe everything: routing, DI, themes, state machines
-- Zero-cost abstractions that compile away
-
-### 2. **Enterprise-Ready Architecture** 🏢
-
-- Most sophisticated DI system in any reactive framework
-- Built-in patterns for large-scale applications
-- Micro-frontend support out of the box
-- Observable and debuggable at production scale
-
-### 3. **Developer Experience Revolution** 👨‍💻
-
-- AI-powered assistance and error diagnosis
-- Visual debugging and component inspection
-- Time-travel debugging with state replay
-- Automatic performance optimization suggestions
-
-**Target Audience:**
-
-- TypeScript-heavy teams and organizations
-- Enterprise applications requiring advanced patterns
-- Teams migrating from Angular seeking modern DX
-- Projects prioritizing type safety and build-time optimization
 
 ---
 
@@ -709,7 +649,14 @@ Born from 15+ years of building with jQuery, Knockout, Angular, Vue, and React, 
 
 ---
 
-## Current Limitations (Beta)
+## Current Limitations (Beta)ramework-agnostic form management library
+
+- ✅ Works with Pulsar, React, Vue, Angular, vanilla JS
+- ✅ 6 languages built-in (EN, FR, ES, DE, PT, IT)
+- ✅ 12+ country validation (phone, postal, SSN)
+- ✅ 18+ validators with intelligent caching
+- ✅ IoC/DI patterns that inspired Pulsar's architecture
+- ✅ 45KB core (12KB gzipped), zero dependencies
 
 **Be aware that Pulsar is in active beta (v0.1.0):**
 
@@ -777,7 +724,7 @@ Pulsar is a modular framework with dedicated packages for each concern:
 
 ## Contributing
 
-Pulsar is in **active development** (v0.3.0-alpha). Contributions are welcome!
+Pulsar is in **active development** (v0.7.0-alpha). Contributions are welcome!
 
 ### Ways to Contribute
 
@@ -836,7 +783,7 @@ Special thanks to the authors of React, SolidJS, Svelte, and Vue for pioneering 
 ---
 
 <p align="center">
-  <strong>Pulsar Framework - v0.3.0-alpha</strong><br/>
+  <strong>Pulsar Framework - v0.7.0-alpha</strong><br/>
   TypeScript-first reactive UI framework with compile-time JSX transformation
 </p>
 
