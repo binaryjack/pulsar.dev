@@ -1,7 +1,7 @@
 {
-  "name": "pulsar",
+  "name": "@pulsar-framework/core",
   "version": "0.6.0-alpha",
-  "description": "A modern reactive framework for building web applications",
+  "description": "Reactive UI framework with TypeScript-first JSX transformation and fine-grained reactivity",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -103,14 +103,16 @@
     "prepublishOnly": "pnpm run build"
   },
   "keywords": [
-    "framework",
+    "pulsar",
     "reactive",
+    "framework",
+    "typescript",
+    "jsx",
     "signals",
     "ui",
-    "components",
-    "pulsar"
+    "frontend"
   ],
-  "author": "",
+  "author": "Tadeo Piana <https://www.linkedin.com/in/tadeopiana/>",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
@@ -123,5 +125,17 @@
     "vite": "^6.0.11",
     "vite-plugin-dts": "^4.4.1",
     "vitest": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binaryjack/pulsar.dev.git"
+  },
+  "homepage": "https://github.com/binaryjack/pulsar.dev#readme",
+  "bugs": {
+    "url": "https://github.com/binaryjack/pulsar.dev/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
