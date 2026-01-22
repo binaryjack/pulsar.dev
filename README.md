@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <strong>Created by <a href="https://www.linkedin.com/in/tadeopiana/">Tadeo Piana</a></strong>
+  <strong><a href="https://www.linkedin.com/in/tadeopiana/">Linked In</a></strong>
 </p>
 
 ---
@@ -760,14 +760,14 @@ Pulsar is a modular framework with dedicated packages for each concern:
 
 ### Core Packages
 
-| Package | Description | Repository |
-|---------|-------------|------------|
-| **pulsar.dev** | Main framework with reactivity, router, DI, lifecycle | [GitHub](https://github.com/binaryjack/pulsar.dev) |
-| **@pulsar/transformer** | TypeScript JSX transformer for compile-time optimization | [GitHub](https://github.com/binaryjack/pulsar-transformer) |
-| **@pulsar/vite-plugin** | Vite integration plugin | [GitHub](https://github.com/binaryjack/pulsar-vite-plugin) |
-| **@pulsar/design-tokens** | Framework-agnostic design tokens & brand assets | [GitHub](https://github.com/binaryjack/pulsar-design-system) |
-| **@pulsar/ui** | Component library built with Pulsar | [GitHub](https://github.com/binaryjack/pulsar-ui.dev) |
-| **pulsar-demo** | Example applications and demos | [GitHub](https://github.com/binaryjack/pulsar-demo) |
+| Package                   | Description                                              | Repository                                                   |
+| ------------------------- | -------------------------------------------------------- | ------------------------------------------------------------ |
+| **pulsar.dev**            | Main framework with reactivity, router, DI, lifecycle    | [GitHub](https://github.com/binaryjack/pulsar.dev)           |
+| **@pulsar/transformer**   | TypeScript JSX transformer for compile-time optimization | [GitHub](https://github.com/binaryjack/pulsar-transformer)   |
+| **@pulsar/vite-plugin**   | Vite integration plugin                                  | [GitHub](https://github.com/binaryjack/pulsar-vite-plugin)   |
+| **@pulsar/design-tokens** | Framework-agnostic design tokens & brand assets          | [GitHub](https://github.com/binaryjack/pulsar-design-system) |
+| **@pulsar/ui**            | Component library built with Pulsar                      | [GitHub](https://github.com/binaryjack/pulsar-ui.dev)        |
+| **pulsar-demo**           | Example applications and demos                           | [GitHub](https://github.com/binaryjack/pulsar-demo)          |
 
 ### Related Projects
 
