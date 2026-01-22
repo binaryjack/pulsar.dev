@@ -134,8 +134,114 @@ export type {
   ResponseInterceptor,
 } from './http';
 
-// Testing utilities (separate import path: 'pulsar/testing')
-// export * from './testing';
+// Export SSR
+export {
+  createHydrationScript,
+  createSSRContext,
+  deserializeData,
+  escapeAttribute,
+  escapeHtml,
+  extractHydrationState,
+  generateStatic,
+  hydrate,
+  renderToString,
+  serializeData,
+} from './ssr';
+export type {
+  ComponentFunction,
+  IHydrateOptions,
+  IRenderResult,
+  IRenderToStringOptions,
+  ISSRContext,
+  IStaticGenerationOptions,
+} from './ssr';
+
+// Export formular.dev integration
+export { useFormular } from './formular';
+export type {
+  AsyncValidatorMap,
+  CustomValidatorMap,
+  ErrorHandler,
+  FormularFields,
+  IFormularContext,
+  IFormularField,
+  IFormularFieldArray,
+  IFormularHook,
+  IFormularOptions,
+  IFormularState,
+  SubmitHandler,
+  SuccessHandler,
+  ValidatorFn,
+  ValidatorMap,
+} from './formular';
+
+// Export utilities
+export { produce } from './utilities';
+
+// Export testing utilities
+export {
+  act,
+  blur,
+  blurField,
+  change,
+  cleanup,
+  click,
+  createMockForm,
+  createQueries,
+  createSpy,
+  // formular.dev
+  fillField,
+  fillForm,
+  // Events
+  fireEvent,
+  flush,
+  focus,
+  getFieldError,
+  getFormErrors,
+  isFieldDirty,
+  isFieldTouched,
+  isFieldValid,
+  isFormSubmitting,
+  isFormValid,
+  keyboard,
+  mockContext,
+  mockFetch,
+  mockLocalStorage,
+  // Mocks
+  mockRouter,
+  mockService,
+  nextTick,
+  // Rendering
+  render,
+  restoreAllMocks,
+  // Queries
+  screen,
+  setupAutoCleanup,
+  submit,
+  submitForm,
+  type,
+  wait,
+  // Async
+  waitFor,
+  waitForElement,
+  waitForElementToBeRemoved,
+  waitForFieldValidation,
+  waitForFormSubmission,
+  waitForStateUpdate,
+} from './testing';
+
+export type {
+  IAccessibilityQueries,
+  IFireEventOptions,
+  IMockFormOptions,
+  IMockRouterOptions,
+  IMockService,
+  IQueryOptions,
+  IRenderOptions,
+  IRenderResult,
+  IWaitForOptions,
+  TCleanupFunction,
+} from './testing';
 
 // Lazy loading utilities (separate import path: 'pulsar/lazy-loading')
 // export * from './lazy-loading';

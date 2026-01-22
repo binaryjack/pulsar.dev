@@ -548,6 +548,159 @@ test('component renders', () => {
 });
 ```
 
+## formular.dev Testing
+
+### Form Field Utilities
+
+```typescript
+import { fillField, fillForm, submitForm, getFieldError } from 'pulsar/testing';
+
+test('form validation', async () => {
+  render(MyForm);
+
+  // Fill individual field
+  const nameInput = screen.getByLabelText('Name');
+  fillField(nameInput, 'John Doe');
+
+  // Fill multiple fields
+  fillForm({
+    email: 'john@example.com',
+    age: 30,
+    terms: true,
+  });
+
+  // Submit form
+  const form = screen.getByRole('form');
+  await submitForm(form, { waitForValidation: true });
+
+  // Check for errors
+  const error = getFieldError('email');
+  expect(error).toBeNull();
+});
+```
+
+### Field State Checking
+
+```typescript
+import { isFieldValid, isFieldTouched, isFieldDirty } from 'pulsar/testing';
+
+test('field state tracking', () => {
+  render(MyForm);
+
+  expect(isFieldValid('email')).toBe(true);
+  expect(isFieldTouched('email')).toBe(false);
+  expect(isFieldDirty('email')).toBe(false);
+
+  fillField(screen.getByName('email'), 'test@example.com');
+
+  expect(isFieldDirty('email')).toBe(true);
+});
+```
+
+### Async Validation
+
+```typescript
+import { waitForFieldValidation, blurField } from 'pulsar/testing';
+
+test('async validation', async () => {
+  render(MyForm);
+
+  const username = screen.getByName('username');
+  fillField(username, 'john');
+  blurField('username');
+
+  await waitForFieldValidation('username');
+
+  const error = getFieldError('username');
+  expect(error).toBe('Username already taken');
+});
+```
+
+### Form Submission
+
+```typescript
+import { waitForFormSubmission, isFormSubmitting } from 'pulsar/testing';
+
+test('form submission', async () => {
+  const onSubmit = vi.fn();
+  render(MyForm, { props: { onSubmit } });
+
+  fillForm({ name: 'John', email: 'john@example.com' });
+
+  const form = screen.getByRole('form');
+  fireEvent.submit(form);
+
+  expect(isFormSubmitting()).toBe(true);
+
+  await waitForFormSubmission(form);
+
+  expect(isFormSubmitting()).toBe(false);
+  expect(onSubmit).toHaveBeenCalledWith({
+    name: 'John',
+    email: 'john@example.com',
+  });
+});
+```
+
+### Form Errors
+
+```typescript
+import { getFormErrors, isFormValid } from 'pulsar/testing';
+
+test('form validation errors', async () => {
+  render(MyForm);
+
+  fillForm({ email: 'invalid', age: 15 });
+
+  const form = screen.getByRole('form');
+  fireEvent.submit(form);
+
+  await waitFor(() => {
+    expect(isFormValid()).toBe(false);
+  });
+
+  const errors = getFormErrors();
+  expect(errors).toEqual({
+    email: 'Invalid email format',
+    age: 'Must be at least 18',
+  });
+});
+```
+
+### Mock Forms
+
+```typescript
+import { createMockForm } from 'pulsar/testing';
+
+test('form logic with mock', async () => {
+  const form = createMockForm({
+    initialValues: { name: '', email: '' },
+    validators: {
+      email: (value) => {
+        return value.includes('@') ? null : 'Invalid email';
+      },
+    },
+    onSubmit: async (values) => {
+      await api.post('/users', values);
+    },
+  });
+
+  form.setValue('name', 'John');
+  form.setValue('email', 'invalid');
+
+  expect(form.dirty.email).toBe(true);
+
+  const isValid = await form.validate('email');
+  expect(isValid).toBe(false);
+  expect(form.errors.email).toBe('Invalid email');
+
+  form.setValue('email', 'john@example.com');
+  await form.submit();
+
+  expect(form.isSubmitting).toBe(false);
+});
+```
+
 ## Contributing
 
 To add new testing utilities, see [CONTRIBUTING.md](../../CONTRIBUTING.md).

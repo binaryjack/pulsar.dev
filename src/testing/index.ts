@@ -35,6 +35,24 @@ export {
   restoreAllMocks,
 } from './mocks';
 
+// formular.dev Testing Utilities
+export {
+  blurField,
+  createMockForm,
+  fillField,
+  fillForm,
+  getFieldError,
+  getFormErrors,
+  isFieldDirty,
+  isFieldTouched,
+  isFieldValid,
+  isFormSubmitting,
+  isFormValid,
+  submitForm,
+  waitForFieldValidation,
+  waitForFormSubmission,
+} from './formular-utils';
+
 // Types
 export type {
   IAccessibilityQueries,
@@ -47,6 +65,9 @@ export type {
   IWaitForOptions,
   TCleanupFunction,
 } from './testing.types';
+
+// formular.dev types
+export type { IMockFormOptions } from './formular-utils';
 
 /**
  * Usage Example:

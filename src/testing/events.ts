@@ -13,7 +13,6 @@ export function click(element: HTMLElement, options?: IFireEventOptions): void {
     bubbles: options?.bubbles ?? true,
     cancelable: options?.cancelable ?? true,
     composed: options?.composed ?? true,
-    view: window,
   });
   element.dispatchEvent(event);
 }
@@ -22,15 +21,30 @@ export function click(element: HTMLElement, options?: IFireEventOptions): void {
  * Fires a change event on an input element
  */
 export function change(element: HTMLInputElement | HTMLTextAreaElement, value: string): void {
-  const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    'value'
-  )?.set;
+  // Use appropriate setter based on element type
+  if (element instanceof HTMLInputElement) {
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value'
+    )?.set;
 
-  if (nativeInputValueSetter) {
-    nativeInputValueSetter.call(element, value);
+    if (nativeInputValueSetter) {
+      nativeInputValueSetter.call(element, value);
+    } else {
+      element.value = value;
+    }
   } else {
-    element.value = value;
+    // HTMLTextAreaElement
+    const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLTextAreaElement.prototype,
+      'value'
+    )?.set;
+
+    if (nativeTextAreaValueSetter) {
+      nativeTextAreaValueSetter.call(element, value);
+    } else {
+      element.value = value;
+    }
   }
 
   const event = new Event('input', { bubbles: true });

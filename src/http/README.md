@@ -21,44 +21,44 @@ npm install @pulsar-framework/core
 ## Basic Usage
 
 ```typescript
-import { createHttpClient } from '@pulsar-framework/core'
+import { createHttpClient } from '@pulsar-framework/core';
 
 // Create client
 const client = createHttpClient({
   baseURL: 'https://api.example.com',
   timeout: 5000,
   headers: {
-    'Content-Type': 'application/json'
-  }
-})
+    'Content-Type': 'application/json',
+  },
+});
 
 // Make requests
-const response = await client.get('/users')
-console.log(response.data)
+const response = await client.get('/users');
+console.log(response.data);
 
-await client.post('/users', { name: 'John' })
-await client.put('/users/1', { name: 'Jane' })
-await client.delete('/users/1')
+await client.post('/users', { name: 'John' });
+await client.put('/users/1', { name: 'Jane' });
+await client.delete('/users/1');
 ```
 
 ## Configuration
 
 ```typescript
 interface IHttpClientConfig {
-  baseURL?: string
-  timeout?: number
-  headers?: Record<string, string>
-  cache?: boolean           // Enable/disable caching (default: true)
-  cacheTTL?: number        // Cache time-to-live in ms (default: 300000)
-  retry?: boolean          // Enable/disable retry (default: false)
+  baseURL?: string;
+  timeout?: number;
+  headers?: Record<string, string>;
+  cache?: boolean; // Enable/disable caching (default: true)
+  cacheTTL?: number; // Cache time-to-live in ms (default: 300000)
+  retry?: boolean; // Enable/disable retry (default: false)
   retryConfig?: {
-    maxAttempts?: number   // Max retry attempts (default: 3)
-    baseDelay?: number     // Base delay in ms (default: 1000)
-    maxDelay?: number      // Max delay in ms (default: 10000)
-    factor?: number        // Backoff factor (default: 2)
-    jitter?: boolean       // Add jitter (default: true)
-    retryableStatuses?: number[]  // HTTP status codes to retry (default: [429, 500, 502, 503, 504])
-  }
+    maxAttempts?: number; // Max retry attempts (default: 3)
+    baseDelay?: number; // Base delay in ms (default: 1000)
+    maxDelay?: number; // Max delay in ms (default: 10000)
+    factor?: number; // Backoff factor (default: 2)
+    jitter?: boolean; // Add jitter (default: true)
+    retryableStatuses?: number[]; // HTTP status codes to retry (default: [429, 500, 502, 503, 504])
+  };
 }
 ```
 
@@ -71,10 +71,10 @@ client.addRequestInterceptor((config) => {
   // Add authentication token
   config.headers = {
     ...config.headers,
-    'Authorization': `Bearer ${getToken()}`
-  }
-  return config
-})
+    Authorization: `Bearer ${getToken()}`,
+  };
+  return config;
+});
 ```
 
 ### Response Interceptor
@@ -84,9 +84,9 @@ client.addResponseInterceptor((response) => {
   // Transform response data
   return {
     ...response,
-    data: transformData(response.data)
-  }
-})
+    data: transformData(response.data),
+  };
+});
 ```
 
 ### Error Interceptor
@@ -94,15 +94,15 @@ client.addResponseInterceptor((response) => {
 ```typescript
 client.addErrorInterceptor((error) => {
   // Log errors
-  console.error('HTTP Error:', error.message)
-  
+  console.error('HTTP Error:', error.message);
+
   // Redirect on 401
   if (error.status === 401) {
-    window.location.href = '/login'
+    window.location.href = '/login';
   }
-  
-  throw error
-})
+
+  throw error;
+});
 ```
 
 ## Caching
@@ -111,15 +111,15 @@ GET requests are automatically cached:
 
 ```typescript
 // First request hits the server
-const data1 = await client.get('/users')
+const data1 = await client.get('/users');
 
 // Second request returns cached data
-const data2 = await client.get('/users')  // From cache
+const data2 = await client.get('/users'); // From cache
 
 // Clear cache
-client.clearCache('/users')
+client.clearCache('/users');
 // Or clear all
-client.clearCache()
+client.clearCache();
 ```
 
 ## Retry Logic
@@ -131,12 +131,12 @@ const client = createHttpClient({
   retryConfig: {
     maxAttempts: 3,
     baseDelay: 1000,
-    retryableStatuses: [429, 500, 502, 503]
-  }
-})
+    retryableStatuses: [429, 500, 502, 503],
+  },
+});
 
 // Will retry on 5xx errors with exponential backoff
-await client.get('/unstable-endpoint')
+await client.get('/unstable-endpoint');
 ```
 
 ## Reactive Hook
@@ -153,10 +153,10 @@ function UserList() {
     url: '/users',
     method: 'GET'
   })
-  
+
   // Execute on mount or button click
   execute()
-  
+
   return (
     <div>
       {loading() && <div>Loading...</div>}
@@ -176,24 +176,24 @@ function UserList() {
 
 ```typescript
 // Execute with additional config
-await execute({ params: { page: 2 } })
+await execute({ params: { page: 2 } });
 
 // Refetch with same config
-await refetch()
+await refetch();
 
 // Reset all state
-reset()
+reset();
 ```
 
 ### Convenience Hooks
 
 ```typescript
 // GET requests
-const { data, loading, execute } = useHttpGet(client, '/users')
+const { data, loading, execute } = useHttpGet(client, '/users');
 
 // POST requests
-const { data, loading, execute } = useHttpPost(client, '/users')
-await execute({ body: { name: 'John' } })
+const { data, loading, execute } = useHttpPost(client, '/users');
+await execute({ body: { name: 'John' } });
 ```
 
 ## TypeScript
@@ -202,34 +202,34 @@ All APIs are fully typed:
 
 ```typescript
 interface User {
-  id: number
-  name: string
-  email: string
+  id: number;
+  name: string;
+  email: string;
 }
 
 // Type-safe response
-const response = await client.get<User[]>('/users')
-const users: User[] = response.data
+const response = await client.get<User[]>('/users');
+const users: User[] = response.data;
 
 // Type-safe hook
-const { data } = useHttpGet<User[]>(client, '/users')
-const users: User[] | null = data()
+const { data } = useHttpGet<User[]>(client, '/users');
+const users: User[] | null = data();
 ```
 
 ## Error Handling
 
 ```typescript
 try {
-  await client.get('/users')
+  await client.get('/users');
 } catch (error) {
-  const httpError = error as IHttpError
-  
-  console.log(httpError.status)        // 404
-  console.log(httpError.statusText)    // "Not Found"
-  console.log(httpError.message)       // "HTTP Error 404"
-  console.log(httpError.url)           // Full URL
-  console.log(httpError.config)        // Request config
-  console.log(httpError.response)      // Original response
+  const httpError = error as IHttpError;
+
+  console.log(httpError.status); // 404
+  console.log(httpError.statusText); // "Not Found"
+  console.log(httpError.message); // "HTTP Error 404"
+  console.log(httpError.url); // Full URL
+  console.log(httpError.config); // Request config
+  console.log(httpError.response); // Original response
 }
 ```
 
@@ -261,31 +261,35 @@ http/
 ## Best Practices
 
 1. **Create one client instance per base URL**:
+
    ```typescript
-   export const apiClient = createHttpClient({ baseURL: 'https://api.example.com' })
+   export const apiClient = createHttpClient({ baseURL: 'https://api.example.com' });
    ```
 
 2. **Use interceptors for global concerns** (auth, logging):
+
    ```typescript
    apiClient.addRequestInterceptor((config) => {
-     config.headers['X-Request-ID'] = generateRequestId()
-     return config
-   })
+     config.headers['X-Request-ID'] = generateRequestId();
+     return config;
+   });
    ```
 
 3. **Disable cache for mutations**:
+
    ```typescript
-   await client.post('/users', data, { cache: false })
+   await client.post('/users', data, { cache: false });
    ```
 
 4. **Enable retry for idempotent requests**:
+
    ```typescript
-   await client.get('/data', { retry: true })
+   await client.get('/data', { retry: true });
    ```
 
 5. **Use TypeScript generics for type safety**:
    ```typescript
-   const response = await client.get<User[]>('/users')
+   const response = await client.get<User[]>('/users');
    ```
 
 ## Testing
