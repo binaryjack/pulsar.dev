@@ -6,6 +6,14 @@ pnpm-lock.yaml
 dist
 *.tsbuildinfo
 
+# Generated type files (should only be in dist/)
+/*.d.ts
+/*.d.ts.map
+/*.js
+!vite.config.ts
+!vitest.config.ts
+!eslint.config.js
+
 # Testing
 coverage
 .nyc_output
