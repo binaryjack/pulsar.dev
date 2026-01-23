@@ -131,10 +131,7 @@ SizeTracker.prototype.getTrend = function (
 /**
  * Calculate average size over period
  */
-SizeTracker.prototype.getAverage = function (
-  this: ISizeTrackerInternal,
-  days: number = 7
-): number {
+SizeTracker.prototype.getAverage = function (this: ISizeTrackerInternal, days: number = 7): number {
   const trend = this.getTrend(days);
   if (trend.length === 0) return 0;
 
@@ -184,10 +181,7 @@ SizeTracker.prototype.exportHistory = function (this: ISizeTrackerInternal): str
 /**
  * Import history from JSON
  */
-SizeTracker.prototype.importHistory = function (
-  this: ISizeTrackerInternal,
-  json: string
-): void {
+SizeTracker.prototype.importHistory = function (this: ISizeTrackerInternal, json: string): void {
   try {
     this.history = JSON.parse(json);
   } catch (error) {

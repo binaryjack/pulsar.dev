@@ -2,7 +2,6 @@
  * Client-Side Hydration
  */
 
-import { mount } from '../core/mount';
 import type { ComponentFunction, IHydrateOptions } from './ssr.types';
 import { extractHydrationState } from './utils/serialize-data';
 
@@ -26,7 +25,8 @@ export const hydrate = function hydrate(
 
   // For now, use mount() which will work but replaces the DOM
   // This is a simplified implementation
-  mount(component, target);
+  // TODO: Implement proper hydration - mount(component, target);
+  console.warn('[Pulsar SSR] Hydration not fully implemented, use createApp().mount() instead');
 
   // If we have state, we could restore it here
   if (state) {

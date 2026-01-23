@@ -238,7 +238,7 @@ export type {
   IMockService,
   IQueryOptions,
   IRenderOptions,
-  IRenderResult,
+  IRenderResult as ITestingRenderResult,
   IWaitForOptions,
   TCleanupFunction,
 } from './testing';

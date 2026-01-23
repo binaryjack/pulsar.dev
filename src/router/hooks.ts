@@ -4,8 +4,8 @@
  */
 
 import { QueryParams, type IQueryParams } from './query-parser';
-import type { ILocation } from './router-context.types';
 import { routerContext } from './router-context';
+import type { ILocation } from './router-context.types';
 
 /**
  * Access the router context

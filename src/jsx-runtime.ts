@@ -4,13 +4,13 @@
  */
 
 import type {
-  JSXElementType,
-  JSXProps,
-  JSXKey,
-  IFragmentProps,
   ICreateElementProps,
-  JSXSource,
+  IFragmentProps,
   JSXChild,
+  JSXElementType,
+  JSXKey,
+  JSXProps,
+  JSXSource,
 } from './jsx-runtime.types';
 
 export function jsx<P extends JSXProps = JSXProps>(
@@ -18,7 +18,9 @@ export function jsx<P extends JSXProps = JSXProps>(
   props: P,
   key?: JSXKey
 ): HTMLElement {
-  return typeof type === 'function' ? type(props) : createElement(type, props as ICreateElementProps);
+  return typeof type === 'function'
+    ? type(props)
+    : createElement(type, props as ICreateElementProps);
 }
 
 export function jsxs<P extends JSXProps = JSXProps>(

@@ -9,7 +9,10 @@ import type { IRoute } from '../route.interface';
 /**
  * Lazy route with component loader
  */
-export interface ILazyRoute<P = Record<string, unknown>> extends Omit<IRoute, 'component' | 'element'> {
+export interface ILazyRoute<P = Record<string, unknown>> extends Omit<
+  IRoute,
+  'component' | 'element'
+> {
   /** Lazy component loader */
   component: ILazyComponent<(props: P) => HTMLElement>;
 

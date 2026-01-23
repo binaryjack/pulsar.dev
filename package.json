@@ -114,9 +114,8 @@
   ],
   "author": "Tadeo Piana <https://www.linkedin.com/in/tadeopiana/>",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.19.7",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
     "eslint": "^9.18.0",

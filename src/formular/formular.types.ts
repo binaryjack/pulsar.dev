@@ -2,22 +2,20 @@
  * TypeScript interfaces for formular.dev + Pulsar integration
  */
 
-import type { ISignal } from '../reactivity';
-
 /**
  * Field value signal with validation
  */
 export interface IFormularField<T = any> {
   /** Get current field value */
-  value: ISignal<T>;
+  value: () => T;
   /** Get field error message */
-  error: ISignal<string | null>;
+  error: () => string | null;
   /** Is field touched (user interacted) */
-  touched: ISignal<boolean>;
+  touched: () => boolean;
   /** Is field dirty (value changed from initial) */
-  dirty: ISignal<boolean>;
+  dirty: () => boolean;
   /** Is field validating (async) */
-  validating: ISignal<boolean>;
+  validating: () => boolean;
   /** Set field value */
   setValue: (value: T) => void;
   /** Mark field as touched */
@@ -132,19 +130,19 @@ export interface IFormularOptions<T> {
  */
 export interface IFormularState {
   /** Is form submitting */
-  isSubmitting: ISignal<boolean>;
+  isSubmitting: () => boolean;
   /** Is form valid (all fields valid) */
-  isValid: ISignal<boolean>;
+  isValid: () => boolean;
   /** Is form dirty (any field changed) */
-  isDirty: ISignal<boolean>;
+  isDirty: () => boolean;
   /** Is form touched (any field touched) */
-  isTouched: ISignal<boolean>;
+  isTouched: () => boolean;
   /** Is form validating (any async validation) */
-  isValidating: ISignal<boolean>;
+  isValidating: () => boolean;
   /** Form-level error */
-  error: ISignal<string | null>;
+  error: () => string | null;
   /** Number of submit attempts */
-  submitCount: ISignal<number>;
+  submitCount: () => number;
 }
 
 /**

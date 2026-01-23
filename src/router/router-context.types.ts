@@ -3,7 +3,6 @@
  * Type definitions for router context
  */
 
-import type { ISignal } from '../reactivity/signal/signal.types';
 import type { IPathMatch } from './path-matcher';
 import type { IQueryParams } from './query-parser';
 import type { IRoute } from './route.interface';
@@ -53,7 +52,7 @@ export interface IRouterContext {
   readonly currentQuery: IQueryParams | null;
   readonly currentRoute: IRoute | null;
   readonly currentMatch: IPathMatch | null;
-  
+
   getLocation(): ILocation;
   navigate(path: string, options?: { replace?: boolean }): Promise<void>;
   beforeEach(guard: (to: string, from: string) => boolean | Promise<boolean>): () => void;

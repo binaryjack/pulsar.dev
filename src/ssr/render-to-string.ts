@@ -51,8 +51,8 @@ export const renderToString = function renderToString(
       result.scripts = ssrContext.scripts;
     }
 
-    if (serializeState && context.data) {
-      result.state = createHydrationScript(context.data);
+    if (serializeState && (context as any).data) {
+      result.state = createHydrationScript((context as any).data);
     }
 
     return result;

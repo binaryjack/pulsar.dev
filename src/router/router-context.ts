@@ -4,15 +4,15 @@
  */
 
 import { createSignal } from '../reactivity/signal';
-import type {
-  IRouterContext,
-  IRouterContextInternal,
-  ILocation,
-  INavigationGuard,
-} from './router-context.types';
 import type { IPathMatch } from './path-matcher';
 import type { IQueryParams } from './query-parser';
 import type { IRoute } from './route.interface';
+import type {
+  ILocation,
+  INavigationGuard,
+  IRouterContext,
+  IRouterContextInternal,
+} from './router-context.types';
 
 export type { ILocation, INavigationGuard } from './router-context.types';
 

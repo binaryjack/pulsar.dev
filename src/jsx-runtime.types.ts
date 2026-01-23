@@ -30,7 +30,14 @@ export interface JSXProps {
 /**
  * JSX child types
  */
-export type JSXChild = HTMLElement | DocumentFragment | string | number | boolean | null | undefined;
+export type JSXChild =
+  | HTMLElement
+  | DocumentFragment
+  | string
+  | number
+  | boolean
+  | null
+  | undefined;
 
 /**
  * JSX dev mode source location

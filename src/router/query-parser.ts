@@ -78,10 +78,7 @@ export interface IQueryParamsInternal extends IQueryParams {
 /**
  * Type-safe query parameter constructor
  */
-export const QueryParams = function (
-  this: IQueryParamsInternal,
-  search: string
-) {
+export const QueryParams = function (this: IQueryParamsInternal, search: string) {
   Object.defineProperty(this, 'params', {
     value: parseQuery(search),
     writable: false,
@@ -93,10 +90,7 @@ export const QueryParams = function (
 /**
  * Get a single query parameter
  */
-QueryParams.prototype.get = function (
-  this: IQueryParamsInternal,
-  key: string
-): string | undefined {
+QueryParams.prototype.get = function (this: IQueryParamsInternal, key: string): string | undefined {
   const value = this.params[key];
   return Array.isArray(value) ? value[0] : value;
 };
@@ -104,10 +98,7 @@ QueryParams.prototype.get = function (
 /**
  * Get all values for a query parameter
  */
-QueryParams.prototype.getAll = function (
-  this: IQueryParamsInternal,
-  key: string
-): string[] {
+QueryParams.prototype.getAll = function (this: IQueryParamsInternal, key: string): string[] {
   const value = this.params[key];
   if (value === undefined) return [];
   return Array.isArray(value) ? value : [value];
@@ -116,10 +107,7 @@ QueryParams.prototype.getAll = function (
 /**
  * Check if a query parameter exists
  */
-QueryParams.prototype.has = function (
-  this: IQueryParamsInternal,
-  key: string
-): boolean {
+QueryParams.prototype.has = function (this: IQueryParamsInternal, key: string): boolean {
   return key in this.params;
 };
 
@@ -135,9 +123,7 @@ QueryParams.prototype.getAllAsObject = function (
 /**
  * Convert to URLSearchParams
  */
-QueryParams.prototype.toURLSearchParams = function (
-  this: IQueryParamsInternal
-): URLSearchParams {
+QueryParams.prototype.toURLSearchParams = function (this: IQueryParamsInternal): URLSearchParams {
   const params = new URLSearchParams();
   Object.entries(this.params).forEach(([key, value]) => {
     if (value === undefined) return;

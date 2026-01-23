@@ -93,5 +93,8 @@ export function reconcileWith<T>(
   newValue: T[],
   key: string | ((item: T, index: number) => string | number)
 ): (prevValue: T[]) => T[] {
-  return reconcile(newValue, { key: key as string | ((item: unknown, index: number) => string | number), merge: true });
+  return reconcile(newValue, {
+    key: key as string | ((item: unknown, index: number) => string | number),
+    merge: true,
+  });
 }

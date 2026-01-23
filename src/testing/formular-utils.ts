@@ -243,7 +243,7 @@ export function createMockForm<T extends Record<string, any>>(
       return state.isSubmitting;
     },
     setValue(field, value) {
-      state.values[field as string] = value;
+      (state.values as any)[field as string] = value;
       state.dirty[field as string] = true;
     },
     setTouched(field, touched) {
