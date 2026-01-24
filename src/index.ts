@@ -68,8 +68,8 @@ export { For, Index, Show } from './control-flow';
 export type { IForProps, IIndexProps, IShowProps } from './control-flow';
 
 // Export portal
-export { Portal, cleanupPortals } from './portal';
-export type { IPortalProps } from './portal';
+export { Portal, PortalSlot, cleanupPortals } from './portal';
+export type { IPortalProps, IPortalSlotProps } from './portal';
 
 // Export dev utilities
 export { DEV, invariant, warn } from './dev';

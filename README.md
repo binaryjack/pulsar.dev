@@ -16,7 +16,8 @@
 <p align="center">
   <a href="#what-is-pulsar">About</a> •
   <a href="#core-features">Features</a> •
-  <a href="#getting-started">Getting Started</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="./docs/getting-started.md">Getting Started Guide</a> •
   <a href="./ROADMAP.md">Roadmap</a> •
   <a href="#ecosystem">Ecosystem</a> •
   <a href="#contributing">Contributing</a>
@@ -251,14 +252,16 @@ Pulsar combines:
     </td>
   </tr>
   <tr>
-    <td><strong>🔍 DevTools</strong> 🔗 v0.9.0</td>
+    <td><strong>🔍 DevTools</strong> ⚠️ Partial (v0.9.0)</td>
     <td>
       • Redux DevTools integration ✅<br/>
-      • <strong>Browser Extension:</strong> <a href="https://github.com/binaryjack/pulsar-dev-tools">pulsar-dev-tools</a> (separate repo)<br/>
-      • Component tree inspector<br/>
-      • Signal/state inspector<br/>
-      • formular.dev form debugger<br/>
-      • Time-travel debugging support
+      • Time-travel debugging support (via Redux DevTools)<br/>
+      • State inspection in Redux DevTools<br/>
+      • <strong>Browser Extension:</strong> ⏳ Planned (separate repo)<br/>
+      • Component tree inspector (planned)<br/>
+      • Signal/state inspector (planned)<br/>
+      • formular.dev form debugger (planned)<br/>
+      • <strong>Status:</strong> 20% complete - Redux DevTools only
     </td>
   </tr>
   <tr>
@@ -302,6 +305,27 @@ Pulsar combines:
       • <code>pulsar add</code> - Integration setup<br/>
       • <code>pulsar build</code> - Production builds<br/>
       • Interactive prompts and templates
+    </td>
+  </tr>
+  <tr>
+    <td><strong>🔄 Lazy Loading & Code Splitting</strong> ✅ v0.6.0</td>
+    <td>
+      • <code>lazy()</code> - Dynamic component import<br/>
+      • Multiple preload strategies (eager, idle, visible, hover)<br/>
+      • Route-based code splitting<br/>
+      • <code>usePrefetch()</code> - Manual route prefetching<br/>
+      • Integration with <code>&lt;Waiting&gt;</code> boundaries<br/>
+      • Automatic bundle optimization
+    </td>
+  </tr>
+  <tr>
+    <td><strong>🔍 Component Lifecycle Tracing</strong> ✅ v0.6.0</td>
+    <td>
+      • <code>traceComponentMount/Update/Unmount()</code><br/>
+      • Performance monitoring (render time, update count)<br/>
+      • Memory leak detection<br/>
+      • Excessive update warnings<br/>
+      • Development-mode only (zero production overhead)
     </td>
   </tr>
 </table>
@@ -394,7 +418,7 @@ export const Component = (props) => {
 - ✅ formular.dev integration (`useFormular()` hook) - 41 tests passing
 - ✅ `produce()` utility (Immer-style API) - 29 tests passing
 - ✅ Testing utilities (component testing, form helpers) - 25 tests passing
-- 🔗 DevTools browser extension - [Separate repo](https://github.com/binaryjack/pulsar-dev-tools)
+- ⚠️ DevTools - Redux DevTools integration only (browser extension planned for v1.0)
 
 **v0.8.0-alpha - SHIPPED ✅** (January 2026)
 
@@ -480,30 +504,54 @@ Pulsar + formular.dev aims to differentiate through four core pillars:
 
 ### 4. **Performance First** ⚡
 
-- Smaller bundle: ~22KB (Pulsar 10KB + formular.dev 12KB gzipped)
+- Smaller bundle: ~10KB (Pulsar core gzipped)
 - **vs Angular:** ~70KB (Core + Forms)
-- **vs React + RHF:** ~59KB (React 50KB + React Hook Form 9KB)
+- **vs React:** ~45KB (runtime alone)
+- **vs SolidJS:** ~7KB (similar architecture)
 - Fine-grained reactivity with compile-time optimization
+- Zero virtual DOM overhead
+
+### 5. **Developer Experience & Observability** 🔍 ⭐ UNIQUE ADVANTAGE
+
+- **Component lifecycle tracing** built into core (not afterthought extension)
+- Performance monitoring: render time, update counts, memory usage
+- Automatic excessive update detection
+- Development warnings with actionable hints
+- Signal state debugging with dependency graphs
+- Zero production overhead (dev tools stripped at build)
+- **vs React/Vue:** Requires browser extension for similar features
+
+### 6. **Advanced Code Splitting** 📦
+
+- Multiple preload strategies: eager, idle, visible, hover-based
+- Route-level code splitting with prefetch hooks
+- Automatic bundle optimization and dead code elimination
+- Lazy component loading with integrated loading states
+- **vs Competitors:** Most only offer basic dynamic imports
 
 **Target Audience:**
 
 - Teams building global applications (need i18n/multi-country out-of-box)
 - TypeScript-heavy teams and organizations
-- Enterprise applications requiring advanced patterns
-- Teams migrating from Angular seeking modern DX
+- Enterprise applications requiring advanced patterns (DI, observability)
+- Teams migrating from Angular seeking modern DX with familiar patterns
 - Projects prioritizing type safety and build-time optimization
-- Multi-framework teams (formular.dev portability advantage)
-- 📦 Component library ecosystem
-- 📦 CLI tools and generators
+- Performance-critical applications requiring fine-grained reactivity
+- Multi-framework teams (formular.dev works across React, Vue, Angular)
 
 ---
 
 ### 🔮 Future Vision (v2.0+)
 
-**Experimental Features:**
+**Near-term (v1.0 - Q2 2026):**
+
+- 🔍 **DevTools browser extension** - Component tree, signal inspector, time-travel, profiler
+- 📊 **Performance profiler** - Built-in component performance monitoring
+- 🧪 **Test coverage reporting** - Integrated coverage tools
+
+**Experimental (v2.0+):**
 
 - 🌐 Edge runtime support (Cloudflare Workers, Deno Deploy)
-- 🔍 **DevTools browser extension** (component tree, state inspector, time-travel)
 - 🤖 AI-powered code generation and refactoring
 - 🎮 Web Components compilation target
 - 📱 React Native bridge for native apps
@@ -517,19 +565,23 @@ Pulsar + formular.dev aims to differentiate through four core pillars:
 
 ### How Pulsar Compares
 
-| Feature             | React           | Vue 3               | Svelte             | SolidJS               | **Pulsar**                |
-| ------------------- | --------------- | ------------------- | ------------------ | --------------------- | ------------------------- |
-| **Reactivity**      | VDOM diffing    | Proxy-based         | Compile-time       | Fine-grained signals  | **Fine-grained signals**  |
-| **Updates**         | Re-render tree  | Re-render component | Compile to updates | Update specific nodes | **Update specific nodes** |
-| **State Syntax**    | `count`         | `count.value`       | `$count`           | `count()`             | **`count()`**             |
-| **Virtual DOM**     | Yes             | Yes                 | No                 | No                    | **No**                    |
-| **Bundle Size**     | ~45KB           | ~34KB               | ~2KB               | ~7KB                  | **~10KB**                 |
-| **Component Model** | Function reruns | Function reruns     | Compile away       | Run once              | **Run once**              |
-| **TypeScript**      | Good            | Good                | Good               | Excellent             | **Excellent**             |
-| **JSX/Templates**   | JSX             | Templates/JSX       | Templates          | JSX                   | **JSX (transformed)**     |
-| **SSR**             | Yes             | Yes                 | Yes                | Yes                   | **Yes (v0.8.0)**          |
-| **DevTools**        | Excellent       | Excellent           | Good               | Good                  | **Good (v0.9.0)**         |
-| **Ecosystem**       | Huge            | Large               | Growing            | Growing               | **New (v0.9.0)**          |
+| Feature                 | React           | Vue 3               | Svelte             | SolidJS               | **Pulsar**                      |
+| ----------------------- | --------------- | ------------------- | ------------------ | --------------------- | ------------------------------- |
+| **Reactivity**          | VDOM diffing    | Proxy-based         | Compile-time       | Fine-grained signals  | **Fine-grained signals**        |
+| **Updates**             | Re-render tree  | Re-render component | Compile to updates | Update specific nodes | **Update specific nodes**       |
+| **State Syntax**        | `count`         | `count.value`       | `$count`           | `count()`             | **`count()`**                   |
+| **Virtual DOM**         | Yes             | Yes                 | No                 | No                    | **No**                          |
+| **Bundle Size**         | ~45KB           | ~34KB               | ~2KB               | ~7KB                  | **~10KB**                       |
+| **Component Model**     | Function reruns | Function reruns     | Compile away       | Run once              | **Run once**                    |
+| **TypeScript Compiler** | No              | No                  | No                 | No                    | **Yes (API integration)** ⭐    |
+| **Built-in DI**         | No              | Limited             | No                 | No                    | **Enterprise-grade** ⭐         |
+| **Lazy Loading**        | Basic           | Basic               | Basic              | Basic                 | **Advanced (6 strategies)** ⭐  |
+| **Component Tracing**   | Extension only  | Extension only      | Extension only     | Extension only        | **Built-in (dev mode)** ⭐      |
+| **Preload Strategies**  | Manual          | Manual              | Manual             | Manual                | **Automatic (4 strategies)** ⭐ |
+| **JSX/Templates**       | JSX             | Templates/JSX       | Templates          | JSX                   | **JSX (transformed)**           |
+| **SSR/SSG**             | Yes             | Yes                 | Yes                | Yes                   | **Yes (v0.8.0)**                |
+| **DevTools**            | Excellent       | Excellent           | Good               | Good                  | **Partial (Redux only)** ⚠️     |
+| **Ecosystem**           | Huge            | Large               | Growing            | Growing               | **New (v0.9.0)**                |
 
 ### When to Choose Pulsar
 
@@ -537,33 +589,133 @@ Pulsar + formular.dev aims to differentiate through four core pillars:
 
 - ✅ React-like hooks API without virtual DOM overhead
 - ✅ Fine-grained reactivity with automatic dependency tracking
-- ✅ **TypeScript-first with deep compiler integration**
-- ✅ **Enterprise DI patterns built-in**
-- ✅ Compile-time optimizations with no runtime JSX
+- ✅ **TypeScript Compiler API integration** (type-safe routing, DI validation)
+- ✅ **Enterprise DI patterns built-in** (Angular-style, but lightweight)
+- ✅ **Advanced lazy loading** (6 preload strategies vs basic dynamic imports)
+- ✅ **Component lifecycle tracing** built into framework (not extension-only)
+- ✅ Compile-time optimizations with no runtime JSX overhead
 - ✅ Minimal bundle size (~10KB vs React's 45KB)
-- ✅ **Server-side rendering (SSR/SSG) support** ✅
-- ✅ **formular.dev integration for reactive forms** ✅
-- ✅ **Production-ready HTTP client with caching** ✅
-- ✅ **CLI tools for scaffolding and code generation** ✅
+- ✅ **SSR/SSG complete** (`renderToString`, `hydrate`, `generateStatic`) ✅
+- ✅ **Framework-agnostic forms** via formular.dev (works with React, Vue, Angular)
+- ✅ **Production-ready HTTP client** with interceptors, caching, retry logic
+- ✅ **CLI tools** for scaffolding, code gen, and integration setup
+- ✅ **Development observability** without needing browser extensions
 - ✅ To learn cutting-edge reactive patterns
 
 **Choose Pulsar OVER SolidJS if you:**
 
-- 🎯 Need advanced dependency injection (decorators, modules, interceptors)
-- 🎯 Want TypeScript Compiler API superpowers (type-safe routing, compile-time validation)
-- 🎯 Require enterprise patterns (FSM, event sourcing, micro-frontends)
-- 🎯 Need production observability built-in (APM, telemetry, monitoring)
-- 🎯 Prefer aggressive build-time optimization over runtime
+- 🎯 Need advanced dependency injection (decorators, lifetimes, modules)
+- 🎯 Want TypeScript Compiler API integration (not just good TS support)
+- 🎯 Require built-in component tracing and performance monitoring
+- 🎯 Need multiple lazy loading strategies (hover, idle, visible, eager)
+- 🎯 Want enterprise patterns without building them yourself
+- 🎯 Prefer opinionated framework over library
 - 🎯 Building design-system-first applications
 - 🎯 Migrating from Angular and want modern DX with familiar patterns
 
 **Consider alternatives if you need:**
 
-- ❌ Immediate production stability → **use SolidJS** (v1.8+ stable)
-- ❌ SSR/SSG right now → **use SolidJS + SolidStart**
-- ❌ Massive ecosystem → **use React**
-- ❌ Enterprise-ready with full-stack framework → **use Next.js, Nuxt**
-- ❌ Extensive third-party component libraries → **use React, Vue**
+- ❌ Immediate API stability guarantees → **use SolidJS** (v1.8+ stable) or **wait for Pulsar v1.0** (Q2 2026)
+- ❌ Full-stack meta-framework → **use Next.js, Nuxt, SolidStart** (Pulsar is client-first)
+- ❌ Massive third-party ecosystem → **use React** (millions of packages)
+- ❌ Extensive pre-built component libraries → **use React, Vue, Angular**
+- ❌ Framework with 5+ years of battle-testing → **use React, Vue** (Pulsar is new)
+
+---
+
+## Quick Start
+
+### Using Pulsar CLI (Recommended)
+
+```bash
+# Install CLI globally
+npm install -g @pulsar-framework/cli
+
+# Create new project
+pulsar create my-app --template basic
+cd my-app
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+```
+
+### Manual Setup
+
+See the complete [Getting Started Guide](./docs/getting-started.md) for detailed setup instructions.
+
+**Minimal setup requires:**
+
+1. **Dependencies:**
+
+   ```bash
+   npm install @pulsar-framework/pulsar.dev @pulsar-framework/vite-plugin
+   npm install -D vite typescript
+   ```
+
+2. **Vite Configuration:**
+
+   ```typescript
+   import { defineConfig } from 'vite';
+   import { pulsarPlugin } from '@pulsar-framework/vite-plugin';
+
+   export default defineConfig({
+     plugins: [pulsarPlugin()],
+     esbuild: {
+       jsxFactory: 'h',
+       jsxFragment: 'Fragment',
+       jsxInject: `import { h, Fragment } from '@pulsar-framework/pulsar.dev'`,
+     },
+   });
+   ```
+
+3. **Bootstrap Your App:**
+
+   ```typescript
+   import { AppContextProvider, bootstrapApp } from '@pulsar-framework/pulsar.dev';
+   import { App } from './App';
+
+   const appRoot = bootstrapApp()
+     .root('#app')
+     .onMount((el) => console.log('Mounted', el))
+     .onError((err) => console.error('Error:', err))
+     .build();
+
+   const app = (
+     <AppContextProvider
+       root={appRoot}
+       context={{ appName: 'My App', version: '1.0.0' }}
+     >
+       <App />
+     </AppContextProvider>
+   );
+
+   document.getElementById('app')?.appendChild(app);
+   ```
+
+**📖 For complete setup guide:** [Getting Started](./docs/getting-started.md)
+
+### Quick Example
+
+```typescript
+import { createSignal, useAppContext } from '@pulsar-framework/pulsar.dev';
+
+const Counter = ({ initialCount = 0 }) => {
+  const context = useAppContext();
+  const [count, setCount] = createSignal(initialCount);
+
+  return (
+    <div className="counter">
+      <h1>{context.appName}</h1>
+      <h2>Count: {count()}</h2>
+      <button onClick={() => setCount(count() + 1)}>Increment</button>
+      <button onClick={() => setCount(count() - 1)}>Decrement</button>
+    </div>
+  )
+}
+```
 
 ---
 
@@ -623,27 +775,70 @@ bootstrapApp({
 })
 ```
 
+### Lazy Loading with Preload Strategies 🆕 v0.6.0
+
+```typescript
+import { lazy } from 'pulsar/lazy-loading'
+import { Waiting } from 'pulsar/resource'
+
+// Basic lazy loading
+const HeavyChart = lazy(() => import('./components/HeavyChart'))
+
+// With preload strategies
+const Dashboard = lazy(() => import('./Dashboard'), {
+  preloadStrategy: 'onIdle', // Load when browser is idle
+})
+
+const UserProfile = lazy(() => import('./UserProfile'), {
+  preloadStrategy: 'onVisible', // Load when element is visible
+})
+
+const Settings = lazy(() => import('./Settings'), {
+  preloadStrategy: 'onHover', // Load when user hovers
+})
+
+const App = () => {
+  return (
+    <div>
+      <Waiting fallback={<Spinner />}>
+        <HeavyChart data={chartData} />
+      </Waiting>
+
+      <Dashboard />
+      <UserProfile />
+      <Settings />
+    </div>
+  )
+}
+```
+
 ### Form Management with formular.dev 🆕 v0.9.0
+
+**Note:** `formular.dev` is a **separate, framework-agnostic** form library that works with Pulsar, React, Vue, Angular, or vanilla JS. While Pulsar provides a `useFormular()` hook for seamless integration, formular.dev can be used independently.
+
+**Why separate?**
+
+- ✅ No vendor lock-in - use same form code across frameworks
+- ✅ Smaller Pulsar core bundle (~10KB instead of ~22KB)
+- ✅ formular.dev can be adopted without Pulsar
+- ✅ Teams can migrate frameworks without rewriting forms
+
+**Integration Example:**
 
 ```typescript
 import { useFormular } from '@pulsar-framework/pulsar.dev'
 
 const SignupForm = () => {
   const form = useFormular({
-    initialValues: {
-      name: '',
-      email: '',
-      age: 18
-    },
+    initialValues: { name: '', email: '', age: 18 },
     validators: {
       name: 'required|minLength:2',
       email: 'required|email',
-      age: 'required|number|min:18'
+      age: 'required|number|min:18',
     },
     onSubmit: async (values) => {
       await api.post('/signup', values)
-      console.log('User registered:', values)
-    }
+    },
   })
 
   return (
@@ -654,19 +849,7 @@ const SignupForm = () => {
         onInput={(e) => form.fields.name.setValue(e.target.value)}
         placeholder="Name"
       />
-      {form.fields.name.error() && (
-        <span class="error">{form.fields.name.error()}</span>
-      )}
-
-      <input
-        type="email"
-        value={form.fields.email.value()}
-        onInput={(e) => form.fields.email.setValue(e.target.value)}
-        placeholder="Email"
-      />
-      {form.fields.email.error() && (
-        <span class="error">{form.fields.email.error()}</span>
-      )}
+      {form.fields.name.error() && <span class="error">{form.fields.name.error()}</span>}
 
       <button type="submit" disabled={form.isSubmitting()}>
         {form.isSubmitting() ? 'Submitting...' : 'Sign Up'}
@@ -675,6 +858,11 @@ const SignupForm = () => {
   )
 }
 ```
+
+**For standalone usage or React/Vue/Angular integration, see:**
+
+- [formular.dev Documentation](https://github.com/binaryjack/formular.dev)
+- [Pulsar + formular.dev Examples](https://github.com/binaryjack/pulsar-formular-ui)
 
 ### Immutable Updates with produce() 🆕 v0.9.0
 
@@ -834,7 +1022,7 @@ Born from 15+ years of building with jQuery, Knockout, Angular, Vue, and React, 
 
 - ✅ **SSR/SSG Support** - Full server-side rendering implemented (v0.8.0)
 - ✅ **Enhanced Router** - Path params, guards, nested routes complete
-- ✅ **DevTools Integration** - Redux DevTools + browser extension (separate repo)
+- ⚠️ **DevTools Integration** - Redux DevTools working; dedicated browser extension planned for v1.0
 - ✅ **Forms Integration** - formular.dev integration with full validation
 - ✅ **HTTP Client** - Production-ready with caching and interceptors
 - ✅ **CLI Tools** - Scaffolding, generation, and integration commands
@@ -871,15 +1059,24 @@ Born from 15+ years of building with jQuery, Knockout, Angular, Vue, and React, 
 
 ### Core Guides
 
-- [Architecture Deep Dive](./src/docs/architecture.md)
-- [API Reference](./src/docs/api-reference.md)
-- [Dependency Injection](./src/docs/dependency-injection.md)
-- [Learning Journey](./src/docs/learning-journey.md)
+- [Architecture Deep Dive](./docs/architecture.md)
+- [API Reference](./docs/api-reference.md)
+- [Dependency Injection](./docs/dependency-injection.md)
+- [State Management](./docs/state-management.md)
+- [Learning Journey](./docs/learning-journey.md)
+
+### Feature Documentation
+
+- [Lazy Loading & Code Splitting](./src/lazy-loading/README.md)
+- [Error Boundaries](./docs/error-boundaries/README.md)
+- [Async Resources](./docs/async-resources/README.md)
+- [Build Tools](./docs/features/build-tools/quick-start.md)
 
 ### Examples
 
 - [Demo Applications](https://github.com/binaryjack/pulsar-demo)
 - [Component Showcase](https://github.com/binaryjack/pulsar-ui.dev)
+- [Form Examples](https://github.com/binaryjack/pulsar-formular-ui)
 
 ---
 
@@ -920,19 +1117,69 @@ Pulsar is in **active development** (v0.7.0-alpha). Contributions are welcome!
 
 ### Development Setup
 
+#### For Contributors: Full Monorepo with Submodules
+
+Pulsar is developed as a monorepo with multiple packages distributed across separate Git repositories linked as submodules.
+
 ```bash
-# Clone the repository
+# Clone the main monorepo
 git clone https://github.com/binaryjack/visual-schema-builder.git
 cd visual-schema-builder
+
+# Initialize and clone all submodules (pulsar.dev, formular.dev, pulsar-demo, etc.)
+git submodule init
+git submodule update --recursive
+
+# Install dependencies across all packages
+pnpm install
+
+# Build all packages in correct dependency order
+pnpm build
+
+# Run demo applications
+cd packages/pulsar-demo
+pnpm dev
+```
+
+**Submodule packages:**
+
+- `packages/pulsar.dev` - Core framework ([GitHub](https://github.com/binaryjack/pulsar.dev))
+- `packages/formular.dev` - Form library ([GitHub](https://github.com/binaryjack/formular.dev))
+- `packages/pulsar-demo` - Demo apps ([GitHub](https://github.com/binaryjack/pulsar-demo))
+- `packages/pulsar-transformer` - TypeScript transformer ([GitHub](https://github.com/binaryjack/pulsar-transformer))
+- `packages/pulsar-vite-plugin` - Vite plugin ([GitHub](https://github.com/binaryjack/pulsar-vite-plugin))
+- `packages/pulsar-design-system` - Design tokens ([GitHub](https://github.com/binaryjack/pulsar-design-system))
+- `packages/pulsar-ui.dev` - Component library ([GitHub](https://github.com/binaryjack/pulsar-ui.dev))
+- `packages/pulsar-formular-ui` - Form examples ([GitHub](https://github.com/binaryjack/pulsar-formular-ui))
+
+**Updating submodules:**
+
+```bash
+# Pull latest changes from all submodule repositories
+git submodule update --remote --recursive
+
+# Commit submodule updates to main repo
+git add packages/
+git commit -m "chore: update submodules to latest"
+```
+
+#### For Package Development: Individual Package
+
+If you only want to work on a specific package:
+
+```bash
+# Clone individual package repository
+git clone https://github.com/binaryjack/pulsar.dev.git
+cd pulsar.dev
 
 # Install dependencies
 pnpm install
 
-# Build all packages
+# Build
 pnpm build
 
-# Run demo application
-pnpm dev
+# Run tests
+pnpm test
 ```
 
 ### Code Guidelines
