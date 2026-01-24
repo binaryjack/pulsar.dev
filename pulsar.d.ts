@@ -4,9 +4,9 @@
  */
 
 declare namespace JSX {
-  type Element = HTMLElement;
-  type Child = HTMLElement | string | number | boolean | null | undefined;
-  type Children = Child | Child[];
+  export type Element = HTMLElement;
+  export type Child = HTMLElement | string | number | boolean | null | undefined;
+  export type Children = Child | Child[];
 
   interface IntrinsicElements {
     // HTML Elements
