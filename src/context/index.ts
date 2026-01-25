@@ -1,6 +1,11 @@
 /**
- * Context system for Visual Schema Builder
- * Provides React-like context API with createContext and useContext
+ * Context system for Pulsar Framework
+ * Registry-based context API with stack support for nested providers
+ *
+ * Key features:
+ * - No deferred children needed (registry available immediately)
+ * - Supports nested providers (same context used multiple times)
+ * - Simple cleanup via useEffect
  */
 
 /**
@@ -10,7 +15,7 @@ export interface IContext<TValue> {
   /**
    * Provider component that wraps children and provides context value
    */
-  Provider: (props: { value: TValue; children: HTMLElement }) => HTMLElement;
+  Provider: (props: { value: TValue; children: HTMLElement | (() => HTMLElement) }) => HTMLElement;
 
   /**
    * Default value for the context
@@ -18,18 +23,19 @@ export interface IContext<TValue> {
   defaultValue: TValue;
 
   /**
-   * Internal context identifier
+   * Internal context identifier (unique symbol)
    */
   _id: symbol;
 }
 
 /**
- * Context registry to store context values
+ * Global context registry - stores current active value for each context
  */
 const contextRegistry = new Map<symbol, unknown>();
 
 /**
- * Stack to track current provider values during render
+ * Context stack - tracks nested providers for the same context
+ * Enables proper cleanup when inner providers unmount
  */
 const contextStack = new Map<symbol, unknown[]>();
 
@@ -66,74 +72,44 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
     value: TValue;
     children: HTMLElement | (() => HTMLElement);
   }): HTMLElement => {
-    const container = document.createElement('div');
-    container.className = 'context-provider';
-    container.setAttribute('data-context-id', contextId.toString());
+    // Import useEffect dynamically to avoid circular dependency
+    const { useEffect } = require('../hooks/use-effect');
 
-    // Push value onto the stack
-    if (!contextStack.has(contextId)) {
-      contextStack.set(contextId, []);
-    }
-    contextStack.get(contextId)!.push(value);
+    // Register context value immediately (no timing issues!)
+    useEffect(() => {
+      // Push value onto stack (supports nesting)
+      if (!contextStack.has(contextId)) {
+        contextStack.set(contextId, []);
+      }
+      contextStack.get(contextId)!.push(value);
 
-    // Store reference to the context value on the container
-    Object.defineProperty(container, '__contextId', {
-      value: contextId,
-      enumerable: false,
-      writable: false,
-    });
+      // Set current value in registry
+      contextRegistry.set(contextId, value);
 
-    Object.defineProperty(container, '__contextValue', {
-      value,
-      enumerable: false,
-      writable: false,
-    });
+      // Cleanup: restore previous value or delete
+      return () => {
+        const stack = contextStack.get(contextId);
+        if (stack && stack.length > 0) {
+          stack.pop();
 
-    // Register the context value BEFORE evaluating children
-    contextRegistry.set(contextId, value);
+          // Restore previous provider's value
+          if (stack.length > 0) {
+            contextRegistry.set(contextId, stack[stack.length - 1]);
+          } else {
+            // No more providers, clean up completely
+            contextStack.delete(contextId);
+            contextRegistry.delete(contextId);
+          }
+        }
+      };
+    }, [value]);
 
-    // Evaluate children if it's a thunk (deferred evaluation)
+    // Evaluate children if it's a function
     const evaluatedChildren = typeof children === 'function' ? children() : children;
 
-    // Append children
-    container.appendChild(evaluatedChildren);
-
-    // Cleanup when removed from DOM
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.removedNodes.forEach((node) => {
-          if (node === container) {
-            // Pop from stack
-            const stack = contextStack.get(contextId);
-            if (stack && stack.length > 0) {
-              stack.pop();
-              if (stack.length === 0) {
-                contextStack.delete(contextId);
-                contextRegistry.delete(contextId);
-              } else {
-                contextRegistry.set(contextId, stack[stack.length - 1]);
-              }
-            }
-            observer.disconnect();
-          }
-        });
-      });
-    });
-
-    if (container.parentElement) {
-      observer.observe(container.parentElement, { childList: true });
-    }
-
-    return container;
+    // Return children directly (no wrapper div needed)
+    return evaluatedChildren;
   };
-
-  // Mark Provider to defer children evaluation (transformer will wrap children in arrow function)
-  Object.defineProperty(Provider, '_deferChildren', {
-    value: true,
-    writable: false,
-    enumerable: false,
-    configurable: false,
-  });
 
   return {
     Provider,
@@ -165,36 +141,6 @@ export const useContext = function <TValue>(context: IContext<TValue>): TValue {
 
   // Return default value if no provider found
   return context.defaultValue;
-};
-
-/**
- * Higher-order function to create a context provider component
- * @param contextValue - Initial context value
- * @returns Function that creates Provider component
- *
- * @example
- * ```tsx
- * const withAppContext = createContextProvider<IAppContext>({
- *     appName: 'My App',
- *     version: '1.0.0'
- * })
- *
- * const ProviderComponent = withAppContext((children) => {
- *     return <div className="app-wrapper">{children}</div>
- * })
- * ```
- */
-export const createContextProvider = function <TValue>(
-  defaultValue: TValue
-): (render: (children: HTMLElement, value: TValue) => HTMLElement) => IContext<TValue>['Provider'] {
-  return (render) => {
-    const context = createContext(defaultValue);
-
-    return ({ value, children }) => {
-      const wrapper = render(children, value);
-      return context.Provider({ value, children: wrapper });
-    };
-  };
 };
 
 // Export AppContextProvider and related utilities
