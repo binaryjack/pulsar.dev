@@ -1,5 +1,5 @@
 {
-  "name": "@pulsar-framework/core",
+  "name": "@pulsar-framework/pulsar.dev",
   "version": "0.7.0-alpha",
   "description": "Reactive UI framework with TypeScript-first JSX transformation and fine-grained reactivity",
   "type": "module",

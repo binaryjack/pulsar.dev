@@ -24,8 +24,8 @@ The `<Index>` component renders lists where items are tracked by their **positio
 ## Basic Usage
 
 ```tsx
-import { Index } from '@pulsar-framework/core'
-import { createSignal } from '@pulsar-framework/core'
+import { Index } from '@pulsar-framework/pulsar.dev'
+import { createSignal } from '@pulsar-framework/pulsar.dev'
 
 const [items, setItems] = createSignal([1, 2, 3])
 
@@ -139,8 +139,8 @@ const [todos, setTodos] = createSignal<Todo[]>([
 ### 4. Programmatic Usage
 
 ```typescript
-import { Index } from '@pulsar-framework/core';
-import { createEffect } from '@pulsar-framework/core';
+import { Index } from '@pulsar-framework/pulsar.dev';
+import { createEffect } from '@pulsar-framework/pulsar.dev';
 
 const indexComponent = Index({
   each: () => mySignal(),
@@ -303,8 +303,8 @@ socket.on('sensor-0-update', (data) => {
 ## Testing
 
 ```typescript
-import { Index } from '@pulsar-framework/core';
-import { createSignal } from '@pulsar-framework/core';
+import { Index } from '@pulsar-framework/pulsar.dev';
+import { createSignal } from '@pulsar-framework/pulsar.dev';
 
 describe('Index Component', () => {
   it('wraps items in signals', () => {

@@ -23,7 +23,7 @@ All SolidJS control flow primitives are now implemented:
 #### `<Index>` Component
 
 ```tsx
-import { Index } from '@pulsar-framework/core';
+import { Index } from '@pulsar-framework/pulsar.dev';
 
 <Index each={items}>
   {(item, index) => (
@@ -41,7 +41,7 @@ import { Index } from '@pulsar-framework/core';
 #### `<Dynamic>` Component
 
 ```tsx
-import { Dynamic } from '@pulsar-framework/core';
+import { Dynamic } from '@pulsar-framework/pulsar.dev';
 
 const componentMap = { Button, Card, Modal };
 
@@ -55,7 +55,7 @@ const componentMap = { Button, Card, Modal };
 #### `reconcile()` Utility
 
 ```tsx
-import { reconcile } from '@pulsar-framework/core/state';
+import { reconcile } from '@pulsar-framework/pulsar.dev/state';
 
 const [state, setState] = createSignal(initialData);
 
@@ -76,7 +76,7 @@ setState(reconcile(newData));
 A complete testing framework that was production-ready but never announced:
 
 ```tsx
-import { render, fireEvent, waitFor, screen } from '@pulsar-framework/core/testing';
+import { render, fireEvent, waitFor, screen } from '@pulsar-framework/pulsar.dev/testing';
 
 test('counter increments', async () => {
   const { container } = render(<Counter />);
@@ -104,7 +104,7 @@ test('counter increments', async () => {
 Advanced code splitting with multiple preload strategies:
 
 ```tsx
-import { lazy, preloadOnHover, preloadOnVisible } from '@pulsar-framework/core/lazy-loading';
+import { lazy, preloadOnHover, preloadOnVisible } from '@pulsar-framework/pulsar.dev/lazy-loading';
 
 const Dashboard = lazy(() => import('./Dashboard'));
 
@@ -176,7 +176,7 @@ Was marked 60%, actually 100% production-ready:
 
 All packages updated to v0.7.0-alpha:
 
-- `@pulsar-framework/core@0.7.0-alpha` - Core framework
+- `@pulsar-framework/pulsar.dev@0.7.0-alpha` - Core framework
 - `@pulsar-framework/transformer@0.7.0-alpha` - TypeScript transformer
 - `@pulsar-framework/vite-plugin@0.7.0-alpha` - Vite integration
 - `@pulsar-framework/design-tokens@0.7.0-alpha` - Design system
@@ -192,13 +192,13 @@ All packages updated to v0.7.0-alpha:
 
 ```bash
 # pnpm (recommended)
-pnpm add @pulsar-framework/core@0.7.0-alpha
+pnpm add @pulsar-framework/pulsar.dev@0.7.0-alpha
 
 # npm
-npm install @pulsar-framework/core@0.7.0-alpha
+npm install @pulsar-framework/pulsar.dev@0.7.0-alpha
 
 # yarn
-yarn add @pulsar-framework/core@0.7.0-alpha
+yarn add @pulsar-framework/pulsar.dev@0.7.0-alpha
 ```
 
 ---
@@ -231,17 +231,17 @@ v0.7.0 focuses on **core completeness**. v0.8.0 will add production infrastructu
 All v0.7.0 features were already in your v0.6.0 codebase, just not documented. Simply update package versions:
 
 ```bash
-pnpm update @pulsar-framework/core@0.7.0-alpha
+pnpm update @pulsar-framework/pulsar.dev@0.7.0-alpha
 ```
 
 **New APIs Available**:
 
 ```tsx
 // Now officially documented and supported:
-import { Index, Dynamic } from '@pulsar-framework/core';
-import { reconcile } from '@pulsar-framework/core/state';
-import { render, fireEvent } from '@pulsar-framework/core/testing';
-import { lazy, preloadOnHover } from '@pulsar-framework/core/lazy-loading';
+import { Index, Dynamic } from '@pulsar-framework/pulsar.dev';
+import { reconcile } from '@pulsar-framework/pulsar.dev/state';
+import { render, fireEvent } from '@pulsar-framework/pulsar.dev/testing';
+import { lazy, preloadOnHover } from '@pulsar-framework/pulsar.dev/lazy-loading';
 ```
 
 ---

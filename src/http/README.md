@@ -15,13 +15,13 @@ Production-ready HTTP client with interceptors, caching, and retry logic built o
 ## Installation
 
 ```bash
-npm install @pulsar-framework/core
+npm install @pulsar-framework/pulsar.dev
 ```
 
 ## Basic Usage
 
 ```typescript
-import { createHttpClient } from '@pulsar-framework/core';
+import { createHttpClient } from '@pulsar-framework/pulsar.dev';
 
 // Create client
 const client = createHttpClient({
@@ -144,7 +144,7 @@ await client.get('/unstable-endpoint');
 `useHttp()` provides signal-based reactive state:
 
 ```typescript
-import { useHttp, createHttpClient } from '@pulsar-framework/core'
+import { useHttp, createHttpClient } from '@pulsar-framework/pulsar.dev'
 
 const client = createHttpClient({ baseURL: 'https://api.example.com' })
 

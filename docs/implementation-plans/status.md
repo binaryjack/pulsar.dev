@@ -196,7 +196,7 @@ Genuinely missing: `produce()`, CSS-in-JS, animations, SSR, HTTP client, CLI, cu
 - ✅ Array diffing - [diff-arrays.ts](../../src/state/reconcile/diff-arrays.ts)
 - ✅ Object diffing - [diff-objects.ts](../../src/state/reconcile/diff-objects.ts)
 - ✅ Minimizes object creation by reusing unchanged values
-- ✅ Exported from `@pulsar-framework/core/state`
+- ✅ Exported from `@pulsar-framework/pulsar.dev/state`
 
 **Implementation Notes**: These features were implemented in v0.6.0 but not documented in roadmap. Discovered during documentation cleanup on 2026-01-22.
 

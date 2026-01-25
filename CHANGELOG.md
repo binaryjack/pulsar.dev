@@ -113,7 +113,7 @@ This release represents a comprehensive audit and documentation update revealing
 
 ### 🔗 Ecosystem
 
-- **@pulsar-framework/core** - v0.7.0-alpha
+- **@pulsar-framework/pulsar.dev** - v0.7.0-alpha
 - **@pulsar-framework/transformer** - v0.7.0-alpha (100% complete)
 - **@pulsar-framework/vite-plugin** - v0.7.0-alpha (60% complete)
 - **@pulsar-framework/design-tokens** - v0.7.0-alpha (Phase 1 complete)
