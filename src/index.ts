@@ -1,16 +1,16 @@
 // Export reactivity with specific exports to avoid ambiguity
 export {
-  Effect,
-  Memo,
-  SEffect,
-  SMemo,
-  SSignal,
-  Signal,
   batch,
   createEffect,
   createMemo,
   createSignal,
+  Effect,
   isBatching,
+  Memo,
+  SEffect,
+  Signal,
+  SMemo,
+  SSignal,
 } from './reactivity';
 export type {
   BatchFn,
@@ -23,7 +23,6 @@ export type {
 
 // Export resource system
 export {
-  Waiting,
   clearAll,
   createResource,
   createTrackedResource,
@@ -35,6 +34,7 @@ export {
   resolveWaiting,
   suspendWaiting,
   waitForAll,
+  Waiting,
 } from './resource';
 export type {
   IResource,
@@ -47,12 +47,12 @@ export type {
 // Export error boundary system
 export {
   Catcher,
-  Tryer,
   cleanupTryer,
   createErrorBoundaryContext,
   getActiveErrorBoundary,
   resetTryer,
   setActiveErrorBoundary,
+  Tryer,
   updateCatcher,
 } from './error-boundary';
 export type {
@@ -68,7 +68,7 @@ export { For, Index, Show } from './control-flow';
 export type { IForProps, IIndexProps, IShowProps } from './control-flow';
 
 // Export portal
-export { Portal, PortalSlot, cleanupPortals } from './portal';
+export { cleanupPortals, Portal, PortalSlot } from './portal';
 export type { IPortalProps, IPortalSlotProps } from './portal';
 
 // Export dev utilities
@@ -92,10 +92,10 @@ export type {
   IServiceLocator,
   IServiceManager,
   IServiceOptions,
-  SServiceManager,
   ServiceFactoryType,
   ServiceIdType,
   ServiceLifetimeType,
+  SServiceManager,
 } from './di';
 
 // Export bootstrap (explicit to avoid conflicts with lifecycle)
@@ -109,7 +109,12 @@ export type { HtmlExtends, Pulsar } from './types/html-extends';
 export * from './jsx-runtime';
 
 // Export context
-export * from './context';
+export { createContext, useContext } from './context';
+export type { IContext } from './context';
+
+// Export app context provider separately to avoid circular dependencies
+export { AppContext, AppContextProvider, useAppContext } from './context/app-context-provider';
+export type { IAppContext, IAppContextProviderProps } from './context/app-context-provider';
 
 // Export router
 export * from './router';
@@ -118,7 +123,7 @@ export * from './router';
 export * from './state';
 
 // Export HTTP client
-export { HttpClient, createHttpClient, useHttp, useHttpGet, useHttpPost } from './http';
+export { createHttpClient, HttpClient, useHttp, useHttpGet, useHttpPost } from './http';
 export type {
   ErrorInterceptor,
   ICacheEntry,

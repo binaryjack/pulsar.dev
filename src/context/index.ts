@@ -3,10 +3,14 @@
  * Registry-based context API with stack support for nested providers
  *
  * Key features:
+ * - Wait list pattern: children register first, Provider notifies when it arrives
  * - No deferred children needed (registry available immediately)
  * - Supports nested providers (same context used multiple times)
  * - Simple cleanup via useEffect
  */
+
+import { useEffect } from '../hooks/use-effect';
+import { createSignal } from '../reactivity/signal/create-signal';
 
 /**
  * Context object interface
@@ -26,18 +30,32 @@ export interface IContext<TValue> {
    * Internal context identifier (unique symbol)
    */
   _id: symbol;
+
+  /**
+   * Set context value synchronously (before rendering)
+   * Allows components to set context before children execute
+   */
+  setValue: (value: TValue) => void;
 }
 
 /**
- * Global context registry - stores current active value for each context
+ * Global context registry - stores current active signal for each context
+ * Stores tuple of [getter, setter] for each context
  */
-const contextRegistry = new Map<symbol, unknown>();
+const contextRegistry = new Map<symbol, [() => any, (value: any) => void]>();
 
 /**
  * Context stack - tracks nested providers for the same context
  * Enables proper cleanup when inner providers unmount
  */
 const contextStack = new Map<symbol, unknown[]>();
+
+/**
+ * Wait list pattern - tracks components waiting for context that hasn't arrived yet
+ * When Provider arrives, it notifies all waiting soldiers (children)
+ * Each soldier gets a callback to receive the value when commandant arrives
+ */
+const contextWaitList = new Map<symbol, Set<(value: unknown) => void>>();
 
 /**
  * Creates a new context
@@ -65,6 +83,14 @@ const contextStack = new Map<symbol, unknown[]>();
 export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
   const contextId = Symbol('Context');
 
+  // Create a signal to hold the context value
+  // This allows reactive updates when Provider arrives
+  const [getContextValue, setContextValue] = createSignal<TValue>(defaultValue);
+
+  // REGISTER THE SIGNAL IMMEDIATELY!
+  // Soldiers can now find the signal even if commandant hasn't arrived yet
+  contextRegistry.set(contextId, [getContextValue, setContextValue]);
+
   const Provider = ({
     value,
     children,
@@ -72,21 +98,31 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
     value: TValue;
     children: HTMLElement | (() => HTMLElement);
   }): HTMLElement => {
-    // Import useEffect dynamically to avoid circular dependency
-    const { useEffect } = require('../hooks/use-effect');
+    // COMMANDANT ARRIVES!
+    // Update context value with provider's value
+    // Stack management for nested providers
+    if (!contextStack.has(contextId)) {
+      contextStack.set(contextId, []);
+    }
+    contextStack.get(contextId)!.push(value);
 
-    // Register context value immediately (no timing issues!)
+    // Update the signal value - this will trigger all reactive dependencies!
+    setContextValue(value);
+
+    // NOTIFY ALL WAITING SOLDIERS!
+    // Get all soldiers waiting for this commandant
+    const waitingList = contextWaitList.get(contextId);
+    if (waitingList && waitingList.size > 0) {
+      // Notify each soldier that commandant has arrived with the value
+      waitingList.forEach((notifySoldier) => {
+        notifySoldier(value);
+      });
+      // Clear the wait list - soldiers have been notified
+      contextWaitList.delete(contextId);
+    }
+
+    // Cleanup when component unmounts
     useEffect(() => {
-      // Push value onto stack (supports nesting)
-      if (!contextStack.has(contextId)) {
-        contextStack.set(contextId, []);
-      }
-      contextStack.get(contextId)!.push(value);
-
-      // Set current value in registry
-      contextRegistry.set(contextId, value);
-
-      // Cleanup: restore previous value or delete
       return () => {
         const stack = contextStack.get(contextId);
         if (stack && stack.length > 0) {
@@ -94,11 +130,11 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
 
           // Restore previous provider's value
           if (stack.length > 0) {
-            contextRegistry.set(contextId, stack[stack.length - 1]);
+            const previousValue = stack[stack.length - 1] as TValue;
+            setContextValue(previousValue);
           } else {
-            // No more providers, clean up completely
-            contextStack.delete(contextId);
-            contextRegistry.delete(contextId);
+            // No more providers, restore default value
+            setContextValue(defaultValue);
           }
         }
       };
@@ -111,10 +147,18 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
     return evaluatedChildren;
   };
 
+  // Expose setter so components can set context synchronously before rendering
+  const setValue = (value: TValue) => {
+    console.log('[Context setValue] Setting value:', value, 'for context:', contextId);
+    setContextValue(value);
+    console.log('[Context setValue] Signal now returns:', getContextValue());
+  };
+
   return {
     Provider,
     defaultValue,
     _id: contextId,
+    setValue, // Allow setting context value before Provider renders
   };
 }
 
@@ -134,15 +178,24 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
  * ```
  */
 export const useContext = function <TValue>(context: IContext<TValue>): TValue {
-  // Check if we have a value in the registry
-  if (contextRegistry.has(context._id)) {
-    return contextRegistry.get(context._id) as TValue;
+  // Check if commandant (Provider) has already arrived and registered the signal
+  const signal = contextRegistry.get(context._id);
+
+  console.log('[useContext] Looking up context:', context._id);
+  console.log('[useContext] Found signal:', signal);
+
+  if (signal) {
+    // Signal exists, read its current value reactively
+    const [getValue] = signal as [() => TValue, (value: TValue) => void];
+    const value = getValue();
+    console.log('[useContext] Signal value:', value);
+    return value;
   }
 
-  // Return default value if no provider found
+  // SOLDIER ARRIVES FIRST!
+  // Commandant hasn't arrived yet, return default value for now
+  // When Provider arrives, it will update the signal and trigger reactivity
+
+  console.log('[useContext] No signal found, returning default:', context.defaultValue);
   return context.defaultValue;
 };
-
-// Export AppContextProvider and related utilities
-export { AppContext, AppContextProvider, useAppContext } from './app-context-provider';
-export type { IAppContext, IAppContextProviderProps } from './app-context-provider';
