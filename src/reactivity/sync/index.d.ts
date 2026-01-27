@@ -1,3 +1,2 @@
-export { reactive, warnNonReactiveSignalRead } from './reactive-helpers';
 export { useSync } from './use-sync';
 export type { SnapshotFunction, SubscribeFunction } from './use-sync.types';

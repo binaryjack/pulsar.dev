@@ -23,8 +23,8 @@
  * ```
  */
 
-import { onCleanup } from '../../lifecycle';
 import { createSignal } from '../signal';
+import { enterReactiveContext, exitReactiveContext } from './reactive-helpers';
 import type { SnapshotFunction, SubscribeFunction } from './use-sync.types';
 
 /**
@@ -44,16 +44,22 @@ export function useSync<T>(
   // Subscribe to external changes
   // The subscribe function should call notify() when external state changes
   const cleanup = subscribe(() => {
-    // When external state changes, read the new value and update our signal
-    const newValue = getSnapshot();
-    setValue(newValue);
+    // Mark that we're in reactive context (for dev warnings)
+    enterReactiveContext();
+    try {
+      // When external state changes, read the new value and update our signal
+      const newValue = getSnapshot();
+      setValue(newValue);
+    } finally {
+      exitReactiveContext();
+    }
   });
 
-  // Register cleanup with Pulsar's lifecycle system
-  // This ensures subscriptions are cleaned up when component unmounts
-  if (cleanup) {
-    onCleanup(cleanup);
-  }
+  // Note: We don't call onCleanup here because Pulsar components don't have
+  // automatic lifecycle management. The cleanup will be handled by the external
+  // reactive system (e.g., formular.dev's createEffect cleanup) when the parent
+  // component or effect is disposed.
+  // If you need explicit cleanup, store the returned cleanup function and call it manually.
 
   return value;
 }
