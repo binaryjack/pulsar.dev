@@ -407,9 +407,24 @@ export const Component = (props) => {
 
 ## Roadmap
 
+## **eary works**
+
+**first version started**: february 02, 2023
+
+- rendering and prototyping core features january 2023
+- forms libs creation march 2023
+- component libs v1
+- component libs v2
+- component libs v3 june ~ 2023
+- formular.dev january 2024
+- formular.dev v.1 february 2025
+- pulsar-framework march 2025
+
+## **current**
+
 **Current Version**: v0.9.0-alpha ✅  
-**Next Release**: v1.0.0-stable (Q2 2026)  
-**Last Updated**: January 27, 2026
+ **Next Release**: v1.0.0-stable (Q2 2026)  
+ **Last Updated**: January 27, 2026
 
 ### 🎯 Current Status
 
