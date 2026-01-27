@@ -1,16 +1,17 @@
 // Export reactivity with specific exports to avoid ambiguity
 export {
+  Effect,
+  Memo,
+  SEffect,
+  SMemo,
+  SSignal,
+  Signal,
   batch,
   createEffect,
   createMemo,
   createSignal,
-  Effect,
   isBatching,
-  Memo,
-  SEffect,
-  Signal,
-  SMemo,
-  SSignal,
+  useSync,
 } from './reactivity';
 export type {
   BatchFn,
@@ -19,10 +20,13 @@ export type {
   ISignal,
   ISignalOptions,
   ISignalSubscriber,
+  SnapshotFunction,
+  SubscribeFunction,
 } from './reactivity';
 
 // Export resource system
 export {
+  Waiting,
   clearAll,
   createResource,
   createTrackedResource,
@@ -34,7 +38,6 @@ export {
   resolveWaiting,
   suspendWaiting,
   waitForAll,
-  Waiting,
 } from './resource';
 export type {
   IResource,
@@ -47,12 +50,12 @@ export type {
 // Export error boundary system
 export {
   Catcher,
+  Tryer,
   cleanupTryer,
   createErrorBoundaryContext,
   getActiveErrorBoundary,
   resetTryer,
   setActiveErrorBoundary,
-  Tryer,
   updateCatcher,
 } from './error-boundary';
 export type {
@@ -68,7 +71,7 @@ export { For, Index, Show } from './control-flow';
 export type { IForProps, IIndexProps, IShowProps } from './control-flow';
 
 // Export portal
-export { cleanupPortals, Portal, PortalSlot } from './portal';
+export { Portal, PortalSlot, cleanupPortals } from './portal';
 export type { IPortalProps, IPortalSlotProps } from './portal';
 
 // Export dev utilities
@@ -92,10 +95,10 @@ export type {
   IServiceLocator,
   IServiceManager,
   IServiceOptions,
+  SServiceManager,
   ServiceFactoryType,
   ServiceIdType,
   ServiceLifetimeType,
-  SServiceManager,
 } from './di';
 
 // Export bootstrap (explicit to avoid conflicts with lifecycle)
@@ -123,7 +126,7 @@ export * from './router';
 export * from './state';
 
 // Export HTTP client
-export { createHttpClient, HttpClient, useHttp, useHttpGet, useHttpPost } from './http';
+export { HttpClient, createHttpClient, useHttp, useHttpGet, useHttpPost } from './http';
 export type {
   ErrorInterceptor,
   ICacheEntry,

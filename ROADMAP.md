@@ -1,8 +1,8 @@
 # Pulsar Framework Roadmap
 
-**Current Version**: v0.8.0-alpha  
-**Next Release**: v0.9.0-alpha (January 2026)  
-**Last Updated**: January 23, 2026 - v0.9.0 READY TO SHIP ✅ (formular.dev, produce(), testing utilities complete)
+**Current Version**: v0.9.0-alpha ✅  
+**Next Release**: v1.0.0-stable (Q2 2026)  
+**Last Updated**: January 27, 2026 - v0.9.0 SHIPPED ✅ (formular.dev, produce(), testing utilities, Dev Tools APIs complete)
 
 ---
 
@@ -248,6 +248,28 @@
   - Field state checking (isFieldValid, isFieldTouched, isFieldDirty)
   - Form state checking (isFormValid, isFormSubmitting)
   - Async validation helpers (waitForFieldValidation, waitForFormSubmission)
+
+- ✅ **Dev Tools APIs** (COMPLETE - January 27, 2026) 🎉
+  - **Registry Inspector** - Element hierarchy visualization and introspection
+    - Tree view with parent-child relationships
+    - Orphaned element detection (memory leak prevention)
+    - Search and filtering by type/parent/children
+    - Registry statistics and depth analysis
+    - Path tracing for navigation (7 methods, 10 files)
+  - **Event Inspector** - Event delegation system analysis
+    - Handler introspection per element/type
+    - Delegation statistics (synthetic vs native, capture vs bubble)
+    - Handler hotspot detection
+    - Event capability checks (7 methods, 9 files)
+  - **Performance Monitor** - Performance tracking and memory metrics
+    - Operation timing for register/unregister/lookup/render
+    - Aggregated metrics with percentiles (avg, p95, p99)
+    - Memory usage estimates
+    - Slowest operation tracking
+    - Configurable history with auto-trimming (8 methods, 10 files)
+  - Architecture: Prototype-based constructors, feature slice organization
+  - DEV-only builds for zero production overhead
+  - 29 files total (all building successfully)
   - Mock form creation (createMockForm)
   - Error checking utilities (getFieldError, getFormErrors)
   - Exported from main package (`import { fillField } from '@pulsar-framework/pulsar.dev'`)

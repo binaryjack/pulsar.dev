@@ -2,6 +2,7 @@
  * ApplicationRoot mount method
  */
 
+import { setCurrentAppRoot } from '../../../registry/app-root-context';
 import { IApplicationRootInternal } from '../../application-root-internal.interface';
 
 export const mount = function (this: IApplicationRootInternal, component: HTMLElement): void {
@@ -20,6 +21,9 @@ export const mount = function (this: IApplicationRootInternal, component: HTMLEl
 
       this._mountedComponent = component;
       this._isMounted = true;
+
+      // Register this ApplicationRoot as the current one
+      setCurrentAppRoot(this);
 
       // Call onMount callback
       if (this.onMount) {

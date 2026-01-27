@@ -409,7 +409,7 @@ export const Component = (props) => {
 
 **Current Version**: v0.9.0-alpha ✅  
 **Next Release**: v1.0.0-stable (Q2 2026)  
-**Last Updated**: January 23, 2026
+**Last Updated**: January 27, 2026
 
 ### 🎯 Current Status
 
@@ -418,7 +418,8 @@ export const Component = (props) => {
 - ✅ formular.dev integration (`useFormular()` hook) - 41 tests passing
 - ✅ `produce()` utility (Immer-style API) - 29 tests passing
 - ✅ Testing utilities (component testing, form helpers) - 25 tests passing
-- ⚠️ DevTools - Redux DevTools integration only (browser extension planned for v1.0)
+- ✅ Dev Tools APIs - Registry Inspector, Event Inspector, Performance Monitor (29 files)
+- ⚠️ DevTools UI - Browser extension planned for v1.0
 
 **v0.8.0-alpha - SHIPPED ✅** (January 2026)
 

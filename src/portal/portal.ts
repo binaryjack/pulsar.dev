@@ -1,4 +1,9 @@
 import { invariant, warn } from '../dev';
+import {
+  getLogicalParentId,
+  getPhysicalParentId,
+  registerPortalContent,
+} from '../registry/portal-registry';
 import { getPortalManager } from './create-portal-manager';
 import { IPortalProps, IPortalState } from './portal.types';
 
@@ -67,6 +72,28 @@ export function Portal(props: IPortalProps): HTMLElement {
   // Resolve children
   const content = typeof props.children === 'function' ? props.children() : props.children;
 
+  // Get logical parent ID (where Portal is in the component tree)
+  const logicalParentId = getLogicalParentId(placeholder as any);
+
+  // Get physical parent ID (where content will be mounted)
+  const physicalParentId = getPhysicalParentId(container);
+
+  // Register portal content with registry
+  const { elementId, cleanup: registryCleanup } = registerPortalContent({
+    parentId: logicalParentId,
+    physicalParentId,
+    content,
+    target: container,
+  });
+
+  // Store element ID on content for future lookups
+  if (elementId) {
+    Object.defineProperty(content, '__elementId', {
+      value: elementId,
+      enumerable: false,
+    });
+  }
+
   // Create portal state
   const state: IPortalState = {
     container,
@@ -76,6 +103,7 @@ export function Portal(props: IPortalProps): HTMLElement {
       if (content && container.contains(content)) {
         container.removeChild(content);
       }
+      registryCleanup();
       manager.unregister(state);
     },
   };
