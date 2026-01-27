@@ -74,7 +74,7 @@ This architectural decision makes Pulsar inherently more secure than runtime-onl
 
 Create `docs/security/SECURITY-GUIDE.md`:
 
-```markdown
+````markdown
 # Pulsar Framework Security Guide
 
 ## Compile-Time Security Advantages
@@ -84,23 +84,27 @@ Create `docs/security/SECURITY-GUIDE.md`:
 Pulsar's JSX transformation provides automatic XSS prevention:
 
 **Your Code:**
+
 ```tsx
 const UserComment = ({ text }) => {
-  return <div>{text}</div>
-}
+  return <div>{text}</div>;
+};
 ```
+````
 
 **Transformed Code:**
+
 ```typescript
 const UserComment = ({ text }) => {
-  const el = document.createElement('div')
-  const textNode = document.createTextNode(String(text))
-  el.appendChild(textNode)
-  return el
-}
+  const el = document.createElement('div');
+  const textNode = document.createTextNode(String(text));
+  el.appendChild(textNode);
+  return el;
+};
 ```
 
 **Why This Matters:**
+
 - `createTextNode` automatically escapes ALL content
 - User input cannot inject HTML or scripts
 - No runtime parsing = no injection vectors
@@ -108,18 +112,20 @@ const UserComment = ({ text }) => {
 ### Security Best Practices
 
 1. **Never Use innerHTML with User Data**
+
    ```typescript
    // ❌ DANGEROUS
-   element.innerHTML = userInput
-   
+   element.innerHTML = userInput;
+
    // ✅ SAFE (automatically done by Pulsar)
-   element.appendChild(document.createTextNode(userInput))
+   element.appendChild(document.createTextNode(userInput));
    ```
 
 2. **URL Sanitization**
+
    ```typescript
    import { sanitizeURL } from '@pulsar/security'
-   
+
    const Link = ({ href, children }) => {
      return <a href={sanitizeURL(href)}>{children}</a>
    }
@@ -127,10 +133,10 @@ const UserComment = ({ text }) => {
 
 3. **Content Security Policy**
    ```html
-   <meta http-equiv="Content-Security-Policy" 
-         content="default-src 'self'; script-src 'self'">
+   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
    ```
-```
+
+````
 
 **Deliverables:**
 - [ ] Security guide documentation
@@ -140,8 +146,8 @@ const UserComment = ({ text }) => {
 
 #### 1.2 Security API Reference
 
-**Priority:** 🟡 HIGH  
-**Effort:** Low  
+**Priority:** 🟡 HIGH
+**Effort:** Low
 **Target:** v0.10.0
 
 Document existing security features:
@@ -158,8 +164,8 @@ Document existing security features:
 
 #### 2.1 Security Utilities Module
 
-**Priority:** 🔴 CRITICAL  
-**Effort:** High  
+**Priority:** 🔴 CRITICAL
+**Effort:** High
 **Target:** v0.10.0
 
 Create `src/security/` module:
@@ -174,7 +180,7 @@ Create `src/security/` module:
  */
 export function sanitizeURL(url: string): string {
   if (!url) return '#'
-  
+
   const normalized = url.trim().toLowerCase()
   const dangerousProtocols = [
     'javascript:',
@@ -183,14 +189,14 @@ export function sanitizeURL(url: string): string {
     'file:',
     'about:'
   ]
-  
+
   for (const protocol of dangerousProtocols) {
     if (normalized.startsWith(protocol)) {
       console.warn(`[Pulsar Security] Blocked dangerous URL protocol: ${protocol}`)
       return '#'
     }
   }
-  
+
   return url
 }
 
@@ -214,14 +220,14 @@ export function sanitizeStyle(style: string): string {
     /@import/gi,
     /behavior\s*:/gi
   ]
-  
+
   for (const pattern of dangerous) {
     if (pattern.test(style)) {
       console.warn('[Pulsar Security] Blocked dangerous CSS')
       return ''
     }
   }
-  
+
   return style
 }
 
@@ -237,7 +243,7 @@ export function containsXSS(input: string): boolean {
     /<object/gi,
     /<embed/gi
   ]
-  
+
   return xssPatterns.some(pattern => pattern.test(input))
 }
 
@@ -249,21 +255,21 @@ export function stripHTML(html: string): string {
   temp.textContent = html
   return temp.innerHTML
 }
-```
+````
 
 ```typescript
 // src/security/csp.ts
 
 export interface ICSPConfig {
-  'default-src'?: string[]
-  'script-src'?: string[]
-  'style-src'?: string[]
-  'img-src'?: string[]
-  'connect-src'?: string[]
-  'font-src'?: string[]
-  'object-src'?: string[]
-  'media-src'?: string[]
-  'frame-src'?: string[]
+  'default-src'?: string[];
+  'script-src'?: string[];
+  'style-src'?: string[];
+  'img-src'?: string[];
+  'connect-src'?: string[];
+  'font-src'?: string[];
+  'object-src'?: string[];
+  'media-src'?: string[];
+  'frame-src'?: string[];
 }
 
 /**
@@ -272,9 +278,9 @@ export interface ICSPConfig {
 export function generateCSP(config: ICSPConfig): string {
   const directives = Object.entries(config)
     .map(([directive, sources]) => `${directive} ${sources.join(' ')}`)
-    .join('; ')
-  
-  return directives
+    .join('; ');
+
+  return directives;
 }
 
 /**
@@ -288,52 +294,35 @@ export const PULSAR_RECOMMENDED_CSP: ICSPConfig = {
   'connect-src': ["'self'"],
   'font-src': ["'self'"],
   'object-src': ["'none'"],
-  'frame-src': ["'none'"]
-}
+  'frame-src': ["'none'"],
+};
 
 /**
  * Create CSP meta tag
  */
 export function createCSPMetaTag(config: ICSPConfig = PULSAR_RECOMMENDED_CSP): HTMLMetaElement {
-  const meta = document.createElement('meta')
-  meta.httpEquiv = 'Content-Security-Policy'
-  meta.content = generateCSP(config)
-  return meta
+  const meta = document.createElement('meta');
+  meta.httpEquiv = 'Content-Security-Policy';
+  meta.content = generateCSP(config);
+  return meta;
 }
 ```
 
 ```typescript
 // src/security/index.ts
 
-export {
-  sanitizeURL,
-  isURLSafe,
-  sanitizeStyle,
-  containsXSS,
-  stripHTML
-} from './sanitize'
+export { sanitizeURL, isURLSafe, sanitizeStyle, containsXSS, stripHTML } from './sanitize';
 
-export {
-  generateCSP,
-  createCSPMetaTag,
-  PULSAR_RECOMMENDED_CSP,
-  type ICSPConfig
-} from './csp'
+export { generateCSP, createCSPMetaTag, PULSAR_RECOMMENDED_CSP, type ICSPConfig } from './csp';
 
 // Re-export SSR security utilities
-export {
-  escapeHtml,
-  escapeAttribute,
-  needsEscaping
-} from '../ssr/utils/escape-html'
+export { escapeHtml, escapeAttribute, needsEscaping } from '../ssr/utils/escape-html';
 
-export {
-  serializeData,
-  deserializeData
-} from '../ssr/utils/serialize-data'
+export { serializeData, deserializeData } from '../ssr/utils/serialize-data';
 ```
 
 **Deliverables:**
+
 - [ ] URL sanitization
 - [ ] CSS sanitization
 - [ ] XSS detection
@@ -352,92 +341,93 @@ Create secure component library:
 ```typescript
 // src/components/secure-link.ts
 
-import { sanitizeURL } from '../security'
+import { sanitizeURL } from '../security';
 
 export interface ISecureLinkProps {
-  href: string
-  children: any
-  target?: string
-  rel?: string
-  onClick?: (e: Event) => void
+  href: string;
+  children: any;
+  target?: string;
+  rel?: string;
+  onClick?: (e: Event) => void;
 }
 
 /**
  * Secure link component with automatic URL sanitization
  */
 export function SecureLink(props: ISecureLinkProps): HTMLAnchorElement {
-  const link = document.createElement('a')
-  
+  const link = document.createElement('a');
+
   // Sanitize href
-  const safeHref = sanitizeURL(props.href)
-  link.href = safeHref
-  
+  const safeHref = sanitizeURL(props.href);
+  link.href = safeHref;
+
   // Security: Add rel="noopener noreferrer" for external links
   if (props.target === '_blank') {
-    link.target = '_blank'
-    link.rel = props.rel || 'noopener noreferrer'
+    link.target = '_blank';
+    link.rel = props.rel || 'noopener noreferrer';
   }
-  
+
   // Add click handler
   if (props.onClick) {
-    link.addEventListener('click', props.onClick)
+    link.addEventListener('click', props.onClick);
   }
-  
+
   // Append children
   if (props.children) {
-    const children = Array.isArray(props.children) ? props.children : [props.children]
-    children.forEach(child => {
+    const children = Array.isArray(props.children) ? props.children : [props.children];
+    children.forEach((child) => {
       if (child instanceof Node) {
-        link.appendChild(child)
+        link.appendChild(child);
       } else {
-        link.appendChild(document.createTextNode(String(child)))
+        link.appendChild(document.createTextNode(String(child)));
       }
-    })
+    });
   }
-  
-  return link
+
+  return link;
 }
 ```
 
 ```typescript
 // src/components/secure-image.ts
 
-import { sanitizeURL } from '../security'
+import { sanitizeURL } from '../security';
 
 export interface ISecureImageProps {
-  src: string
-  alt: string
-  onError?: (e: Event) => void
+  src: string;
+  alt: string;
+  onError?: (e: Event) => void;
 }
 
 /**
  * Secure image component with URL validation
  */
 export function SecureImage(props: ISecureImageProps): HTMLImageElement {
-  const img = document.createElement('img')
-  
+  const img = document.createElement('img');
+
   // Sanitize src
-  const safeSrc = sanitizeURL(props.src)
-  img.src = safeSrc
-  img.alt = props.alt || ''
-  
+  const safeSrc = sanitizeURL(props.src);
+  img.src = safeSrc;
+  img.alt = props.alt || '';
+
   // Add error handler
   if (props.onError) {
-    img.addEventListener('error', props.onError)
+    img.addEventListener('error', props.onError);
   }
-  
+
   // Security: Prevent loading external resources in error handler
   img.addEventListener('error', () => {
     if (img.src !== safeSrc) {
-      img.src = safeSrc
+      img.src = safeSrc;
     }
-  })
-  
-  return img
+  });
+
+  return img;
 }
 ```
 
 **Deliverables:**
+
 - [ ] SecureLink component
 - [ ] SecureImage component
 - [ ] SecureIframe component (if needed)
@@ -457,11 +447,13 @@ export function SecureImage(props: ISecureImageProps): HTMLImageElement {
 Review and secure all `innerHTML` usage:
 
 **Current Usage:**
+
 1. `jsx-runtime-standard.ts` - Exposes innerHTML prop
 2. `router/outlet.ts` - Uses innerHTML for clearing
 3. `bootstrap/mount.ts` - Uses innerHTML for root clearing
 
 **Action Items:**
+
 - [ ] Audit all innerHTML usage
 - [ ] Replace with safe alternatives where possible
 - [ ] Document necessary innerHTML usage
@@ -478,21 +470,22 @@ Review and secure all `innerHTML` usage:
 
 // Before:
 if (key === 'innerHTML') {
-  element.innerHTML = props[key] as string
+  element.innerHTML = props[key] as string;
 }
 
 // After:
 if (key === 'innerHTML') {
   console.warn(
     '[Pulsar Security Warning] Using innerHTML prop can introduce XSS vulnerabilities. ' +
-    'Consider using textContent or appendChild with createTextNode instead. ' +
-    'If you must use innerHTML, sanitize content first using sanitizeHTML from @pulsar/security.'
-  )
-  element.innerHTML = props[key] as string
+      'Consider using textContent or appendChild with createTextNode instead. ' +
+      'If you must use innerHTML, sanitize content first using sanitizeHTML from @pulsar/security.'
+  );
+  element.innerHTML = props[key] as string;
 }
 ```
 
 **Deliverables:**
+
 - [ ] Add deprecation warnings
 - [ ] Update documentation
 - [ ] Provide migration guide
@@ -516,42 +509,42 @@ describe('XSS Prevention', () => {
     it('should escape user content in text nodes', () => {
       const malicious = '<script>alert("xss")</script>'
       const div = <div>{malicious}</div>
-      
+
       expect(div.textContent).toBe(malicious)
       expect(div.innerHTML).not.toContain('<script>')
       expect(div.innerHTML).toContain('&lt;script&gt;')
     })
-    
+
     it('should not execute scripts in dynamic content', () => {
       const [content] = createSignal('<img src=x onerror="alert(1)">')
       const div = <div>{content()}</div>
-      
+
       expect(div.querySelector('img')).toBeNull()
       expect(div.textContent).toContain('<img')
     })
   })
-  
+
   describe('URL Sanitization', () => {
     it('should block javascript: URLs', () => {
       expect(sanitizeURL('javascript:alert(1)')).toBe('#')
     })
-    
+
     it('should block data: URLs', () => {
       expect(sanitizeURL('data:text/html,<script>alert(1)</script>')).toBe('#')
     })
-    
+
     it('should allow safe URLs', () => {
       expect(sanitizeURL('https://example.com')).toBe('https://example.com')
       expect(sanitizeURL('/path/to/resource')).toBe('/path/to/resource')
     })
   })
-  
+
   describe('Style Sanitization', () => {
     it('should block CSS with javascript:', () => {
       const dangerous = 'background: url(javascript:alert(1))'
       expect(sanitizeStyle(dangerous)).toBe('')
     })
-    
+
     it('should block CSS expressions', () => {
       const dangerous = 'width: expression(alert(1))'
       expect(sanitizeStyle(dangerous)).toBe('')
@@ -567,16 +560,16 @@ describe('SSR Security', () => {
   it('should escape HTML in renderToString', () => {
     const App = () => <div>{'<script>alert("xss")</script>'}</div>
     const { html } = renderToString(App)
-    
+
     expect(html).not.toContain('<script>')
     expect(html).toContain('&lt;script&gt;')
   })
-  
+
   it('should serialize state safely', () => {
     const dangerousState = {
       content: '</script><script>alert(1)</script>'
     }
-    
+
     const serialized = serializeData(dangerousState)
     expect(serialized).not.toContain('</script>')
     expect(serialized).toContain('\\u003c/script\\u003e')
@@ -585,12 +578,13 @@ describe('SSR Security', () => {
 ```
 
 **Deliverables:**
+
 - [ ] XSS prevention test suite
 - [ ] URL sanitization tests
 - [ ] Style sanitization tests
 - [ ] SSR security tests
 - [ ] Component security tests
-- [ ] >85% security coverage
+- [ ] > 85% security coverage
 
 #### 4.2 OWASP Top 10 Compliance Tests
 
@@ -601,6 +595,7 @@ describe('SSR Security', () => {
 Create tests for OWASP Top 10 vulnerabilities:
 
 **Deliverables:**
+
 - [ ] A01: Broken Access Control tests
 - [ ] A02: Cryptographic Failures tests
 - [ ] A03: Injection tests
@@ -619,7 +614,7 @@ Create tests for OWASP Top 10 vulnerabilities:
 
 Create `docs/security/CONTENT-SECURITY-POLICY.md`:
 
-```markdown
+````markdown
 # Content Security Policy for Pulsar Applications
 
 ## Recommended CSP Configuration
@@ -627,44 +622,49 @@ Create `docs/security/CONTENT-SECURITY-POLICY.md`:
 ### Basic Configuration
 
 ```typescript
-import { createCSPMetaTag, PULSAR_RECOMMENDED_CSP } from '@pulsar-framework/pulsar.dev/security'
+import { createCSPMetaTag, PULSAR_RECOMMENDED_CSP } from '@pulsar-framework/pulsar.dev/security';
 
 // Add to document head
-document.head.appendChild(createCSPMetaTag())
+document.head.appendChild(createCSPMetaTag());
 ```
+````
 
 ### Custom Configuration
 
 ```typescript
-import { createCSPMetaTag } from '@pulsar-framework/pulsar.dev/security'
+import { createCSPMetaTag } from '@pulsar-framework/pulsar.dev/security';
 
 const customCSP = createCSPMetaTag({
   'default-src': ["'self'"],
   'script-src': ["'self'", 'https://cdn.example.com'],
   'style-src': ["'self'", "'unsafe-inline'"],
   'img-src': ["'self'", 'data:', 'https:'],
-  'connect-src': ["'self'", 'https://api.example.com']
-})
+  'connect-src': ["'self'", 'https://api.example.com'],
+});
 
-document.head.appendChild(customCSP)
+document.head.appendChild(customCSP);
 ```
 
 ### Server-Side Configuration
 
 **Express.js:**
-```javascript
-const helmet = require('helmet')
 
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    scriptSrc: ["'self'"],
-    styleSrc: ["'self'", "'unsafe-inline'"]
-  }
-}))
+```javascript
+const helmet = require('helmet');
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
+  })
+);
 ```
 
 **Nginx:**
+
 ```nginx
 add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'";
 ```
@@ -682,7 +682,8 @@ const [color] = createSignal('red')
 // Use CSS variables (CSP-safe)
 <div style={`--dynamic-color: ${color()}`} class="themed"></div>
 ```
-```
+
+````
 
 **Deliverables:**
 - [ ] CSP configuration guide
@@ -692,8 +693,8 @@ const [color] = createSignal('red')
 
 #### 5.2 Security Headers Guide
 
-**Priority:** 🟢 MEDIUM  
-**Effort:** Low  
+**Priority:** 🟢 MEDIUM
+**Effort:** Low
 **Target:** v0.11.0
 
 Document recommended security headers:
@@ -709,8 +710,8 @@ Document recommended security headers:
 
 #### 6.1 Third-Party Security Audit
 
-**Priority:** 🟢 MEDIUM  
-**Effort:** External  
+**Priority:** 🟢 MEDIUM
+**Effort:** External
 **Target:** v0.11.0
 
 Engage security firm for professional audit:
@@ -728,8 +729,8 @@ Engage security firm for professional audit:
 
 #### 6.2 Continuous Security Monitoring
 
-**Priority:** 🟢 MEDIUM  
-**Effort:** Low  
+**Priority:** 🟢 MEDIUM
+**Effort:** Low
 **Target:** v0.10.0
 
 Implement automated security checks:
@@ -750,20 +751,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Run npm audit
         run: npm audit --production
-      
+
       - name: Run Snyk security scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      
+
       - name: Run security tests
         run: npm run test:security
-```
+````
 
 **Deliverables:**
+
 - [ ] GitHub Actions security workflow
 - [ ] Dependency scanning
 - [ ] Automated security testing
@@ -819,14 +821,14 @@ jobs:
 
 ## 📅 Timeline
 
-| Phase | Duration | Target Release | Priority |
-|-------|----------|----------------|----------|
-| Phase 1: Documentation | 4 weeks | v0.10.0 | 🔴 CRITICAL |
-| Phase 2: Security Utilities | 4 weeks | v0.10.0 | 🔴 CRITICAL |
-| Phase 3: innerHTML Audit | 2 weeks | v0.10.0 | 🔴 CRITICAL |
-| Phase 4: Security Testing | 4 weeks | v0.10.0 | 🔴 CRITICAL |
-| Phase 5: CSP Integration | 2 weeks | v0.10.0 | 🟡 HIGH |
-| Phase 6: Security Audit | 4 weeks | v0.11.0 | 🟢 MEDIUM |
+| Phase                       | Duration | Target Release | Priority    |
+| --------------------------- | -------- | -------------- | ----------- |
+| Phase 1: Documentation      | 4 weeks  | v0.10.0        | 🔴 CRITICAL |
+| Phase 2: Security Utilities | 4 weeks  | v0.10.0        | 🔴 CRITICAL |
+| Phase 3: innerHTML Audit    | 2 weeks  | v0.10.0        | 🔴 CRITICAL |
+| Phase 4: Security Testing   | 4 weeks  | v0.10.0        | 🔴 CRITICAL |
+| Phase 5: CSP Integration    | 2 weeks  | v0.10.0        | 🟡 HIGH     |
+| Phase 6: Security Audit     | 4 weeks  | v0.11.0        | 🟢 MEDIUM   |
 
 **Total Duration:** 20 weeks (~5 months)  
 **Target Completion:** June 2026
@@ -858,13 +860,13 @@ jobs:
 
 ### A. Security Comparison
 
-| Feature | Pulsar | React | Vue | Solid |
-|---------|--------|-------|-----|-------|
-| Compile-time XSS Prevention | ✅ | ❌ | ❌ | ✅ |
-| SSR Escaping | ✅ | ✅ | ✅ | ✅ |
-| CSP Support | ⚠️ | ⚠️ | ⚠️ | ⚠️ |
-| Security Documentation | ⚠️ | ✅ | ✅ | ⚠️ |
-| Sanitization API | ❌ | ❌ | ❌ | ❌ |
+| Feature                     | Pulsar | React | Vue | Solid |
+| --------------------------- | ------ | ----- | --- | ----- |
+| Compile-time XSS Prevention | ✅     | ❌    | ❌  | ✅    |
+| SSR Escaping                | ✅     | ✅    | ✅  | ✅    |
+| CSP Support                 | ⚠️     | ⚠️    | ⚠️  | ⚠️    |
+| Security Documentation      | ⚠️     | ✅    | ✅  | ⚠️    |
+| Sanitization API            | ❌     | ❌    | ❌  | ❌    |
 
 ### B. Security Resources
 
@@ -882,13 +884,14 @@ jobs:
 
 ### D. Change Log
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2026-01-27 | 1.0 | Initial security enhancement plan | Security Team |
+| Date       | Version | Changes                           | Author        |
+| ---------- | ------- | --------------------------------- | ------------- |
+| 2026-01-27 | 1.0     | Initial security enhancement plan | Security Team |
 
 ---
 
 **Status Legend:**
+
 - 🔴 CRITICAL - Must have, blocks release
 - 🟡 HIGH - Should have, important for security
 - 🟢 MEDIUM - Nice to have, enhances security
