@@ -12,20 +12,20 @@ interface ImportMetaEnv {
   readonly PROD: boolean;
   readonly SSR: boolean;
   readonly BASE_URL: string;
-  
+
   // Pulsar framework variables
   readonly PULSAR_ENV?: string;
   readonly PULSAR_DEBUG?: string;
   readonly PULSAR_ENABLE_DEVTOOLS?: string;
   readonly PULSAR_LOG_LEVEL?: 'debug' | 'info' | 'warn' | 'error';
-  
+
   // Application variables (customize per project)
   readonly VITE_APP_NAME?: string;
   readonly VITE_APP_VERSION?: string;
   readonly VITE_API_URL?: string;
   readonly VITE_API_TIMEOUT?: string;
   readonly VITE_FEATURE_FLAGS?: string;
-  
+
   // Add your custom variables here
   // readonly VITE_YOUR_VAR?: string;
 }

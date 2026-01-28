@@ -1,17 +1,17 @@
 /**
  * Pulsar Environment Module
- * 
+ *
  * Unified environment variable access that works in both browser and Node.js
  * Provides type-safe, validated access to environment variables
- * 
+ *
  * @example
  * ```typescript
  * import { env, isDev } from 'pulsar/env';
- * 
+ *
  * if (isDev()) {
  *   console.log('Development mode');
  * }
- * 
+ *
  * const apiUrl = env.get('VITE_API_URL', 'http://localhost:3000');
  * ```
  */
@@ -30,7 +30,7 @@ export interface PulsarEnv {
   readonly SSR: boolean;
   /** Base URL for the application */
   readonly BASE_URL: string;
-  
+
   /**
    * Get an environment variable with optional default value
    * @param key - Environment variable name
@@ -38,14 +38,14 @@ export interface PulsarEnv {
    * @returns Variable value or default
    */
   get<T = string>(key: string, defaultValue?: T): T;
-  
+
   /**
    * Check if an environment variable exists
    * @param key - Environment variable name
    * @returns True if variable exists
    */
   has(key: string): boolean;
-  
+
   /**
    * Get a required environment variable (throws if missing)
    * @param key - Environment variable name
@@ -53,7 +53,7 @@ export interface PulsarEnv {
    * @throws Error if variable is not defined
    */
   getRequired(key: string): string;
-  
+
   /**
    * Get boolean environment variable
    * @param key - Environment variable name
@@ -61,7 +61,7 @@ export interface PulsarEnv {
    * @returns Boolean value
    */
   getBoolean(key: string, defaultValue?: boolean): boolean;
-  
+
   /**
    * Get number environment variable
    * @param key - Environment variable name
@@ -79,12 +79,12 @@ function getEnvValue(key: string): string | undefined {
   if (typeof import.meta !== 'undefined' && import.meta.env) {
     return import.meta.env[key];
   }
-  
+
   // Fall back to process.env (Node.js, SSR)
   if (typeof process !== 'undefined' && process.env) {
     return process.env[key];
   }
-  
+
   return undefined;
 }
 
@@ -93,7 +93,7 @@ function getEnvValue(key: string): string | undefined {
  */
 function getModeInternal(): 'development' | 'production' | 'test' {
   const mode = getEnvValue('MODE') || getEnvValue('NODE_ENV') || 'development';
-  
+
   if (mode === 'test' || mode === 'testing') return 'test';
   if (mode === 'production' || mode === 'prod') return 'production';
   return 'development';
@@ -106,75 +106,77 @@ export const env: PulsarEnv = {
   get MODE() {
     return getModeInternal();
   },
-  
+
   get DEV() {
     return this.MODE === 'development';
   },
-  
+
   get PROD() {
     return this.MODE === 'production';
   },
-  
+
   get SSR() {
     const ssrValue = getEnvValue('SSR');
     if (ssrValue !== undefined) {
       return ssrValue === 'true' || ssrValue === '1';
     }
-    
+
     // Check if we're in a browser environment
     return typeof window === 'undefined';
   },
-  
+
   get BASE_URL() {
     return getEnvValue('BASE_URL') || '/';
   },
-  
+
   get<T = string>(key: string, defaultValue?: T): T {
     const value = getEnvValue(key);
-    
+
     if (value === undefined) {
       return defaultValue as T;
     }
-    
+
     return value as unknown as T;
   },
-  
+
   has(key: string): boolean {
     return getEnvValue(key) !== undefined;
   },
-  
+
   getRequired(key: string): string {
     const value = getEnvValue(key);
-    
+
     if (value === undefined || value === '') {
       throw new Error(
         `[Pulsar Env] Required environment variable "${key}" is not defined. ` +
-        `Please set it in your .env file or environment.`
+          `Please set it in your .env file or environment.`
       );
     }
-    
+
     return value;
   },
-  
+
   getBoolean(key: string, defaultValue = false): boolean {
     const value = getEnvValue(key);
-    
+
     if (value === undefined) {
       return defaultValue;
     }
-    
+
     // Handle various truthy values
     const normalized = value.toLowerCase().trim();
-    return normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on';
+    return (
+      normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on'
+    );
   },
-  
+
   getNumber(key: string, defaultValue = 0): number {
     const value = getEnvValue(key);
-    
+
     if (value === undefined) {
       return defaultValue;
     }
-    
+
     const parsed = Number(value);
     return isNaN(parsed) ? defaultValue : parsed;
   },

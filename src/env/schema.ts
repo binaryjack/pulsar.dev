@@ -1,25 +1,25 @@
 /**
  * Environment Variable Validation Schema
- * 
+ *
  * Minimal validation system for environment variables, inspired by formular.dev's
  * constraint builder pattern. Uses prototype-based classes following Pulsar conventions.
- * 
+ *
  * @example
  * ```typescript
  * import { createEnvSchema, required, oneOf, string } from 'pulsar/env/schema';
- * 
+ *
  * const schema = createEnvSchema({
  *   NODE_ENV: required(oneOf(['development', 'production', 'test'])),
  *   VITE_API_URL: required(string()),
  *   VITE_DEBUG: optional(boolean()),
  * });
- * 
+ *
  * const errors = schema.validate(env);
  * if (errors.length > 0) {
  *   console.error('Environment validation failed:', errors);
  * }
  * ```
- * 
+ *
  * @note
  * This is a lightweight implementation inspired by formular.dev's validation system.
  * For complex form validation, use formular.dev directly.
@@ -63,14 +63,14 @@ export interface IEnvRule {
 export interface IEnvSchema {
   /** Map of variable name to validation rule */
   rules: Record<string, IEnvRule>;
-  
+
   /**
    * Validate environment object against schema
    * @param env - Environment object to validate
    * @returns Array of validation errors (empty if valid)
    */
   validate: (env: Record<string, any>) => IEnvValidationError[];
-  
+
   /**
    * Validate and throw on first error
    * @param env - Environment object to validate
@@ -91,24 +91,24 @@ export interface IStringRuleOptions {
   pattern?: RegExp;
 }
 
-export const StringRule = function(this: IEnvRule, options: IStringRuleOptions = {}) {
+export const StringRule = function (this: IEnvRule, options: IStringRuleOptions = {}) {
   this.type = 'string';
   this.required = false;
   this.expected = 'string';
-  
-  this.validate = function(value: any): boolean {
+
+  this.validate = function (value: any): boolean {
     if (value === undefined || value === null) return !this.required;
-    
+
     if (typeof value !== 'string') return false;
-    
+
     if (options.minLength && value.length < options.minLength) return false;
     if (options.maxLength && value.length > options.maxLength) return false;
     if (options.pattern && !options.pattern.test(value)) return false;
-    
+
     return true;
   };
-  
-  this.getError = function(key: string, value: any): string {
+
+  this.getError = function (key: string, value: any): string {
     if (value === undefined || value === null) {
       return `${key} is required but not defined`;
     }
@@ -126,35 +126,35 @@ export const StringRule = function(this: IEnvRule, options: IStringRuleOptions =
     }
     return `${key} is invalid`;
   };
-} as any as { new(options?: IStringRuleOptions): IEnvRule };
+} as any as { new (options?: IStringRuleOptions): IEnvRule };
 
 /**
  * Boolean validation rule (prototype-based)
  */
-export const BooleanRule = function(this: IEnvRule) {
+export const BooleanRule = function (this: IEnvRule) {
   this.type = 'boolean';
   this.required = false;
   this.expected = 'boolean';
-  
-  this.validate = function(value: any): boolean {
+
+  this.validate = function (value: any): boolean {
     if (value === undefined || value === null) return !this.required;
-    
+
     if (typeof value === 'boolean') return true;
     if (typeof value === 'string') {
       const normalized = value.toLowerCase().trim();
       return ['true', 'false', '1', '0', 'yes', 'no', 'on', 'off'].includes(normalized);
     }
-    
+
     return false;
   };
-  
-  this.getError = function(key: string, value: any): string {
+
+  this.getError = function (key: string, value: any): string {
     if (value === undefined || value === null) {
       return `${key} is required but not defined`;
     }
     return `${key} must be a boolean (true/false, 1/0, yes/no, on/off)`;
   };
-} as any as { new(): IEnvRule };
+} as any as { new (): IEnvRule };
 
 /**
  * Number validation rule (prototype-based)
@@ -165,31 +165,31 @@ export interface INumberRuleOptions {
   integer?: boolean;
 }
 
-export const NumberRule = function(this: IEnvRule, options: INumberRuleOptions = {}) {
+export const NumberRule = function (this: IEnvRule, options: INumberRuleOptions = {}) {
   this.type = 'number';
   this.required = false;
   this.expected = 'number';
-  
-  this.validate = function(value: any): boolean {
+
+  this.validate = function (value: any): boolean {
     if (value === undefined || value === null) return !this.required;
-    
+
     const num = typeof value === 'string' ? Number(value) : value;
-    
+
     if (typeof num !== 'number' || isNaN(num)) return false;
     if (options.integer && !Number.isInteger(num)) return false;
     if (options.min !== undefined && num < options.min) return false;
     if (options.max !== undefined && num > options.max) return false;
-    
+
     return true;
   };
-  
-  this.getError = function(key: string, value: any): string {
+
+  this.getError = function (key: string, value: any): string {
     if (value === undefined || value === null) {
       return `${key} is required but not defined`;
     }
-    
+
     const num = typeof value === 'string' ? Number(value) : value;
-    
+
     if (typeof num !== 'number' || isNaN(num)) {
       return `${key} must be a number`;
     }
@@ -202,31 +202,31 @@ export const NumberRule = function(this: IEnvRule, options: INumberRuleOptions =
     if (options.max !== undefined && num > options.max) {
       return `${key} must be at most ${options.max}`;
     }
-    
+
     return `${key} is invalid`;
   };
-} as any as { new(options?: INumberRuleOptions): IEnvRule };
+} as any as { new (options?: INumberRuleOptions): IEnvRule };
 
 /**
  * OneOf/Enum validation rule (prototype-based)
  */
-export const OneOfRule = function<T>(this: IEnvRule, allowedValues: T[]) {
+export const OneOfRule = function <T>(this: IEnvRule, allowedValues: T[]) {
   this.type = 'oneOf';
   this.required = false;
   this.expected = allowedValues;
-  
-  this.validate = function(value: any): boolean {
+
+  this.validate = function (value: any): boolean {
     if (value === undefined || value === null) return !this.required;
     return allowedValues.includes(value);
   };
-  
-  this.getError = function(key: string, value: any): string {
+
+  this.getError = function (key: string, value: any): string {
     if (value === undefined || value === null) {
       return `${key} is required but not defined`;
     }
     return `${key} must be one of: ${allowedValues.join(', ')}. Got: ${value}`;
   };
-} as any as { new<T>(allowedValues: T[]): IEnvRule };
+} as any as { new <T>(allowedValues: T[]): IEnvRule };
 
 // ==================== HELPER FACTORIES ====================
 
@@ -279,15 +279,15 @@ export function optional(rule: IEnvRule): IEnvRule {
 /**
  * Environment Schema (prototype-based)
  */
-export const EnvSchema = function(this: IEnvSchema, rules: Record<string, IEnvRule>) {
+export const EnvSchema = function (this: IEnvSchema, rules: Record<string, IEnvRule>) {
   this.rules = rules;
-  
-  this.validate = function(env: Record<string, any>): IEnvValidationError[] {
+
+  this.validate = function (env: Record<string, any>): IEnvValidationError[] {
     const errors: IEnvValidationError[] = [];
-    
+
     for (const [key, rule] of Object.entries(this.rules)) {
       const value = env[key];
-      
+
       if (!rule.validate(value)) {
         errors.push({
           key,
@@ -298,26 +298,26 @@ export const EnvSchema = function(this: IEnvSchema, rules: Record<string, IEnvRu
         });
       }
     }
-    
+
     return errors;
   };
-  
-  this.validateOrThrow = function(env: Record<string, any>): void {
+
+  this.validateOrThrow = function (env: Record<string, any>): void {
     const errors = this.validate(env);
-    
+
     if (errors.length > 0) {
-      const errorMessages = errors.map(e => `  - ${e.message}`).join('\n');
+      const errorMessages = errors.map((e) => `  - ${e.message}`).join('\n');
       throw new Error(
         `Environment validation failed:\n${errorMessages}\n\n` +
-        `Please check your .env file or environment variables.`
+          `Please check your .env file or environment variables.`
       );
     }
   };
-} as any as { new(rules: Record<string, IEnvRule>): IEnvSchema };
+} as any as { new (rules: Record<string, IEnvRule>): IEnvSchema };
 
 /**
  * Create an environment validation schema
- * 
+ *
  * @example
  * ```typescript
  * const schema = createEnvSchema({
@@ -326,10 +326,10 @@ export const EnvSchema = function(this: IEnvSchema, rules: Record<string, IEnvRu
  *   VITE_API_TIMEOUT: optional(number({ min: 0 })),
  *   VITE_DEBUG: optional(boolean()),
  * });
- * 
+ *
  * // Validate
  * const errors = schema.validate(process.env);
- * 
+ *
  * // Or throw on error
  * schema.validateOrThrow(process.env);
  * ```
