@@ -82,6 +82,10 @@
     "./build-tools": {
       "import": "./dist/build-tools/index.js",
       "types": "./dist/build-tools/index.d.ts"
+    },
+    "./env": {
+      "import": "./dist/env/index.js",
+      "types": "./dist/env/index.d.ts"
     }
   },
   "files": [
