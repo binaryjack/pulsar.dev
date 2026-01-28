@@ -26,4 +26,7 @@ import type { Dispatch, Reducer, UseReducerReturn } from './use-reducer.types';
  * console.log(count()) // 1
  * ```
  */
-export declare function useReducer<S, A>(reducer: Reducer<S, A>, initialState: S): UseReducerReturn<S, A>;
+export declare function useReducer<S, A>(
+  reducer: Reducer<S, A>,
+  initialState: S
+): UseReducerReturn<S, A>;
