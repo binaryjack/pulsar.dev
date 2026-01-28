@@ -78,6 +78,28 @@ export type { IPortalProps, IPortalSlotProps } from './portal';
 export { DEV, invariant, warn } from './dev';
 export type { IDevError, IDevWarning } from './dev';
 
+// Export environment utilities
+export { env, isDev, isProd, isTest, isSSR, getMode } from './env';
+export type { PulsarEnv } from './env';
+
+// Export environment validation schema
+export {
+  createEnvSchema,
+  string as envString,
+  boolean as envBoolean,
+  number as envNumber,
+  oneOf as envOneOf,
+  required as envRequired,
+  optional as envOptional,
+} from './env';
+export type {
+  IEnvValidationError,
+  IEnvRule,
+  IEnvSchema,
+  IStringRuleOptions,
+  INumberRuleOptions,
+} from './env';
+
 // Export events
 export * from './events';
 

@@ -2,10 +2,13 @@
  * Development mode utilities
  */
 
+import { isDev } from '../env'
+
 /**
  * Check if running in development mode
+ * @deprecated Use isDev() from 'pulsar/env' instead
  */
-export const DEV = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production'
+export const DEV = isDev()
 
 /**
  * Warning message formatter
