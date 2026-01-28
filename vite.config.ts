@@ -7,6 +7,8 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
+        'jsx-runtime': resolve(__dirname, 'src/jsx-runtime.ts'),
+        'jsx-dev-runtime': resolve(__dirname, 'src/jsx-dev-runtime.ts'),
         bootstrap: resolve(__dirname, 'src/bootstrap/index.ts'),
         hooks: resolve(__dirname, 'src/hooks/index.ts'),
         reactivity: resolve(__dirname, 'src/reactivity/index.ts'),

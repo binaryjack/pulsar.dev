@@ -4,7 +4,7 @@
  *
  * @example
  * ```tsx
- * import { lazy, Waiting } from 'pulsar/lazy-loading';
+ * import { lazy, Waiting } from '@pulsar-framework/pulsar.dev/lazy-loading';
  *
  * const Chart = lazy(() => import('./Chart'));
  *

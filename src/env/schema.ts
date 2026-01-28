@@ -6,7 +6,7 @@
  *
  * @example
  * ```typescript
- * import { createEnvSchema, required, oneOf, string } from 'pulsar/env/schema';
+ * import { createEnvSchema, required, oneOf, string } from '@pulsar-framework/pulsar.dev/env/schema';
  *
  * const schema = createEnvSchema({
  *   NODE_ENV: required(oneOf(['development', 'production', 'test'])),

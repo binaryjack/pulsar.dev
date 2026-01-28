@@ -2,19 +2,61 @@
  * Testing Utilities - Main Export
  * Comprehensive testing framework for Pulsar
  */
-export { cleanup, render, setupAutoCleanup } from './render';
+export {
+  act,
+  flush,
+  nextTick,
+  wait,
+  waitFor,
+  waitForElement,
+  waitForElementToBeRemoved,
+  waitForStateUpdate,
+} from './async-utils';
 export { blur, change, click, fireEvent, focus, keyboard, submit, type } from './events';
-export { act, flush, nextTick, wait, waitFor, waitForElement, waitForElementToBeRemoved, waitForStateUpdate, } from './async-utils';
-export { createQueries, screen } from './queries';
-export { createSpy, mockContext, mockFetch, mockLocalStorage, mockRouter, mockService, restoreAllMocks, } from './mocks';
-export { blurField, createMockForm, fillField, fillForm, getFieldError, getFormErrors, isFieldDirty, isFieldTouched, isFieldValid, isFormSubmitting, isFormValid, submitForm, waitForFieldValidation, waitForFormSubmission, } from './formular-utils';
-export type { IAccessibilityQueries, IFireEventOptions, IMockRouterOptions, IMockService, IQueryOptions, IRenderOptions, IRenderResult, IWaitForOptions, TCleanupFunction, } from './testing.types';
+export {
+  blurField,
+  createMockForm,
+  fillField,
+  fillForm,
+  getFieldError,
+  getFormErrors,
+  isFieldDirty,
+  isFieldTouched,
+  isFieldValid,
+  isFormSubmitting,
+  isFormValid,
+  submitForm,
+  waitForFieldValidation,
+  waitForFormSubmission,
+} from './formular-utils';
 export type { IMockFormOptions } from './formular-utils';
+export {
+  createSpy,
+  mockContext,
+  mockFetch,
+  mockLocalStorage,
+  mockRouter,
+  mockService,
+  restoreAllMocks,
+} from './mocks';
+export { createQueries, screen } from './queries';
+export { cleanup, render, setupAutoCleanup } from './render';
+export type {
+  IAccessibilityQueries,
+  IFireEventOptions,
+  IMockRouterOptions,
+  IMockService,
+  IQueryOptions,
+  IRenderOptions,
+  IRenderResult,
+  IWaitForOptions,
+  TCleanupFunction,
+} from './testing.types';
 /**
  * Usage Example:
  *
  * ```typescript
- * import { render, screen, fireEvent, waitFor } from 'pulsar/testing';
+ * import { render, screen, fireEvent, waitFor } from '@pulsar-framework/pulsar.dev/testing';
  *
  * describe('Counter', () => {
  *   it('increments on click', async () => {

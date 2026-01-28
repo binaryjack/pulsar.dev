@@ -4,7 +4,7 @@
  *
  * @example
  * ```typescript
- * import { lazyRoute, generateRouteManifest } from 'pulsar/router';
+ * import { lazyRoute, generateRouteManifest } from '@pulsar-framework/pulsar.dev/router';
  *
  * const routes = [
  *   lazyRoute({
@@ -19,7 +19,37 @@
  */
 export { usePrefetchLink, usePrefetchOnMount, usePrefetchRoute } from './hooks';
 export { isLazyRoute, lazyRoute, makeLazyRoutes } from './lazy-route';
-export { calculateTotalSize, exportManifest, generateRouteManifest, getPreloadRoutes, getRouteManifestByPath, getRoutePaths, importManifest, } from './route-manifest';
-export { SmartPrefetcher, clearRouteCache, clearRouteCacheEntry, createPrefetchLink, getCachedRoute, getRouteCacheSize, isRouteCached, prefetchRoute, prefetchRouteWithStrategy, prefetchRoutes, prefetchRoutesWithOptions, } from './route-prefetch';
-export { extractRoutes, findRouteByPath, getAllLazyRoutes, renderLazyRoute, } from './router-integration';
-export type { ILazyRoute, IRouteLoaderCache, IRouteManifest, IRoutePrefetchOptions, } from './lazy-route.types';
+export type {
+  ILazyRoute,
+  IRouteLoaderCache,
+  IRouteManifest,
+  IRoutePrefetchOptions,
+} from './lazy-route.types';
+export {
+  calculateTotalSize,
+  exportManifest,
+  generateRouteManifest,
+  getPreloadRoutes,
+  getRouteManifestByPath,
+  getRoutePaths,
+  importManifest,
+} from './route-manifest';
+export {
+  SmartPrefetcher,
+  clearRouteCache,
+  clearRouteCacheEntry,
+  createPrefetchLink,
+  getCachedRoute,
+  getRouteCacheSize,
+  isRouteCached,
+  prefetchRoute,
+  prefetchRouteWithStrategy,
+  prefetchRoutes,
+  prefetchRoutesWithOptions,
+} from './route-prefetch';
+export {
+  extractRoutes,
+  findRouteByPath,
+  getAllLazyRoutes,
+  renderLazyRoute,
+} from './router-integration';

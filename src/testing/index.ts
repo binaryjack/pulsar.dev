@@ -73,7 +73,7 @@ export type { IMockFormOptions } from './formular-utils';
  * Usage Example:
  *
  * ```typescript
- * import { render, screen, fireEvent, waitFor } from 'pulsar/testing';
+ * import { render, screen, fireEvent, waitFor } from '@pulsar-framework/pulsar.dev/testing';
  *
  * describe('Counter', () => {
  *   it('increments on click', async () => {

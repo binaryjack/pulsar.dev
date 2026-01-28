@@ -6,7 +6,7 @@
  *
  * @example
  * ```typescript
- * import { env, isDev } from 'pulsar/env';
+ * import { env, isDev } from '@pulsar-framework/pulsar.dev/env';
  *
  * if (isDev()) {
  *   console.log('Development mode');
@@ -224,24 +224,24 @@ export function getMode(): 'development' | 'production' | 'test' {
 
 // Export validation schema utilities
 export type {
-  IEnvValidationError,
   IEnvRule,
   IEnvSchema,
-  IStringRuleOptions,
+  IEnvValidationError,
   INumberRuleOptions,
+  IStringRuleOptions,
 } from './schema';
 
 export {
-  createEnvSchema,
-  string,
-  boolean,
-  number,
-  oneOf,
-  required,
-  optional,
-  StringRule,
   BooleanRule,
+  EnvSchema,
   NumberRule,
   OneOfRule,
-  EnvSchema,
+  StringRule,
+  boolean,
+  createEnvSchema,
+  number,
+  oneOf,
+  optional,
+  required,
+  string,
 } from './schema';

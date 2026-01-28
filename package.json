@@ -16,8 +16,8 @@
       "types": "./dist/jsx-runtime.d.ts"
     },
     "./jsx-dev-runtime": {
-      "import": "./dist/jsx-runtime.js",
-      "types": "./dist/jsx-runtime.d.ts"
+      "import": "./dist/jsx-dev-runtime.js",
+      "types": "./dist/jsx-dev-runtime.d.ts"
     },
     "./bootstrap": {
       "import": "./dist/bootstrap.js",
@@ -115,7 +115,7 @@
   "author": "Tadeo Piana <https://www.linkedin.com/in/tadeopiana/>",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.19.7",
+    "@types/node": "^20.19.30",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
     "eslint": "^9.18.0",

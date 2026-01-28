@@ -30,7 +30,7 @@ export interface BundleAnalyzerPluginOptions {
  * @example
  * ```typescript
  * // vite.config.ts
- * import { bundleAnalyzer } from 'pulsar/build-tools';
+ * import { bundleAnalyzer } from '@pulsar-framework/pulsar.dev/build-tools';
  *
  * export default {
  *   plugins: [

@@ -4,7 +4,7 @@
  *
  * @example
  * ```typescript
- * import { analyzeBundle, generateReport, SizeTracker } from 'pulsar/build-tools';
+ * import { analyzeBundle, generateReport, SizeTracker } from '@pulsar-framework/pulsar.dev/build-tools';
  *
  * // Analyze bundle
  * const analysis = await analyzeBundle(buildStats, {
@@ -33,7 +33,7 @@ export {
   isCompressible,
 } from './gzip-utils';
 export { generateComparisonReport, generateReport } from './report-generator';
-export { calculateBudgetRemaining, checkSizeThreshold, SizeTracker } from './size-tracker';
+export { SizeTracker, calculateBudgetRemaining, checkSizeThreshold } from './size-tracker';
 
 export type {
   IBuildStats,

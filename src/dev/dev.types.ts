@@ -6,7 +6,7 @@ import { isDev } from '../env';
 
 /**
  * Check if running in development mode
- * @deprecated Use isDev() from 'pulsar/env' instead
+ * @deprecated Use isDev() from '@pulsar-framework/pulsar.dev/env' instead
  */
 export const DEV = isDev();
 

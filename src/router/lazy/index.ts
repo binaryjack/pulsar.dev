@@ -4,7 +4,7 @@
  *
  * @example
  * ```typescript
- * import { lazyRoute, generateRouteManifest } from 'pulsar/router';
+ * import { lazyRoute, generateRouteManifest } from '@pulsar-framework/pulsar.dev/router';
  *
  * const routes = [
  *   lazyRoute({
