@@ -32,7 +32,7 @@ export default defineConfig({
       },
     },
     rollupOptions: {
-      external: [],
+      external: ['fs', 'fs/promises', 'path', 'node:fs', 'node:fs/promises', 'node:path'],
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',
