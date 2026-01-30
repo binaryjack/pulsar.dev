@@ -39,6 +39,32 @@ export default [
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'react',
+              importNames: ['useImperativeHandle', 'forwardRef'],
+              message:
+                '🚫 IMPERATIVE PATTERNS FORBIDDEN: Use declarative props (isOpen, onClose) instead of imperative APIs (ref.open(), ref.close()). Components must be controlled via props only.',
+            },
+          ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "Identifier[name='useImperativeHandle']",
+          message:
+            '🚫 IMPERATIVE PATTERNS FORBIDDEN: useImperativeHandle creates imperative APIs. Use declarative props instead (e.g., isOpen={true} instead of ref.open()).',
+        },
+        {
+          selector: "Identifier[name='forwardRef']",
+          message:
+            '🚫 IMPERATIVE PATTERNS FORBIDDEN: forwardRef is typically used for imperative APIs. Use declarative props to control component state.',
+        },
+      ],
     },
   },
   {

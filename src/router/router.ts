@@ -1,6 +1,6 @@
 /**
  * Router component
- * Hash-based client-side routing with declarative Route children
+ * HTML5 History API client-side routing with declarative Route children
  * Now with path parameters, query strings, and navigation guards
  */
 
@@ -15,7 +15,7 @@ interface IRouterProps {
 }
 
 /**
- * Router component - manages hash-based routing
+ * Router component - manages HTML5 History API routing
  * Expects Route components as children
  */
 export const Router = ({ children, fallback }: IRouterProps): HTMLElement => {
@@ -41,18 +41,15 @@ export const Router = ({ children, fallback }: IRouterProps): HTMLElement => {
   outlet.className = 'router-outlet';
   container.appendChild(outlet);
 
-  // Function to get current hash path
+  // Function to get current pathname
   const getCurrentPath = (): string => {
-    const hash = window.location.hash.slice(1) || '/';
-    // Remove query string for matching
-    return hash.split('?')[0];
+    const pathname = window.location.pathname || '/';
+    return pathname;
   };
 
   // Function to get query string
   const getCurrentQuery = (): string => {
-    const hash = window.location.hash.slice(1) || '/';
-    const queryIndex = hash.indexOf('?');
-    return queryIndex !== -1 ? hash.slice(queryIndex) : '';
+    return window.location.search;
   };
 
   // Function to render current route
@@ -119,12 +116,12 @@ export const Router = ({ children, fallback }: IRouterProps): HTMLElement => {
   // Initial render
   renderCurrentRoute();
 
-  // Listen for hash changes
-  window.addEventListener('hashchange', renderCurrentRoute);
+  // Listen for popstate (back/forward navigation)
+  window.addEventListener('popstate', renderCurrentRoute);
 
   // Cleanup on removal (if lifecycle is integrated)
   (container as any).__cleanup = () => {
-    window.removeEventListener('hashchange', renderCurrentRoute);
+    window.removeEventListener('popstate', renderCurrentRoute);
   };
 
   return container;

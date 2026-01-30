@@ -9,6 +9,14 @@ declare namespace JSX {
   export type Children = Child | Child[];
   export type Key = string | number;
 
+  // Ref type for element references
+  export interface Ref<T> {
+    current: T;
+  }
+
+  // Event handler type
+  export type EventHandler<E extends Event = Event> = (event: E) => void;
+
   // Helper type for element props with children, key, and className support
   type ElementProps<T> = Partial<Omit<T, 'children' | 'className' | 'style'>> & {
     children?: Children;
@@ -16,6 +24,42 @@ declare namespace JSX {
     class?: string;
     className?: string;
     style?: string | Partial<CSSStyleDeclaration> | Record<string, string | number> | null;
+    ref?: Ref<T | null> | ((el: T | null) => void);
+
+    // Event handlers - support both lowercase (DOM standard) and camelCase (React-style)
+    // Prefer lowercase for consistency with DOM API
+    onclick?: EventHandler<MouseEvent>;
+    onClick?: EventHandler<MouseEvent>;
+    onchange?: EventHandler<Event>;
+    onChange?: EventHandler<Event>;
+    oninput?: EventHandler<InputEvent>;
+    onInput?: EventHandler<InputEvent>;
+    onsubmit?: EventHandler<SubmitEvent>;
+    onSubmit?: EventHandler<SubmitEvent>;
+    onkeydown?: EventHandler<KeyboardEvent>;
+    onKeyDown?: EventHandler<KeyboardEvent>;
+    onkeyup?: EventHandler<KeyboardEvent>;
+    onKeyUp?: EventHandler<KeyboardEvent>;
+    onkeypress?: EventHandler<KeyboardEvent>;
+    onKeyPress?: EventHandler<KeyboardEvent>;
+    onfocus?: EventHandler<FocusEvent>;
+    onFocus?: EventHandler<FocusEvent>;
+    onblur?: EventHandler<FocusEvent>;
+    onBlur?: EventHandler<FocusEvent>;
+    onmouseenter?: EventHandler<MouseEvent>;
+    onMouseEnter?: EventHandler<MouseEvent>;
+    onmouseleave?: EventHandler<MouseEvent>;
+    onMouseLeave?: EventHandler<MouseEvent>;
+    onmouseover?: EventHandler<MouseEvent>;
+    onMouseOver?: EventHandler<MouseEvent>;
+    onmouseout?: EventHandler<MouseEvent>;
+    onMouseOut?: EventHandler<MouseEvent>;
+    onmousemove?: EventHandler<MouseEvent>;
+    onMouseMove?: EventHandler<MouseEvent>;
+    onmousedown?: EventHandler<MouseEvent>;
+    onMouseDown?: EventHandler<MouseEvent>;
+    onmouseup?: EventHandler<MouseEvent>;
+    onMouseUp?: EventHandler<MouseEvent>;
   };
 
   interface IntrinsicElements {
@@ -139,6 +183,6 @@ declare namespace JSX {
   }
 
   interface ElementChildrenAttribute {
-    children: {};
+    children: Children;
   }
 }

@@ -93,7 +93,6 @@ function initializeListeners(this: IRouterContextInternal): void {
     updateLocation.call(this);
   };
 
-  window.addEventListener('hashchange', handleNavigation);
   window.addEventListener('popstate', handleNavigation);
 }
 
@@ -111,11 +110,7 @@ function updateLocation(this: IRouterContextInternal): void {
  * @internal
  */
 function getCurrentPath(this: IRouterContextInternal): string {
-  // Support both hash and pathname routing
-  if (window.location.hash) {
-    return window.location.hash.slice(1) || '/';
-  }
-  return window.location.pathname;
+  return window.location.pathname || '/';
 }
 
 // Reactive property getters
@@ -189,12 +184,18 @@ RouterContext.prototype.navigate = async function (
     }
   }
 
-  // Perform navigation
+  // Perform navigation using HTML5 History API
   if (options?.replace) {
-    window.location.replace(`#${path}`);
+    window.history.replaceState({}, '', path);
   } else {
-    window.location.hash = path;
+    window.history.pushState({}, '', path);
   }
+
+  // Manually trigger location update since pushState doesn't fire popstate
+  updateLocation.call(this);
+
+  // Trigger a custom event for router to re-render
+  window.dispatchEvent(new PopStateEvent('popstate'));
 
   // Run after guards
   this.afterGuards.forEach((guard) => guard(path, from));
