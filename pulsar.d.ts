@@ -10,10 +10,12 @@ declare namespace JSX {
   export type Key = string | number;
 
   // Helper type for element props with children, key, and className support
-  type ElementProps<T> = Partial<Omit<T, 'children' | 'className'>> & {
+  type ElementProps<T> = Partial<Omit<T, 'children' | 'className' | 'style'>> & {
     children?: Children;
     key?: Key;
+    class?: string;
     className?: string;
+    style?: string | Partial<CSSStyleDeclaration> | Record<string, string | number> | null;
   };
 
   interface IntrinsicElements {
