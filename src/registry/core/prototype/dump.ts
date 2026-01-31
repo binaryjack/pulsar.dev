@@ -15,7 +15,7 @@ export const dump = function (this: ICoreRegistry): Record<string, unknown> {
   });
 
   // Get component IDs from component tree
-  const components = Array.from(this._components.keys());
+  const components = Array.from(this._instances.keys());
 
   return {
     signals,

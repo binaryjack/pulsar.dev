@@ -9,6 +9,9 @@ import { IShowProps } from './control-flow.types';
  * KEY DIFFERENCE: Uses wire() to reactively show/hide content
  * without destroying and recreating DOM nodes
  *
+ * CLEANUP: Wire disposer is stored in $REGISTRY._nodes and will be
+ * automatically cleaned up by NodeWatcher when container is removed
+ *
  * @example
  * ```tsx
  * <Show when={isVisible()} fallback={<Loading />}>
@@ -56,26 +59,30 @@ export function ShowRegistry(props: IShowProps): HTMLElement {
         currentElement = whenElement;
       }
     } else {
-      // Show fallback content
-      if (props.fallback && !fallbackElement) {
-        // Create fallback once
-        fallbackElement =
-          typeof props.fallback === 'function' ? props.fallback() : (props.fallback as HTMLElement);
+      // Hide "when" content - CRITICAL: Remove even if no fallback
+      if (whenElement && container.contains(whenElement)) {
+        container.removeChild(whenElement);
       }
 
-      // Swap if needed
-      if (currentElement !== fallbackElement && fallbackElement) {
-        // Remove when element
-        if (whenElement && container.contains(whenElement)) {
-          container.removeChild(whenElement);
+      // Show fallback content if provided
+      if (props.fallback) {
+        if (!fallbackElement) {
+          // Create fallback once
+          fallbackElement =
+            typeof props.fallback === 'function'
+              ? props.fallback()
+              : (props.fallback as HTMLElement);
         }
 
-        // Add fallback if exists
+        // Add fallback if not already in container
         if (fallbackElement && !container.contains(fallbackElement)) {
           container.appendChild(fallbackElement);
         }
 
         currentElement = fallbackElement;
+      } else {
+        // No fallback, just ensure container is empty
+        currentElement = null;
       }
     }
   });

@@ -1,0 +1,694 @@
+
+> @pulsar-framework/pulsar.dev@0.7.0-alpha test E:\Sources\visual-schema-builder\packages\pulsar.dev
+> vitest run "--run"
+
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mE:/Sources/visual-schema-builder/packages/pulsar.dev[39m
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mexecute()[2m > [22m[2mshould execute factory and return result
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mexecute()[2m > [22m[2mshould track component context
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mexecute()[2m > [22m[2mshould track nested components
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mexecute()[2m > [22m[2mshould restore parent context after child execution
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mexecute()[2m > [22m[2mshould track multiple component instances
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mgetCurrent()[2m > [22m[2mshould return undefined outside component context
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mgetCurrent()[2m > [22m[2mshould return current context inside component
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mwire()[2m > [22m[2mshould update element property from signal
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mwire()[2m > [22m[2mshould update nested property paths
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mwire()[2m > [22m[2mshould return disposer function
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mwire()[2m > [22m[2mshould handle multiple wires on same element
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mwire()[2m > [22m[2mshould dispose wire cleanly
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mnextHid()[2m > [22m[2mshould generate sequential HIDs
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mnextHid()[2m > [22m[2mshould reset HID counter on reset
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mnextHid()[2m > [22m[2mshould reset HID counter on reset
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mdump()[2m > [22m[2mshould dump empty state initially
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mdump()[2m > [22m[2mshould include HID counter in dump
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mdump()[2m > [22m[2mshould include component list in dump
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mboot()[2m > [22m[2mshould boot with valid state
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mboot()[2m > [22m[2mshould handle null state gracefully
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mboot()[2m > [22m[2mshould restore HID counter
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2menableDebug()[2m > [22m[2mshould enable debug mode
+[22m[39m[Pulsar Registry] Debug mode enabled
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2menableDebug()[2m > [22m[2mshould enable debug mode
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mdisableDebug()[2m > [22m[2mshould disable debug mode
+[22m[39m[Pulsar Registry] Debug mode enabled
+[Pulsar Registry] Debug mode disabled
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mdisableDebug()[2m > [22m[2mshould disable debug mode
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mgetStats()[2m > [22m[2mshould return registry statistics
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mgetStats()[2m > [22m[2mshould track component count
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mgetComponentTree()[2m > [22m[2mshould return component tree
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mgetComponentTree()[2m > [22m[2mshould include component IDs and parents
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mgetSignals()[2m > [22m[2mshould return signal map
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mlogState()[2m > [22m[2mshould log state without throwing
+[22m[39m[Pulsar Registry] Current State
+  Stats: {
+    components: [33m0[39m,
+    signals: [33m0[39m,
+    stackDepth: [33m0[39m,
+    ownerStackDepth: [33m0[39m,
+    hidCounter: [33m0[39m
+  }
+  Component Tree: {}
+  Signals: {}
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mlogState()[2m > [22m[2mshould log state without throwing
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mreset()[2m > [22m[2mshould reset all state
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mDebug Methods[2m > [22m[2mreset()[2m > [22m[2mshould reset all state
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mrunInScope()[2m > [22m[2mshould run function in effect owner scope
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mgetCurrentOwner()[2m > [22m[2mshould return undefined outside owner scope
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mRegistration[2m > [22m[2mshould register a service with factory
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (singleton)
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle rapid component creation
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mRegistration[2m > [22m[2mshould register a service with class
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (singleton)
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle deeply nested components
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mRegistration[2m > [22m[2mshould register a service instance
+[22m[39m[ServiceManager] Registered instance: Symbol(ITestService)
+
+[90mstdout[2m | src/registry/__tests__/unit/core-registry.test.ts[2m > [22m[2mCoreRegistry - Unit Tests[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle wire on non-existent properties gracefully
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mResolution[2m > [22m[2mshould resolve a registered service
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (singleton)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mLifetimes[2m > [22m[2mshould cache singleton instances
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (singleton)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mLifetimes[2m > [22m[2mshould create new transient instances
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (transient)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mLifetimes[2m > [22m[2mshould cache scoped instances within scope
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (scoped)
+
+ [32mΓ£ô[39m src/registry/__tests__/unit/core-registry.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mDependencies[2m > [22m[2mshould resolve service with dependencies
+[22m[39m[ServiceManager] Registered: Symbol(IConfigService) (singleton)
+[ServiceManager] Registered: Symbol(IApiService) (singleton)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mDependencies[2m > [22m[2mshould detect circular dependencies
+[22m[39m[ServiceManager] Registered: Symbol(A) (transient)
+[ServiceManager] Registered: Symbol(B) (transient)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mDependencies[2m > [22m[2mshould validate no cycles
+[22m[39m[ServiceManager] Registered: Symbol(A) (transient)
+[ServiceManager] Registered: Symbol(B) (transient)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mLazy Resolution[2m > [22m[2mshould create lazy resolver
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (singleton)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mLazy Resolution[2m > [22m[2mshould cache lazy resolver results
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (singleton)
+
+stderr | src/jsx-runtime/__tests__/t-element.test.ts > t_element - Unit Tests > SSR Hydration (data-hid) > should create new element if data-hid not found
+[t_element] SSR hydration: Could not find element with data-hid="el_999"
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mScopes[2m > [22m[2mshould access parent services from scope
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (singleton)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mScopes[2m > [22m[2mshould have separate scoped instances
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (scoped)
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mDisposal[2m > [22m[2mshould call dispose on disposable services
+[22m[39m[ServiceManager] Registered: Symbol(ITestService) (singleton)
+[ServiceManager] Disposed: Symbol(ITestService)
+
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould maintain stable DOM nodes when array reorders
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/di/service-manager.test.ts[2m > [22m[2mServiceManager[2m > [22m[2mUtilities[2m > [22m[2mshould list registered services
+[22m[39m[ServiceManager] Registered: Symbol(A) (transient)
+[ServiceManager] Registered: Symbol(B) (transient)
+
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould maintain stable DOM nodes when array reorders
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/di/service-manager.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould handle complex drag-and-drop reordering
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render empty list
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould handle complex drag-and-drop reordering
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render list with items
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/memory-leaks.test.ts[2m > [22m[2mMemory Leak Prevention[2m > [22m[2mshould cleanup effect when disposed manually
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould handle reverse operation
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render list with complex objects
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould handle reverse operation
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mReactive Updates[2m > [22m[2mshould update when signal changes
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/jsx-runtime/__tests__/t-element.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould handle add/remove during reorder
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mReactive Updates[2m > [22m[2mshould remove items when list shrinks
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould handle add/remove during reorder
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mReactive Updates[2m > [22m[2mshould clear all items when list becomes empty
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/__tests__/registry-integration.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould maintain element identity across multiple operations
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mKey Function[2m > [22m[2mshould use key function for reconciliation
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/drag-drop.test.ts[2m > [22m[2mForRegistry Drag-and-Drop Integration[2m > [22m[2mshould maintain element identity across multiple operations
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mKey Function[2m > [22m[2mshould maintain stable references with keys
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mReverse Order Bug Prevention[2m > [22m[2mshould NOT reverse order when prepending item
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mReverse Order Bug Prevention[2m > [22m[2mshould maintain order when inserting in middle
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/control-flow/__tests__/drag-drop.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mReverse Order Bug Prevention[2m > [22m[2mshould maintain order when removing from middle
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mIndex Accessor[2m > [22m[2mshould provide index accessor to children
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mIndex Accessor[2m > [22m[2mshould update index when items reorder
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle undefined/null items gracefully
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle rapid updates
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mComplete Component Lifecycle[2m > [22m[2mshould handle component mount, update, and unmount
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle duplicate keys
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mComplete Component Lifecycle[2m > [22m[2mshould handle component mount, update, and unmount
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/__tests__/for-registry.test.ts[2m > [22m[2mForRegistry - Unit Tests[2m > [22m[2mMemory Management[2m > [22m[2mshould cleanup removed items
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mComplete Component Lifecycle[2m > [22m[2mshould handle nested component lifecycle
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mComplete Component Lifecycle[2m > [22m[2mshould handle nested component lifecycle
+[22m[39m[Pulsar Registry] State reset
+
+ [31mΓ¥»[39m src/control-flow/__tests__/for-registry.test.ts [2m([22m[2m17 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 37[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mBasic Rendering[2m > [22mshould render empty list[32m 5[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mBasic Rendering[2m > [22mshould render list with items[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mBasic Rendering[2m > [22mshould render list with complex objects[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mReactive Updates[2m > [22mshould update when signal changes[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mReactive Updates[2m > [22mshould remove items when list shrinks[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mReactive Updates[2m > [22mshould clear all items when list becomes empty[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mKey Function[2m > [22mshould use key function for reconciliation[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mKey Function[2m > [22mshould maintain stable references with keys[32m 5[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mReverse Order Bug Prevention[2m > [22mshould NOT reverse order when prepending item[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mReverse Order Bug Prevention[2m > [22mshould maintain order when inserting in middle[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mReverse Order Bug Prevention[2m > [22mshould maintain order when removing from middle[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mIndex Accessor[2m > [22mshould provide index accessor to children[32m 1[2mms[22m[39m
+[31m   [31m├ù[31m ForRegistry - Unit Tests[2m > [22mIndex Accessor[2m > [22mshould update index when items reorder[39m[32m 7[2mms[22m[39m
+[31m     ΓåÆ expected '0: A' to be '0: C' // Object.is equality[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mEdge Cases[2m > [22mshould handle undefined/null items gracefully[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mEdge Cases[2m > [22mshould handle rapid updates[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mEdge Cases[2m > [22mshould handle duplicate keys[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m ForRegistry - Unit Tests[2m > [22mMemory Management[2m > [22mshould cleanup removed items[32m 1[2mms[22m[39m
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mDrag-and-Drop Scenario (Original Bug)[2m > [22m[2mshould NOT reverse order when dragging items
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mDrag-and-Drop Scenario (Original Bug)[2m > [22m[2mshould NOT reverse order when dragging items
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mDrag-and-Drop Scenario (Original Bug)[2m > [22m[2mshould maintain stable references during multiple drags
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/testing/__tests__/formular-utils.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mDrag-and-Drop Scenario (Original Bug)[2m > [22m[2mshould maintain stable references during multiple drags
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mSSR Hydration Flow[2m > [22m[2mshould hydrate from server state
+[22m[39m[Pulsar Registry] State reset
+
+stderr | src/__tests__/integration/full-flow.test.ts > Registry Pattern - Full Integration Tests > SSR Hydration Flow > should hydrate from server state
+[t_element] SSR hydration: Could not find element with data-hid="el_0"
+[t_element] SSR hydration: Could not find element with data-hid="el_1"
+[t_element] SSR hydration: Could not find element with data-hid="el_0"
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mSSR Hydration Flow[2m > [22m[2mshould hydrate from server state
+[22m[39m[Pulsar Registry] State reset
+[Pulsar Registry] State reset
+[Pulsar SSR] Registry hydrated from server state.
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mSSR Hydration Flow[2m > [22m[2mshould hydrate from server state
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mSSR Hydration Flow[2m > [22m[2mshould handle full SSR ΓåÆ hydration cycle
+[22m[39m[Pulsar Registry] State reset
+
+stderr | src/__tests__/integration/full-flow.test.ts > Registry Pattern - Full Integration Tests > SSR Hydration Flow > should handle full SSR ΓåÆ hydration cycle
+[t_element] SSR hydration: Could not find element with data-hid="el_0"
+[t_element] SSR hydration: Could not find element with data-hid="el_0"
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mSSR Hydration Flow[2m > [22m[2mshould handle full SSR ΓåÆ hydration cycle
+[22m[39m[Pulsar Registry] State reset
+[Pulsar Registry] State reset
+[Pulsar SSR] Registry hydrated from server state.
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mSSR Hydration Flow[2m > [22m[2mshould handle full SSR ΓåÆ hydration cycle
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mComplex Nested State[2m > [22m[2mshould handle deeply nested reactive state
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mComplex Nested State[2m > [22m[2mshould handle deeply nested reactive state
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mConditional Rendering with ShowRegistry[2m > [22m[2mshould show/hide content based on condition
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mConditional Rendering with ShowRegistry[2m > [22m[2mshould show/hide content based on condition
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mConditional Rendering with ShowRegistry[2m > [22m[2mshould combine ForRegistry and ShowRegistry
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mConditional Rendering with ShowRegistry[2m > [22m[2mshould combine ForRegistry and ShowRegistry
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mPerformance and Memory[2m > [22m[2mshould handle 1000 simultaneous wires efficiently
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mPerformance and Memory[2m > [22m[2mshould handle 1000 simultaneous wires efficiently
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mPerformance and Memory[2m > [22m[2mshould cleanup wires when elements removed
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mPerformance and Memory[2m > [22m[2mshould cleanup wires when elements removed
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mPerformance and Memory[2m > [22m[2mshould handle rapid component mounting/unmounting
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mPerformance and Memory[2m > [22m[2mshould handle rapid component mounting/unmounting
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mReal-World Scenarios[2m > [22m[2mshould handle todo list with add/remove/toggle
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mReal-World Scenarios[2m > [22m[2mshould handle todo list with add/remove/toggle
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mReal-World Scenarios[2m > [22m[2mshould handle form with multiple inputs
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/__tests__/integration/full-flow.test.ts[2m > [22m[2mRegistry Pattern - Full Integration Tests[2m > [22m[2mReal-World Scenarios[2m > [22m[2mshould handle form with multiple inputs
+[22m[39m[Pulsar Registry] State reset
+
+ [31mΓ¥»[39m src/__tests__/integration/full-flow.test.ts [2m([22m[2m14 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 95[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mComplete Component Lifecycle[2m > [22mshould handle component mount, update, and unmount[32m 8[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mComplete Component Lifecycle[2m > [22mshould handle nested component lifecycle[32m 6[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mDrag-and-Drop Scenario (Original Bug)[2m > [22mshould NOT reverse order when dragging items[32m 7[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mDrag-and-Drop Scenario (Original Bug)[2m > [22mshould maintain stable references during multiple drags[32m 4[2mms[22m[39m
+[31m   [31m├ù[31m Registry Pattern - Full Integration Tests[2m > [22mSSR Hydration Flow[2m > [22mshould hydrate from server state[39m[32m 15[2mms[22m[39m
+[31m     ΓåÆ expected undefined to be 'Count: 42' // Object.is equality[39m
+[31m   [31m├ù[31m Registry Pattern - Full Integration Tests[2m > [22mSSR Hydration Flow[2m > [22mshould handle full SSR ΓåÆ hydration cycle[39m[32m 4[2mms[22m[39m
+[31m     ΓåÆ expected null to be 'el_0' // Object.is equality[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mComplex Nested State[2m > [22mshould handle deeply nested reactive state[32m 3[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mConditional Rendering with ShowRegistry[2m > [22mshould show/hide content based on condition[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mConditional Rendering with ShowRegistry[2m > [22mshould combine ForRegistry and ShowRegistry[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mPerformance and Memory[2m > [22mshould handle 1000 simultaneous wires efficiently[32m 21[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mPerformance and Memory[2m > [22mshould cleanup wires when elements removed[32m 6[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mPerformance and Memory[2m > [22mshould handle rapid component mounting/unmounting[32m 7[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mReal-World Scenarios[2m > [22mshould handle todo list with add/remove/toggle[32m 4[2mms[22m[39m
+   [32mΓ£ô[39m Registry Pattern - Full Integration Tests[2m > [22mReal-World Scenarios[2m > [22mshould handle form with multiple inputs[32m 4[2mms[22m[39m
+ [31mΓ¥»[39m src/dev/dev.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 12[2mms[22m[39m
+   [32mΓ£ô[39m Dev Utilities[2m > [22mwarn()[2m > [22mshould log warning with string[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m Dev Utilities[2m > [22mwarn()[2m > [22mshould format warning with component[32m 0[2mms[22m[39m
+   [32mΓ£ô[39m Dev Utilities[2m > [22mwarn()[2m > [22mshould include hint in warning[32m 0[2mms[22m[39m
+   [32mΓ£ô[39m Dev Utilities[2m > [22minvariant()[2m > [22mshould not throw when condition is true[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m Dev Utilities[2m > [22minvariant()[2m > [22mshould throw when condition is false in dev[32m 0[2mms[22m[39m
+   [32mΓ£ô[39m Dev Utilities[2m > [22minvariant()[2m > [22mshould include component in error[32m 0[2mms[22m[39m
+   [32mΓ£ô[39m Dev Utilities[2m > [22minvariant()[2m > [22mshould include hint in error[32m 0[2mms[22m[39m
+   [32mΓ£ô[39m Dev Utilities[2m > [22mDEV flag[2m > [22mshould be boolean[32m 0[2mms[22m[39m
+[31m   [31m├ù[31m Dev Utilities[2m > [22mDEV flag[2m > [22mshould match NODE_ENV[39m[32m 6[2mms[22m[39m
+[31m     ΓåÆ expected false to be true // Object.is equality[39m
+stderr | src/error-boundary/error-boundary.test.ts > Error Boundary System > Catcher component > should render nothing when no error
+Catcher must be used inside a Tryer component
+
+stderr | src/error-boundary/error-boundary.test.ts > Error Boundary System > Catcher component > should warn when used without Tryer
+Catcher must be used inside a Tryer component
+
+ [32mΓ£ô[39m src/error-boundary/error-boundary.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mRegistration Performance[2m > [22m[2mshould register 1000 elements in < 10ms
+[22m[39mΓ£ô Registered 1000 elements in 2.68ms
+
+ [32mΓ£ô[39m src/registry/__tests__/integration/registry-integration.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mRegistration Performance[2m > [22m[2mshould register hierarchical elements efficiently
+[22m[39mΓ£ô Registered 1 root + 999 children in 8.04ms
+
+ [32mΓ£ô[39m src/registry/__tests__/integration/registry-scenarios.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+stderr | src/portal/portal.test.ts > Portal > should render content to document.body by default
+[Portal] No ApplicationRoot found, skipping registry
+
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mLookup Performance[2m > [22m[2mshould lookup 10000 elements in < 5ms
+[22m[39mΓ£ô 10000 lookups in 9.92ms
+
+stderr | src/portal/portal.test.ts > Portal > should render to specified container by selector
+[Portal] No ApplicationRoot found, skipping registry
+
+stderr | src/portal/portal.test.ts > Portal > should render to specified HTMLElement
+[Portal] No ApplicationRoot found, skipping registry
+
+stderr | src/portal/portal.test.ts > Portal > should support function children
+[Portal] No ApplicationRoot found, skipping registry
+
+stderr | src/portal/portal.test.ts > Portal > should register portal with manager
+[Portal] No ApplicationRoot found, skipping registry
+
+stderr | src/portal/portal.test.ts > Portal > should cleanup portal manually
+[Portal] No ApplicationRoot found, skipping registry
+
+stderr | src/portal/portal.test.ts > Portal > should handle multiple portals
+[Portal] No ApplicationRoot found, skipping registry
+[Portal] No ApplicationRoot found, skipping registry
+
+stderr | src/portal/portal.test.ts > Portal > should cleanup all portals
+[Portal] No ApplicationRoot found, skipping registry
+[Portal] No ApplicationRoot found, skipping registry
+
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mLookup Performance[2m > [22m[2mshould get child list efficiently
+[22m[39mΓ£ô Retrieved children list 1000 times in 13.00ms
+
+ [31mΓ¥»[39m src/portal/portal.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 44[2mms[22m[39m
+   [32mΓ£ô[39m Portal[2m > [22mshould render content to document.body by default[32m 14[2mms[22m[39m
+   [32mΓ£ô[39m Portal[2m > [22mshould render to specified container by selector[32m 3[2mms[22m[39m
+   [32mΓ£ô[39m Portal[2m > [22mshould render to specified HTMLElement[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m Portal[2m > [22mshould support function children[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m Portal[2m > [22mshould register portal with manager[32m 1[2mms[22m[39m
+   [32mΓ£ô[39m Portal[2m > [22mshould cleanup portal manually[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m Portal[2m > [22mshould handle multiple portals[32m 2[2mms[22m[39m
+   [32mΓ£ô[39m Portal[2m > [22mshould cleanup all portals[32m 2[2mms[22m[39m
+[31m   [31m├ù[31m Portal[2m > [22mshould throw error for invalid mount target[39m[32m 14[2mms[22m[39m
+[31m     ΓåÆ expected [Function] to throw error including 'Portal mount target "#non-existent" nΓÇª' but got 'Cannot use \'in\' operator to search ΓÇª'[39m
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mUnregistration Performance[2m > [22m[2mshould unregister 1000 elements in < 10ms
+[22m[39mΓ£ô Unregistered 1000 elements in 0.46ms
+
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mUnregistration Performance[2m > [22m[2mshould unregister subtree efficiently
+[22m[39mΓ£ô Unregistered subtree (111 elements) in 0.28ms
+
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mClear Performance[2m > [22m[2mshould clear 1000 elements in < 5ms
+[22m[39mΓ£ô Cleared 1000 elements in 0.59ms
+
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mMemory Footprint[2m > [22m[2mshould use < 150 bytes per element
+[22m[39mΓÜá Memory measurement not available (browser-specific feature)
+
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mReal-World Scenarios[2m > [22m[2mshould handle rapid add/remove cycles
+[22m[39mΓ£ô 100 cycles of add/remove (1000 ops) in 8.01ms
+
+[90mstdout[2m | src/registry/__tests__/integration/registry-performance.test.ts[2m > [22m[2mRegistry Performance[2m > [22m[2mReal-World Scenarios[2m > [22m[2mshould handle mixed operations efficiently
+[22m[39mΓ£ô 1000 mixed operations in 2.07ms
+
+ [32mΓ£ô[39m src/registry/__tests__/integration/registry-performance.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 120[2mms[22m[39m
+ [32mΓ£ô[39m src/resource/resource.test.ts [2m([22m[2m20 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[32m 242[2mms[22m[39m
+ [32mΓ£ô[39m src/http/__tests__/http-client.test.ts [2m([22m[2m12 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[32m 54[2mms[22m[39m
+ [32mΓ£ô[39m src/http/__tests__/use-http.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32mΓ£ô[39m src/formular/__tests__/use-formular.test.ts [2m([22m[2m41 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+[90mstdout[2m | src/control-flow/index/index.test.ts[2m > [22m[2mIndex Component[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render empty list
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/index/index.test.ts[2m > [22m[2mIndex Component[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render empty list
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/index/index.test.ts[2m > [22m[2mIndex Component[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render list of primitives
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/index/index.test.ts[2m > [22m[2mIndex Component[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render list of primitives
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/index/index.test.ts[2m > [22m[2mIndex Component[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render list of objects
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/index/index.test.ts[2m > [22m[2mIndex Component[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render list of objects
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/index/index.test.ts[2m > [22m[2mIndex Component[2m > [22m[2mBasic Rendering[2m > [22m[2mshould render with signal-based array
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/jsx-runtime/__tests__/create-element-with-registry.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+[90mstdout[2m | src/control-flow/dynamic/dynamic.test.ts[2m > [22m[2mDynamic Component[2m > [22m[2mFunction Components[2m > [22m[2mshould render function component
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/dynamic/dynamic.test.ts[2m > [22m[2mDynamic Component[2m > [22m[2mFunction Components[2m > [22m[2mshould render function component
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/dynamic/dynamic.test.ts[2m > [22m[2mDynamic Component[2m > [22m[2mFunction Components[2m > [22m[2mshould forward all props except component
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/dynamic/dynamic.test.ts[2m > [22m[2mDynamic Component[2m > [22m[2mFunction Components[2m > [22m[2mshould forward all props except component
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/control-flow/dynamic/dynamic.test.ts[2m > [22m[2mDynamic Component[2m > [22m[2mFunction Components[2m > [22m[2mshould render with signal-based component selection
+[22m[39m[Pulsar Registry] State reset
+
+stderr | src/registry/event-delegation/__tests__/registry-event-delegator.test.ts > RegistryEventDelegator > Error Handling > should catch handler errors
+Event handler error: Error: Handler error
+    at E:\Sources\visual-schema-builder\packages\pulsar.dev\src\registry\event-delegation\__tests__\registry-event-delegator.test.ts:370:15
+    at HTMLDivElement.delegatedHandler (E:\Sources\visual-schema-builder\packages\pulsar.dev\src\registry\event-delegation\prototype\start-delegation.ts:43:13)
+    at HTMLDivElement.callTheUserObjectsOperation (E:\Sources\visual-schema-builder\node_modules\.pnpm\jsdom@26.1.0\node_modules\jsdom\lib\jsdom\living\generated\EventListener.js:26:30)
+    at innerInvokeEventListeners (E:\Sources\visual-schema-builder\node_modules\.pnpm\jsdom@26.1.0\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:350:25)
+    at invokeEventListeners (E:\Sources\visual-schema-builder\node_modules\.pnpm\jsdom@26.1.0\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:286:3)
+    at HTMLButtonElementImpl._dispatch (E:\Sources\visual-schema-builder\node_modules\.pnpm\jsdom@26.1.0\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:233:9)
+    at fireAnEvent (E:\Sources\visual-schema-builder\node_modules\.pnpm\jsdom@26.1.0\node_modules\jsdom\lib\jsdom\living\helpers\events.js:18:36)
+    at HTMLButtonElementImpl.click (E:\Sources\visual-schema-builder\node_modules\.pnpm\jsdom@26.1.0\node_modules\jsdom\lib\jsdom\living\nodes\HTMLElement-impl.js:85:5)
+    at HTMLButtonElement.click (E:\Sources\visual-schema-builder\node_modules\.pnpm\jsdom@26.1.0\node_modules\jsdom\lib\jsdom\living\generated\HTMLElement.js:108:34)
+    at E:\Sources\visual-schema-builder\packages\pulsar.dev\src\registry\event-delegation\__tests__\registry-event-delegator.test.ts:374:27
+
+[90mstdout[2m | src/registry/event-delegation/__tests__/registry-event-delegator.test.ts[2m > [22m[2mRegistryEventDelegator[2m > [22m[2mIntegration with ApplicationRoot[2m > [22m[2mshould cleanup on ApplicationRoot unmount
+[22m[39m[ApplicationRoot] DOM already ready, mounting immediately
+[ApplicationRoot] Component mounted successfully
+[ApplicationRoot] Registry cleared
+[ApplicationRoot] Portal stack cleared
+[ApplicationRoot] Event delegator destroyed
+[ApplicationRoot] Cleanup observer disconnected
+[ApplicationRoot] Component unmounted successfully
+
+ [32mΓ£ô[39m src/registry/event-delegation/__tests__/registry-event-delegator.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32mΓ£ô[39m src/registry/__tests__/unit/element-registry.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould create subscription when wire() is called
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould create subscription when wire() is called
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould update DOM when signal changes
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould update DOM when signal changes
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould support nested property paths
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould support nested property paths
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould handle multiple wires on same element
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould handle multiple wires on same element
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould dispose wire and stop updates
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould dispose wire and stop updates
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould work with computed values
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould work with computed values
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould not re-run wire if value unchanged
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould not re-run wire if value unchanged
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould handle signal passed directly
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould handle signal passed directly
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould track multiple signal dependencies
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould track multiple signal dependencies
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould cleanup subscriptions on dispose
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/registry/__tests__/wire-reactivity.test.ts[2m > [22m[2m$REGISTRY.wire() Reactivity[2m > [22m[2mshould cleanup subscriptions on dispose
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/registry/__tests__/wire-reactivity.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32mΓ£ô[39m src/utilities/__tests__/produce.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m src/state/reconcile/reconcile.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m src/resource/waiting.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould batch multiple signal writes
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould batch multiple signal writes
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould handle nested batches
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/env/__tests__/schema.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould handle nested batches
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould handle errors without breaking batch
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould handle errors without breaking batch
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould deduplicate effect executions
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould deduplicate effect executions
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/batch/batch.test.ts[2m > [22m[2mBatch System[2m > [22m[2mbatch()[2m > [22m[2mshould not batch when not in batch context
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/registry/portal-context/__tests__/portal-context-stack.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/registry/__tests__/unit/id-generator.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m src/registry/__tests__/unit/reconciliation.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/ssr/__tests__/render-to-string.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+[90mstdout[2m | src/reactivity/reactivity.test.ts[2m > [22m[2mReactivity System[2m > [22m[2mSignal[2m > [22m[2mshould create a signal with initial value
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/reactivity.test.ts[2m > [22m[2mReactivity System[2m > [22m[2mSignal[2m > [22m[2mshould create a signal with initial value
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/reactivity.test.ts[2m > [22m[2mReactivity System[2m > [22m[2mSignal[2m > [22m[2mshould update signal value
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/reactivity.test.ts[2m > [22m[2mReactivity System[2m > [22m[2mSignal[2m > [22m[2mshould update signal value
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/reactivity.test.ts[2m > [22m[2mReactivity System[2m > [22m[2mSignal[2m > [22m[2mshould update signal with function
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/reactivity.test.ts[2m > [22m[2mReactivity System[2m > [22m[2mSignal[2m > [22m[2mshould update signal with function
+[22m[39m[Pulsar Registry] State reset
+
+[90mstdout[2m | src/reactivity/reactivity.test.ts[2m > [22m[2mReactivity System[2m > [22m[2mSignal[2m > [22m[2mshould notify subscribers on change
+[22m[39m[Pulsar Registry] State reset
+
+ [32mΓ£ô[39m src/hooks/use-toggleable/use-toggleable.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/events/events.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/use-reducer/use-reducer.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/lifecycle/lifecycle.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/hooks.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m

@@ -325,21 +325,30 @@ describe('ForRegistry - Unit Tests', () => {
 
       const container = ForRegistry({
         each: items,
+        key: (item) => item, // Use item value as key for proper reordering detection
         children: (item, index) => {
           const el = document.createElement('div');
-          // Store initial index, but note: index() is not reactive after creation
-          el.textContent = `${index()}: ${item}`;
+          // Use wire to make index reactive - index() is a signal
+          $REGISTRY.wire(el, 'textContent', () => {
+            const idx = index();
+            return `${idx}: ${item}`;
+          });
           return el;
         },
       });
 
-      // Reorder - elements maintain their original content since index is not re-wired
+      // Initial state
+      expect(container.childNodes[0].textContent).toBe('0: A');
+      expect(container.childNodes[1].textContent).toBe('1: B');
+      expect(container.childNodes[2].textContent).toBe('2: C');
+
+      // Reorder - index() is reactive and returns NEW current position
       setItems(['C', 'B', 'A']);
 
-      // Elements reorder but keep their original index text
-      expect(container.childNodes[0].textContent).toBe('2: C'); // C was created at index 2
-      expect(container.childNodes[1].textContent).toBe('1: B'); // B was created at index 1
-      expect(container.childNodes[2].textContent).toBe('0: A'); // A was created at index 0
+      // Elements maintain same DOM nodes but index() returns current position
+      expect(container.childNodes[0].textContent).toBe('0: C'); // C now at index 0
+      expect(container.childNodes[1].textContent).toBe('1: B'); // B now at index 1
+      expect(container.childNodes[2].textContent).toBe('2: A'); // A now at index 2
     });
   });
 

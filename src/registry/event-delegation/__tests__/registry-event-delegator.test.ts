@@ -7,6 +7,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ApplicationRoot } from '../../../bootstrap/application-root';
 import type { IApplicationRoot } from '../../../bootstrap/application-root.interface';
 import type { IRegistryEventDelegator } from '../registry-event-delegator.types';
+// Import builder to ensure prototype methods are attached
+import '../../../bootstrap/builder';
 
 // Extend HTMLElement to include __elementId property
 declare global {
@@ -70,8 +72,8 @@ describe('RegistryEventDelegator', () => {
       // Call cleanup
       cleanup();
 
-      // Verify unregistered
-      expect(delegator.handlers.get('a.0')?.has('click')).toBe(false);
+      // Verify unregistered (element entry removed when no more handlers)
+      expect(delegator.handlers.has('a.0')).toBe(false);
     });
 
     it('should handle multiple handlers for same element', () => {
@@ -233,7 +235,8 @@ describe('RegistryEventDelegator', () => {
       expect(delegator.handlers.get('a.0')?.has('click')).toBe(true);
 
       delegator.unregisterHandler('a.0', 'click');
-      expect(delegator.handlers.get('a.0')?.has('click')).toBe(false);
+      // Element entry removed when no more handlers
+      expect(delegator.handlers.has('a.0')).toBe(false);
     });
 
     it('should remove element entry when no handlers left', () => {
@@ -304,7 +307,8 @@ describe('RegistryEventDelegator', () => {
       expect(delegator.handlers.get('a.0')?.has('click')).toBe(true);
 
       button.click();
-      expect(delegator.handlers.get('a.0')?.has('click')).toBe(false);
+      // Element entry removed when no more handlers
+      expect(delegator.handlers.has('a.0')).toBe(false);
     });
   });
 
@@ -470,17 +474,19 @@ describe('RegistryEventDelegator', () => {
     });
 
     it('should cleanup on ApplicationRoot unmount', () => {
+      // Register a handler first
       delegator.registerHandler('a.0', 'click', () => {});
       expect(delegator.handlers.size).toBe(1);
+      expect(delegator.nativeListeners.size).toBe(1); // 'click' delegation started
 
-      // Mount a component
+      // Mount a component to set up proper state
       const component = document.createElement('div');
       appRoot.mount(component);
 
-      // Unmount
+      // Unmount should destroy the delegator
       appRoot.unmount();
 
-      // Delegator should be destroyed
+      // Delegator should be destroyed (handlers and listeners cleared)
       expect(delegator.handlers.size).toBe(0);
       expect(delegator.nativeListeners.size).toBe(0);
     });

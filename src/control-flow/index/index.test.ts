@@ -4,18 +4,21 @@
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createEffect, createSignal } from '../../reactivity';
+import { $REGISTRY } from '../../registry/core';
 import { Index } from './index-component';
 
 describe('Index Component', () => {
   let container: HTMLElement;
 
   beforeEach(() => {
+    $REGISTRY.reset();
     container = document.createElement('div');
     document.body.appendChild(container);
   });
 
   afterEach(() => {
     document.body.removeChild(container);
+    $REGISTRY.reset();
   });
 
   describe('Basic Rendering', () => {

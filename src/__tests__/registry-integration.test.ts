@@ -65,7 +65,7 @@ describe('Registry Pattern - Integration Tests', () => {
   describe('Component Execution', () => {
     it('should execute component with stable ID', () => {
       const Component = (): HTMLElement => {
-        return $REGISTRY.execute('test:Component', () => {
+        return $REGISTRY.execute('test:Component', null, () => {
           const el = t_element('div', {});
           el.textContent = 'Hello';
           return el;
@@ -78,13 +78,13 @@ describe('Registry Pattern - Integration Tests', () => {
 
     it('should track nested components', () => {
       const Child = (): HTMLElement => {
-        return $REGISTRY.execute('test:Child', () => {
+        return $REGISTRY.execute('test:Child', 'test:Parent', () => {
           return t_element('span', { textContent: 'Child' });
         });
       };
 
       const Parent = (): HTMLElement => {
-        return $REGISTRY.execute('test:Parent', () => {
+        return $REGISTRY.execute('test:Parent', null, () => {
           const container = t_element('div', {});
           container.appendChild(Child());
           return container;
@@ -161,6 +161,7 @@ describe('Registry Pattern - Integration Tests', () => {
       const container = t_element('ul', {});
       const forElement = ForRegistry({
         each: items,
+        key: (item) => item.id, // Use id as key for proper reconciliation
         children: (item) => {
           const li = t_element('li', {});
           li.textContent = item.text;
@@ -195,9 +196,9 @@ describe('Registry Pattern - Integration Tests', () => {
       const hid2 = $REGISTRY.nextHid();
       const hid3 = $REGISTRY.nextHid();
 
-      expect(hid1).toBe('el_0');
-      expect(hid2).toBe('el_1');
-      expect(hid3).toBe('el_2');
+      expect(hid1).toBe(0);
+      expect(hid2).toBe(1);
+      expect(hid3).toBe(2);
     });
 
     it('should dump and boot state', () => {
@@ -264,7 +265,7 @@ describe('Registry Pattern - Integration Tests', () => {
       ]);
 
       const BoxComponent = (box: IBox): HTMLElement => {
-        return $REGISTRY.execute(`test:Box_${box.id}`, () => {
+        return $REGISTRY.execute(`test:Box_${box.id}`, null, () => {
           const [x] = createSignal(box.x);
           const [y] = createSignal(box.y);
 
@@ -284,6 +285,7 @@ describe('Registry Pattern - Integration Tests', () => {
       const container = t_element('div', {});
       const forElement = ForRegistry({
         each: boxes,
+        key: (box) => box.id, // Use id as key for proper reconciliation
         children: (box) => BoxComponent(box),
       });
 

@@ -68,16 +68,11 @@ export const startDelegation = function (this: IRegistryEventDelegator, eventTyp
   };
 
   // Add native listener at root
-  // Determine capture phase from first registered handler (all handlers of same event type share phase)
-  // Note: If handlers have different capture preferences, first registered handler wins
-  let capture = false;
-  for (const elementHandlers of this.handlers.values()) {
-    const handlerEntry = elementHandlers.get(eventType);
-    if (handlerEntry) {
-      capture = handlerEntry.options?.capture || false;
-      break;
-    }
-  }
+  // IMPORTANT: All handlers of the same event type MUST use the same capture phase
+  // We use capture=true by default to catch events early, then check handlers during bubble
+  // This ensures consistent behavior regardless of registration order
+  const capture = true; // Always use capture phase for delegated events
+
   this.appRoot.rootElement.addEventListener(eventType, delegatedHandler, { capture });
 
   // Store cleanup function

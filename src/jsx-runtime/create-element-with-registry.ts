@@ -140,23 +140,28 @@ export function appendChildren(
 
   childArray.forEach((child, index) => {
     if (child instanceof Node) {
-      parent.appendChild(child);
-
-      // If child has __elementId, update parent relationship in registry
+      // If child has __elementId, update parent relationship BEFORE appending
+      // This ensures proper lifecycle tracking before MutationObserver fires
       if (child instanceof HTMLElement && child.__elementId && parentId) {
         const appRoot = getCurrentAppRoot();
         if (appRoot) {
           const elementId = child.__elementId;
           const entry = appRoot.registry.get(elementId);
           if (entry && !entry.parentId) {
-            // Update entry with parent
-            appRoot.registry.register(elementId, child as HTMLElement, {
-              ...entry,
-              parentId,
-            });
+            // Update parentId directly in the registry entry
+            entry.parentId = parentId;
+
+            // Update parent-child tracking
+            if (!appRoot.registry.parentChildren.has(parentId)) {
+              appRoot.registry.parentChildren.set(parentId, new Set<string>());
+            }
+            appRoot.registry.parentChildren.get(parentId)!.add(elementId);
           }
         }
       }
+
+      // Now safely append to DOM
+      parent.appendChild(child);
     } else if (typeof child === 'string' || typeof child === 'number') {
       parent.appendChild(document.createTextNode(String(child)));
     }

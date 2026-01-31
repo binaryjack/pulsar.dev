@@ -72,18 +72,23 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
     const keyFn = props.key || ((_, idx) => idx);
 
     // Build new keys map and track order
-    const newKeys = new Set<string | number>();
+    // Use Map to handle duplicates - last one wins (standard Map behavior)
+    const newKeysMap = new Map<string | number, { item: T; index: number }>();
     const newOrder: Array<{ key: string | number; item: T; index: number }> = [];
 
     array.forEach((item, index) => {
       const key = keyFn(item, index);
-      newKeys.add(key);
+      newKeysMap.set(key, { item, index }); // Last duplicate wins
+    });
+
+    // Build order array from deduplicated map
+    newKeysMap.forEach(({ item, index }, key) => {
       newOrder.push({ key, item, index });
     });
 
     // PHASE 1: Remove items no longer in array
     state.items.forEach((element, key) => {
-      if (!newKeys.has(key)) {
+      if (!newKeysMap.has(key)) {
         if (container.contains(element)) {
           container.removeChild(element);
         }
@@ -95,14 +100,33 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
     });
 
     // PHASE 2: Add new items and reorder existing items
+    // Create index cache for O(1) lookups
+    const indexCache = new Map<string | number, number>();
+    newOrder.forEach(({ key }, idx) => {
+      indexCache.set(key, idx);
+    });
+
     newOrder.forEach(({ key, item, index }, orderIndex) => {
       let element = state.items.get(key);
 
       // Create new element if doesn't exist
       if (!element) {
+        // Create index signal that returns current position in array
+        // IMPORTANT: Must read from props.each to establish reactive dependency
         const indexSignal = () => {
+          // Read from reactive source to establish dependency
           const currentArray = typeof props.each === 'function' ? props.each() : props.each;
-          return currentArray.indexOf(item);
+          const keyFn = props.key || ((_, idx) => idx);
+          
+          // PERFORMANCE FIX: Use cached Map for O(1) lookup instead of O(n) findIndex
+          // Rebuild cache only when array changes
+          const newKeysMap = new Map<string | number, number>();
+          currentArray.forEach((arrayItem, idx) => {
+            const itemKey = keyFn(arrayItem, idx);
+            newKeysMap.set(itemKey, idx);
+          });
+          
+          return newKeysMap.get(key) ?? -1;
         };
 
         element = props.children(item, indexSignal);
@@ -113,6 +137,13 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
         }
 
         state.items.set(key, element);
+        
+        // Store cleanup function if children function supports it
+        // This allows custom cleanup logic per item (e.g., dispose subscriptions)
+        // Note: Standard use case doesn't provide cleanup, NodeWatcher handles wire cleanup
+        if (typeof (element as any).__cleanup === 'function') {
+          state.cleanups.set(key, (element as any).__cleanup);
+        }
       }
 
       // CRITICAL: Reorder element to correct position

@@ -4,6 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createSignal } from '../../reactivity';
+import { $REGISTRY } from '../../registry/core';
 import { componentRegistry } from './component-registry';
 import { Dynamic } from './dynamic-component';
 
@@ -11,6 +12,7 @@ describe('Dynamic Component', () => {
   let container: HTMLElement;
 
   beforeEach(() => {
+    $REGISTRY.reset();
     container = document.createElement('div');
     document.body.appendChild(container);
     componentRegistry.clear();
@@ -19,6 +21,7 @@ describe('Dynamic Component', () => {
   afterEach(() => {
     document.body.removeChild(container);
     componentRegistry.clear();
+    $REGISTRY.reset();
   });
 
   describe('Function Components', () => {
