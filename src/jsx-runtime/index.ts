@@ -3,6 +3,10 @@
  * Exports both standard JSX functions and registry-enhanced versions
  */
 
+// NEW: Registry Pattern SSR-aware element creation
+export { t_element } from './t-element';
+export type { IElementAttributes } from './t-element';
+
 // Standard JSX runtime (backward compatibility)
 export { Fragment, jsx, jsxDEV, jsxs, jsxsDEV } from './jsx-runtime-standard';
 

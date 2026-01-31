@@ -90,6 +90,9 @@ function createElement(type: string, props: ICreateElementProps): HTMLElement {
         element.addEventListener(eventName, props[key] as EventListener);
       } else if (key.startsWith('aria-') || key.startsWith('data-') || key === 'role') {
         element.setAttribute(key, String(props[key]));
+      } else if (key === 'style' && typeof props[key] === 'object') {
+        // Handle style objects by applying to element.style
+        Object.assign(element.style, props[key]);
       } else if (typeof props[key] !== 'undefined' && props[key] !== null) {
         (element as unknown as Record<string, unknown>)[key] = props[key];
       }

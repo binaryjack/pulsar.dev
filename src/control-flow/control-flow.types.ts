@@ -69,6 +69,11 @@ export interface IForState<_T = unknown> {
    * Cleanup functions for each item
    */
   cleanups: Map<string | number, () => void>;
+
+  /**
+   * Fallback element shown when array is empty
+   */
+  fallbackElement: HTMLElement | null;
 }
 
 /**

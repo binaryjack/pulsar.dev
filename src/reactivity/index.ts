@@ -2,7 +2,7 @@
 export { SSignal, Signal, createSignal } from './signal';
 export type { ISignal, ISignalOptions, ISignalSubscriber } from './signal';
 
-export { Effect, SEffect, createEffect } from './effect';
+export { Effect, SEffect, createEffect, createEffectWithOwner } from './effect';
 export type { IEffect } from './effect';
 
 export { Memo, SMemo, createMemo } from './memo';

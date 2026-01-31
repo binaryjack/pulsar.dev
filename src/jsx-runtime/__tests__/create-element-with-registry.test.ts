@@ -2,6 +2,7 @@
  * createElementWithRegistry Tests
  */
 
+import { vi } from 'vitest';
 import { ApplicationRoot } from '../../bootstrap/application-root';
 import { clearCurrentAppRoot, setCurrentAppRoot } from '../../registry/app-root-context';
 import { ElementType } from '../../registry/types/element-type.enum';
@@ -39,7 +40,7 @@ describe('createElementWithRegistry', () => {
     });
 
     it('should attach event listeners', () => {
-      const handleClick = jest.fn();
+      const handleClick = vi.fn();
       const element = createElementWithRegistry('button', {
         onclick: handleClick,
       });
@@ -75,7 +76,7 @@ describe('createElementWithRegistry', () => {
 
   describe('component elements', () => {
     it('should call component function', () => {
-      const MyComponent = jest.fn((props: any) => {
+      const MyComponent = vi.fn((props: any) => {
         const el = document.createElement('div');
         el.textContent = props.text;
         return el;

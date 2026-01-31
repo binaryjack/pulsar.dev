@@ -3,7 +3,7 @@
  * @module @pulsar/lazy-loading
  */
 
-import { Show } from '../control-flow/show';
+import { ShowRegistry } from '../control-flow/show-registry';
 import { onCleanup, onMount } from '../lifecycle/lifecycle-hooks';
 import { createSignal } from '../reactivity/signal/create-signal';
 import type { ILazyComponentProps } from './lazy-loading.types';
@@ -68,11 +68,11 @@ export function LazyComponent(componentProps: ILazyComponentProps) {
     return div;
   }
 
-  return Show({
+  return ShowRegistry({
     when: !isLoading(),
     fallback: componentProps.fallback || null,
     children: () =>
-      Show({
+      ShowRegistry({
         when: !error(),
         fallback: componentProps.errorBoundary
           ? componentProps.errorBoundary({ error: error() })

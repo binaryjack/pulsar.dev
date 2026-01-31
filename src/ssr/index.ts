@@ -7,6 +7,9 @@ export { createSSRContext } from './create-ssr-context';
 export { hydrate } from './hydrate';
 export { renderToString } from './render-to-string';
 
+// Registry-based SSR (new)
+export { bootFromState, dumpState, getHydrationScript } from './hydration';
+
 // Utilities
 export { escapeAttribute, escapeHtml } from './utils/escape-html';
 export {

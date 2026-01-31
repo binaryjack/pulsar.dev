@@ -5,7 +5,14 @@
  * and portal rendering.
  */
 
-// Core registry
+// NEW REGISTRY PATTERN - Primary exports
+export { $REGISTRY, CoreRegistry } from './core';
+export type { IComponentContext, ICoreRegistry, IEffectOwner, WireDisposer, WireSet } from './core';
+
+export { $WATCHER, NodeWatcher } from './node-watcher';
+export type { INodeWatcher } from './node-watcher';
+
+// LEGACY - Core registry (kept for backward compatibility)
 export { ElementRegistry } from './core';
 export type { IElementRegistry } from './core';
 

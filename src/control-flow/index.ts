@@ -1,15 +1,15 @@
+// Registry-based components
+export { ForRegistry } from './for-registry';
+export { ShowRegistry } from './show-registry';
+
+// Other control flow
 export type {
   ComponentType,
   IComponentRegistry,
   IDynamicProps,
   IDynamicState,
-  IForProps,
-  IForState,
   IIndexProps,
   IIndexState,
-  IShowProps,
 } from './control-flow.types';
-export { componentRegistry, Dynamic } from './dynamic/index';
-export { For } from './for';
+export { Dynamic, componentRegistry } from './dynamic/index';
 export { Index } from './index/index';
-export { Show } from './show';

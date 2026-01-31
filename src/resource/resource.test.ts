@@ -5,6 +5,7 @@
  * error handling, refetch, and dependency tracking.
  */
 
+import { vi } from 'vitest'
 import { createSignal } from '../reactivity/signal/create-signal'
 import { createResource } from './create-resource'
 import { createTrackedResource } from './create-tracked-resource'
@@ -42,7 +43,7 @@ describe('Resource System', () => {
         });
         
         test('should load data successfully', async () => {
-            const fetchData = jest.fn(() => Promise.resolve({ id: 1, name: 'Test' }));
+            const fetchData = vi.fn(() => Promise.resolve({ id: 1, name: 'Test' }));
             const resource = createResource(fetchData, { lazy: true });
             
             await resource.load();
@@ -65,7 +66,7 @@ describe('Resource System', () => {
         });
         
         test('should deduplicate concurrent loads', async () => {
-            const fetchData = jest.fn(() => new Promise(resolve => {
+            const fetchData = vi.fn(() => new Promise(resolve => {
                 setTimeout(() => resolve(42), 20);
             }));
             const resource = createResource(fetchData, { lazy: true });
@@ -83,7 +84,7 @@ describe('Resource System', () => {
         });
         
         test('should call onSuccess callback', async () => {
-            const onSuccess = jest.fn();
+            const onSuccess = vi.fn();
             const resource = createResource(
                 () => Promise.resolve('data'),
                 { lazy: true, onSuccess }
@@ -96,7 +97,7 @@ describe('Resource System', () => {
         
         test('should call onError callback', async () => {
             const error = new Error('Failed');
-            const onError = jest.fn();
+            const onError = vi.fn();
             const resource = createResource(
                 () => Promise.reject(error),
                 { lazy: true, onError }
@@ -111,7 +112,7 @@ describe('Resource System', () => {
     describe('refetch', () => {
         test('should refetch data', async () => {
             let callCount = 0;
-            const fetchData = jest.fn(() => Promise.resolve(++callCount));
+            const fetchData = vi.fn(() => Promise.resolve(++callCount));
             const resource = createResource(fetchData, { lazy: true });
             
             await resource.load();
@@ -193,7 +194,7 @@ describe('Resource System', () => {
             // integration with the effect system to properly track async operations
             const userId = createSignal(1);
             let callCount = 0;
-            const fetchData = jest.fn(() => {
+            const fetchData = vi.fn(() => {
                 const id = userId(); // Access signal inside fetcher
                 callCount++;
                 return Promise.resolve(`User ${id} - Call ${callCount}`);

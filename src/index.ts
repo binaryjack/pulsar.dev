@@ -1,3 +1,29 @@
+// ========================================
+// NEW REGISTRY PATTERN ARCHITECTURE
+// ========================================
+
+// Global registry and watcher
+export { $REGISTRY, $WATCHER, CoreRegistry, NodeWatcher } from './registry';
+export type {
+  IComponentContext,
+  ICoreRegistry,
+  IEffectOwner,
+  INodeWatcher,
+  WireDisposer,
+  WireSet,
+} from './registry';
+
+// SSR-aware element creation
+export { t_element } from './jsx-runtime/t-element';
+export type { IElementAttributes } from './jsx-runtime/t-element';
+
+// Reset signal ID counter for SSR
+export { resetSignalIdCounter } from './reactivity/signal/signal';
+
+// ========================================
+// CORE REACTIVITY (Updated for Registry)
+// ========================================
+
 // Export reactivity with specific exports to avoid ambiguity
 export {
   Effect,
@@ -8,6 +34,7 @@ export {
   Signal,
   batch,
   createEffect,
+  createEffectWithOwner,
   createMemo,
   createSignal,
   isBatching,
@@ -66,9 +93,9 @@ export type {
   ITryerProps,
 } from './error-boundary';
 
-// Export control flow
-export { For, Index, Show } from './control-flow';
-export type { IForProps, IIndexProps, IShowProps } from './control-flow';
+// Export control flow (registry-based only)
+export { ForRegistry, Index, ShowRegistry } from './control-flow';
+export type { IIndexProps } from './control-flow';
 
 // Export portal
 export { Portal, PortalSlot, cleanupPortals } from './portal';
@@ -124,7 +151,7 @@ export type {
 } from './di';
 
 // Export bootstrap (explicit to avoid conflicts with lifecycle)
-export { bootstrapApp } from './bootstrap';
+export { bootstrapApp, disposePulsar, initPulsar } from './bootstrap';
 export type { IApplicationBuilder, IApplicationRoot, IBootstrapConfig } from './bootstrap';
 
 // Export type utilities
@@ -272,6 +299,9 @@ export type {
   IWaitForOptions,
   TCleanupFunction,
 } from './testing';
+
+// Utility functions
+export { shallowEqual } from './utils';
 
 // Lazy loading utilities (separate import path: 'pulsar/lazy-loading')
 // export * from './lazy-loading';
