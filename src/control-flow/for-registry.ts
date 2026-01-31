@@ -117,7 +117,7 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
           // Read from reactive source to establish dependency
           const currentArray = typeof props.each === 'function' ? props.each() : props.each;
           const keyFn = props.key || ((_, idx) => idx);
-          
+
           // PERFORMANCE FIX: Use cached Map for O(1) lookup instead of O(n) findIndex
           // Rebuild cache only when array changes
           const newKeysMap = new Map<string | number, number>();
@@ -125,7 +125,7 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
             const itemKey = keyFn(arrayItem, idx);
             newKeysMap.set(itemKey, idx);
           });
-          
+
           return newKeysMap.get(key) ?? -1;
         };
 
@@ -137,7 +137,7 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
         }
 
         state.items.set(key, element);
-        
+
         // Store cleanup function if children function supports it
         // This allows custom cleanup logic per item (e.g., dispose subscriptions)
         // Note: Standard use case doesn't provide cleanup, NodeWatcher handles wire cleanup
