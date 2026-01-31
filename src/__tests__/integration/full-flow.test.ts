@@ -9,7 +9,7 @@ import { ShowRegistry } from '../../control-flow/show-registry';
 import { t_element } from '../../jsx-runtime/t-element';
 import { createSignal } from '../../reactivity/signal';
 import { $REGISTRY } from '../../registry/core';
-import { bootFromState, dumpState } from '../../ssr/hydration';
+import { bootFromState } from '../../ssr/hydration';
 
 describe('Registry Pattern - Full Integration Tests', () => {
   beforeEach(() => {
@@ -224,20 +224,20 @@ describe('Registry Pattern - Full Integration Tests', () => {
     it('should hydrate from server state', () => {
       // Server-side: Create component with signal
       $REGISTRY.reset();
-      
+
       const App = (): HTMLElement => {
         return $REGISTRY.execute('app:HydrationTest', null, () => {
           const [count] = createSignal(42);
-          
+
           const container = t_element('div', { 'data-hid': 'el_0' });
           const span = t_element('span', { 'data-hid': 'el_1' });
           $REGISTRY.wire(span, 'textContent', () => `Count: ${count()}`);
           container.appendChild(span);
-          
+
           return container;
         });
       };
-      
+
       // Execute on server to register signals
       const serverEl = App();
       const serverState = $REGISTRY.dump();

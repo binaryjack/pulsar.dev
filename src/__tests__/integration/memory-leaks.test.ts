@@ -3,12 +3,12 @@
  * Verifies effect cleanup, wire disposal, and NodeWatcher functionality
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { ForRegistry } from '../../control-flow/for-registry';
+import { t_element } from '../../jsx-runtime/t-element';
 import { createEffect } from '../../reactivity/effect/create-effect';
 import { createSignal } from '../../reactivity/signal';
-import { t_element } from '../../jsx-runtime/t-element';
 import { $REGISTRY } from '../../registry/core';
-import { ForRegistry } from '../../control-flow/for-registry';
 
 describe('Memory Leak Prevention', () => {
   beforeEach(() => {

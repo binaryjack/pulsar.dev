@@ -5,8 +5,8 @@
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ForRegistry } from '../../control-flow/for-registry';
-import { createSignal } from '../../reactivity/signal';
 import { t_element } from '../../jsx-runtime/t-element';
+import { createSignal } from '../../reactivity/signal';
 import { $REGISTRY } from '../../registry/core';
 
 interface IBox {
@@ -97,7 +97,7 @@ describe('ForRegistry Drag-and-Drop Integration', () => {
     setItems([1, 3, 4, 5, 2]);
 
     const reordered = Array.from(container.querySelectorAll('[data-value]'));
-    
+
     // Check order
     expect(reordered.map((el) => el.textContent)).toEqual([
       'Item 1',
@@ -137,7 +137,7 @@ describe('ForRegistry Drag-and-Drop Integration', () => {
     setItems([3, 2, 1]);
 
     const reversed = Array.from(container.querySelectorAll('span'));
-    
+
     expect(reversed[0].textContent).toBe('3');
     expect(reversed[1].textContent).toBe('2');
     expect(reversed[2].textContent).toBe('1');
@@ -170,7 +170,7 @@ describe('ForRegistry Drag-and-Drop Integration', () => {
     setItems([3, 1, 4]);
 
     const updated = Array.from(container.querySelectorAll('span[data-item]'));
-    
+
     expect(updated).toHaveLength(3);
     expect(updated.map((el) => el.textContent)).toEqual(['3', '1', '4']);
 

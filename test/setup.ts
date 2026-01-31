@@ -3,8 +3,8 @@
  * Ensures proper initialization and cleanup of Pulsar framework between tests
  */
 
-import { beforeEach, afterEach } from 'vitest';
-import { initPulsar, disposePulsar } from '../src/bootstrap/init-pulsar';
+import { afterEach, beforeEach } from 'vitest';
+import { disposePulsar, initPulsar } from '../src/bootstrap/init-pulsar';
 import { $REGISTRY } from '../src/registry/core';
 
 /**
@@ -14,7 +14,7 @@ import { $REGISTRY } from '../src/registry/core';
 beforeEach(() => {
   // Initialize Pulsar first (starts MutationObserver if not already started)
   initPulsar();
-  
+
   // Then reset registry state for clean test
   $REGISTRY.reset();
 });
@@ -26,7 +26,7 @@ beforeEach(() => {
 afterEach(() => {
   // Reset registry state first
   $REGISTRY.reset();
-  
+
   // Then dispose Pulsar (disconnects MutationObserver)
   disposePulsar();
 });
