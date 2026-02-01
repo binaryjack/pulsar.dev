@@ -16,8 +16,16 @@ export const wire = function (
   path: string,
   source: ISignal<unknown> | (() => unknown)
 ): WireDisposer {
-  // Determine if source is a getter function or a Signal
-  const isGetter = typeof source === 'function' && !('_isSignal' in source && source._isSignal);
+  // Determine if source is a Signal (has _isSignal marker and read method)
+  const isSignal =
+    typeof source === 'object' &&
+    source !== null &&
+    '_isSignal' in source &&
+    (source as any)._isSignal === true &&
+    typeof (source as any).read === 'function';
+
+  // Determine if source is a getter function (not a signal)
+  const isGetter = typeof source === 'function' && !isSignal;
 
   // Split property path (e.g., "style.left" -> ["style", "left"])
   const parts = path.split('.');
@@ -26,7 +34,11 @@ export const wire = function (
   // Create the effect that updates the DOM
   const effect = () => {
     // Get the value from signal or getter
-    const val = isGetter ? (source as () => unknown)() : (source as ISignal<unknown>).read();
+    const val = isSignal
+      ? (source as ISignal<unknown>).read()
+      : isGetter
+        ? (source as () => unknown)()
+        : source; // Static value
 
     // Navigate to the target object
     let target: any = el;

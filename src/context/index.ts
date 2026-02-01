@@ -19,7 +19,7 @@ export interface IContext<TValue> {
   /**
    * Provider component that wraps children and provides context value
    */
-  Provider: (props: { value: TValue; children: HTMLElement | (() => HTMLElement) }) => HTMLElement;
+  Provider: (props: { value: TValue; children: HTMLElement }) => HTMLElement;
 
   /**
    * Default value for the context
@@ -91,13 +91,7 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
   // Soldiers can now find the signal even if commandant hasn't arrived yet
   contextRegistry.set(contextId, [getContextValue, setContextValue]);
 
-  const Provider = ({
-    value,
-    children,
-  }: {
-    value: TValue;
-    children: HTMLElement | (() => HTMLElement);
-  }): HTMLElement => {
+  const Provider = ({ value, children }: { value: TValue; children: HTMLElement }): HTMLElement => {
     // COMMANDANT ARRIVES!
     // Update context value with provider's value
     // Stack management for nested providers
@@ -140,11 +134,9 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
       };
     }, [value]);
 
-    // Evaluate children if it's a function
-    const evaluatedChildren = typeof children === 'function' ? children() : children;
-
-    // Return children directly (no wrapper div needed)
-    return evaluatedChildren;
+    // With registry pattern, children are always evaluated HTMLElements
+    // No need to defer evaluation anymore - registry handles timing
+    return children as HTMLElement;
   };
 
   // Expose setter so components can set context synchronously before rendering

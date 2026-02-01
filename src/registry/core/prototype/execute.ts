@@ -10,6 +10,8 @@ export const execute = function <T>(
   parentId: string | null,
   factory: () => T
 ): T {
+  console.log('[REGISTRY.execute] START:', id, 'parentId:', parentId);
+
   // Create component context
   const context: IComponentContext = {
     id,
@@ -25,7 +27,16 @@ export const execute = function <T>(
 
   try {
     // Execute factory in context
-    return factory();
+    const result = factory();
+    console.log(
+      '[REGISTRY.execute] RESULT:',
+      id,
+      'result:',
+      result,
+      'instanceof HTMLElement:',
+      result instanceof HTMLElement
+    );
+    return result;
   } finally {
     // Always pop context, even if factory throws
     this._stack.pop();
