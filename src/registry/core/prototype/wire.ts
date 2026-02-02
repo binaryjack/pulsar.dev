@@ -27,6 +27,26 @@ export const wire = function (
   // Determine if source is a getter function (not a signal)
   const isGetter = typeof source === 'function' && !isSignal;
 
+  // Runtime guard: Handle static values gracefully (Tier 3 false positives)
+  // If source is neither signal nor getter, treat as static value and set immediately
+  if (!isSignal && !isGetter) {
+    // Split property path
+    const parts = path.split('.');
+    const lastKey = parts.pop() as string;
+
+    // Navigate to target object
+    let target: any = el;
+    for (const p of parts) {
+      target = target[p];
+    }
+
+    // Set static value once
+    target[lastKey] = source;
+
+    // Return no-op disposer for consistency
+    return () => {};
+  }
+
   // Split property path (e.g., "style.left" -> ["style", "left"])
   const parts = path.split('.');
   const lastKey = parts.pop() as string;
@@ -34,11 +54,7 @@ export const wire = function (
   // Create the effect that updates the DOM
   const effect = () => {
     // Get the value from signal or getter
-    const val = isSignal
-      ? (source as ISignal<unknown>).read()
-      : isGetter
-        ? (source as () => unknown)()
-        : source; // Static value
+    const val = isSignal ? (source as ISignal<unknown>).read() : (source as () => unknown)();
 
     // Navigate to the target object
     let target: any = el;

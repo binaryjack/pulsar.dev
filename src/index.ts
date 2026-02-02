@@ -235,6 +235,17 @@ export type {
 // Export utilities
 export { produce } from './utilities';
 
+// ⚠️ Imperative Handle - ESCAPE HATCH for browser APIs ONLY
+// See packages/pulsar.dev/src/utilities/imperative-handle/README.md for valid use cases
+// Requires code review approval - use declarative props for 99% of components
+export { createImperativeHandle } from './utilities';
+export type {
+  IImperativeHandle,
+  IImperativeHandleConfig,
+  IImperativeHandleMetadata,
+  ImperativeHandleUseCase,
+} from './utilities';
+
 // Export testing utilities
 export {
   act,
