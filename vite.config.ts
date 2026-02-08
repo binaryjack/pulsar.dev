@@ -19,6 +19,7 @@ export default defineConfig({
         di: resolve(__dirname, 'src/di/index.ts'),
         'control-flow': resolve(__dirname, 'src/control-flow/index.ts'),
         'error-boundary': resolve(__dirname, 'src/error-boundary/index.ts'),
+        registry: resolve(__dirname, 'src/registry/index.ts'),
         portal: resolve(__dirname, 'src/portal/index.ts'),
         resource: resolve(__dirname, 'src/resource/index.ts'),
         state: resolve(__dirname, 'src/state/index.ts'),
