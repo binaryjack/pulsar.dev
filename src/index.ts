@@ -151,7 +151,7 @@ export type {
 } from './di';
 
 // Export bootstrap (explicit to avoid conflicts with lifecycle)
-export { bootstrapApp, disposePulsar, initPulsar } from './bootstrap';
+export { bootstrapApp, bootstrapAppConfig, disposePulsar, initPulsar } from './bootstrap';
 export type { IApplicationBuilder, IApplicationRoot, IBootstrapConfig } from './bootstrap';
 
 // Export type utilities
