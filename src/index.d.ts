@@ -1,5 +1,15 @@
-export { bootstrapApp } from './bootstrap';
-export type { IApplicationBuilder, IApplicationRoot, IBootstrapConfig } from './bootstrap';
+/// <reference types="vite/client" />
+
+// Auto-include PSR file type declarations
+/// <reference path="./types/psr-modules.d.ts" />
+
+export { bootstrapApp, pulse } from './bootstrap';
+export type {
+  IApplicationBuilder,
+  IApplicationRoot,
+  IBootstrapConfig,
+  IPulseConfig,
+} from './bootstrap';
 export { createContext, useContext } from './context';
 export type { IContext } from './context';
 export { AppContext, AppContextProvider, useAppContext } from './context/app-context-provider';
@@ -15,19 +25,19 @@ export type {
   IServiceLocator,
   IServiceManager,
   IServiceOptions,
-  SServiceManager,
   ServiceFactoryType,
   ServiceIdType,
   ServiceLifetimeType,
+  SServiceManager,
 } from './di';
 export {
   Catcher,
-  Tryer,
   cleanupTryer,
   createErrorBoundaryContext,
   getActiveErrorBoundary,
   resetTryer,
   setActiveErrorBoundary,
+  Tryer,
   updateCatcher,
 } from './error-boundary';
 export type {
@@ -56,7 +66,7 @@ export type {
   ValidatorMap,
 } from './formular';
 export * from './hooks';
-export { HttpClient, createHttpClient, useHttp, useHttpGet, useHttpPost } from './http';
+export { createHttpClient, HttpClient, useHttp, useHttpGet, useHttpPost } from './http';
 export type {
   ErrorInterceptor,
   ICacheEntry,
@@ -73,20 +83,20 @@ export type {
 } from './http';
 export * from './jsx-runtime';
 export * from './lifecycle';
-export { Portal, PortalSlot, cleanupPortals } from './portal';
+export { cleanupPortals, Portal, PortalSlot } from './portal';
 export type { IPortalProps, IPortalSlotProps } from './portal';
 export {
-  Effect,
-  Memo,
-  SEffect,
-  SMemo,
-  SSignal,
-  Signal,
   batch,
   createEffect,
   createMemo,
   createSignal,
+  Effect,
   isBatching,
+  Memo,
+  SEffect,
+  Signal,
+  SMemo,
+  SSignal,
   useSync,
 } from './reactivity';
 export type {
@@ -100,7 +110,6 @@ export type {
   SubscribeFunction,
 } from './reactivity';
 export {
-  Waiting,
   clearAll,
   createResource,
   createTrackedResource,
@@ -112,6 +121,7 @@ export {
   resolveWaiting,
   suspendWaiting,
   waitForAll,
+  Waiting,
 } from './resource';
 export type {
   IResource,

@@ -4,36 +4,39 @@
  */
 
 // Export Pulsar initialization
-export { disposePulsar, initPulsar } from './init-pulsar'
+export { disposePulsar, initPulsar } from './init-pulsar';
 
 // Export types
-export type { IApplicationBuilder } from './application-builder.interface'
-export type { IApplicationInternal } from './application-internal.interface'
-export type { IApplicationRootInternal } from './application-root-internal.interface'
-export type { IApplicationRoot } from './application-root.interface'
-export type { IApplication } from './application.interface'
-export type { IBootstrapConfig } from './bootstrap-config.interface'
-export type { IOutletInternal } from './outlet-internal.interface'
-export type { IOutlet } from './outlet.interface'
+export type { IApplicationBuilder } from './application-builder.interface';
+export type { IApplicationInternal } from './application-internal.interface';
+export type { IApplicationRootInternal } from './application-root-internal.interface';
+export type { IApplicationRoot } from './application-root.interface';
+export type { IApplication } from './application.interface';
+export type { IBootstrapConfig } from './bootstrap-config.interface';
+export type { IOutletInternal } from './outlet-internal.interface';
+export type { IOutlet } from './outlet.interface';
 
 // Export constructors (for advanced use cases)
-export { Application } from './application'
-export { ApplicationRoot } from './application-root'
-export { Outlet } from './outlet'
+export { Application } from './application';
+export { ApplicationRoot } from './application-root';
+export { Outlet } from './outlet';
 
 // Export factory functions (primary public API)
-export { bootstrapApp as bootstrapAppConfig, createApp } from './create-app'
-export { createOutlet } from './create-outlet'
+export { bootstrapApp as bootstrapAppConfig, createApp } from './create-app';
+export { createOutlet } from './create-outlet';
 
 // Export new builder API (recommended)
-export { bootstrapApp, bootstrapApp as createAppBuilder } from './builder'
+export { bootstrapApp, bootstrapApp as createAppBuilder } from './builder';
+
+// Export minimal pulse API (primary recommended API)
+export { pulse } from './pulse';
+export type { IPulseConfig } from './pulse';
 
 // Export prototype methods (for extension)
-export { mount as legacyMount } from './prototype/mount'
-export { clear } from './prototype/outlet/clear'
-export { render } from './prototype/outlet/render'
-export { mount } from './prototype/root/mount'
-export { unmount } from './prototype/root/unmount'
-export { unmount as legacyUnmount } from './prototype/unmount'
-export { update } from './prototype/update'
-
+export { mount as legacyMount } from './prototype/mount';
+export { clear } from './prototype/outlet/clear';
+export { render } from './prototype/outlet/render';
+export { mount } from './prototype/root/mount';
+export { unmount } from './prototype/root/unmount';
+export { unmount as legacyUnmount } from './prototype/unmount';
+export { update } from './prototype/update';
