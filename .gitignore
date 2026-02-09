@@ -40,3 +40,5 @@ pnpm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# Implementation docs consolidated to monorepo root
