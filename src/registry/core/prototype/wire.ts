@@ -52,19 +52,62 @@ export const wire = function (
   const lastKey = parts.pop() as string;
 
   // Create the effect that updates the DOM
-  const effect = () => {
-    // Get the value from signal or getter
-    const val = isSignal ? (source as ISignal<unknown>).read() : (source as () => unknown)();
+  let runCount = 0;
+  let isRunning = false;
+  let disposed = false;
+  let isFirstRun = true;
 
-    // Navigate to the target object
-    let target: any = el;
-    for (const p of parts) {
-      target = target[p];
+  const effect = () => {
+    runCount++;
+
+    // CRITICAL: Guard against detached elements (HMR cleanup)
+    // Skip check on first run (element might not be in DOM yet)
+    // On subsequent runs, exit if element is detached
+    if (!isFirstRun && (disposed || !el.isConnected)) {
+      disposed = true;
+      return;
     }
 
-    // Only update if value changed (avoid unnecessary DOM thrashing)
-    if (target[lastKey] !== val) {
-      target[lastKey] = val;
+    // CRITICAL: Detect infinite loop
+    if (isRunning) {
+      console.error('[WIRE INFINITE LOOP] Effect called recursively!', {
+        element: el,
+        property: path,
+        runCount,
+      });
+      debugger; // Break in debugger if dev tools open
+      return; // Guard against infinite recursion
+    }
+
+    if (runCount > 100) {
+      console.error('[WIRE INFINITE LOOP] Effect ran 100+ times!', {
+        element: el,
+        property: path,
+        runCount,
+      });
+      debugger;
+      return;
+    }
+
+    isRunning = true;
+
+    try {
+      // Get the value from signal or getter
+      const val = isSignal ? (source as ISignal<unknown>).read() : (source as () => unknown)();
+
+      // Navigate to the target object
+      let target: any = el;
+      for (const p of parts) {
+        target = target[p];
+      }
+
+      // Only update if value changed (avoid unnecessary DOM thrashing)
+      if (target[lastKey] !== val) {
+        target[lastKey] = val;
+      }
+    } finally {
+      isRunning = false;
+      isFirstRun = false;
     }
   };
 
@@ -77,12 +120,14 @@ export const wire = function (
     _children: new Set(),
     run: effect,
     cleanup: function () {
+      disposed = true;
       this._subs.forEach((sig) => sig.unsubscribe?.(this.run));
       this._subs.clear();
       this._children.forEach((child) => child.dispose());
       this._children.clear();
     },
     dispose: function () {
+      disposed = true;
       this.cleanup();
     },
   };

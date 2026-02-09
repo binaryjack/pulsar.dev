@@ -82,6 +82,18 @@ export interface ICoreRegistry {
    */
   wire(el: Element, path: string, source: ISignal<unknown> | (() => unknown)): WireDisposer;
 
+  /**
+   * Dispose all wire effects for a specific element
+   * @param el - Element whose wires should be disposed
+   */
+  disposeElement(el: Element): void;
+
+  /**
+   * Recursively dispose wire effects for an element and all its descendants
+   * @param rootElement - Root element of the tree to dispose
+   */
+  disposeTree(rootElement: Element): void;
+
   // --- Effect Owner Methods ---
 
   /**

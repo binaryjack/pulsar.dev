@@ -4,6 +4,7 @@
  */
 
 import { IServiceManager } from '../di/service-manager.types';
+import { createDefaultLifecycleOrchestrator } from '../lifecycle/lifecycle-orchestrator';
 import { ElementRegistry } from '../registry/core';
 import { RegistryEventDelegator } from '../registry/event-delegation';
 import { createIdContext } from '../registry/id-generator';
@@ -105,6 +106,14 @@ export const ApplicationRoot = function (
   this.cleanupObserver.observe(rootElement, {
     childList: true,
     subtree: true,
+  });
+
+  // Initialize lifecycle orchestrator (per-app-root)
+  // IMPORTANT: Must be created AFTER other dependencies are initialized
+  Object.defineProperty(this, 'lifecycleOrchestrator', {
+    value: createDefaultLifecycleOrchestrator(this),
+    writable: false,
+    enumerable: false,
   });
 
   Object.defineProperty(this, '_mountedComponent', {

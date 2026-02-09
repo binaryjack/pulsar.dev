@@ -3,6 +3,8 @@ import type { IComponentContext, ICoreRegistry, IEffectOwner } from './registry.
 
 // Import prototype methods
 import { boot } from './prototype/boot';
+import { disposeElement } from './prototype/dispose-element';
+import { disposeTree } from './prototype/dispose-tree';
 import { dump } from './prototype/dump';
 import { execute } from './prototype/execute';
 import { getCurrent } from './prototype/get-current';
@@ -90,6 +92,8 @@ Object.assign(CoreRegistry.prototype, {
   execute,
   getCurrent,
   wire,
+  disposeElement,
+  disposeTree,
   runInScope,
   getCurrentOwner,
   nextHid,
