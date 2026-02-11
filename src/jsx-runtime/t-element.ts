@@ -16,10 +16,16 @@ export interface IElementAttributes {
  *
  * @param tag - HTML tag name
  * @param attrs - Element attributes (including data-hid for SSR)
+ * @param children - Child elements or text content (array)
  * @param isSSR - Whether we're in SSR hydration mode (picks nodes instead of creating). Auto-detected if data-hid is present.
  * @returns DOM Element
  */
-export function t_element(tag: string, attrs: IElementAttributes = {}, isSSR = false): Element {
+export function t_element(
+  tag: string,
+  attrs: IElementAttributes = {},
+  children: any[] = [],
+  isSSR = false
+): Element {
   let el: Element;
 
   // Auto-detect SSR hydration mode if data-hid is present
@@ -95,6 +101,31 @@ export function t_element(tag: string, attrs: IElementAttributes = {}, isSSR = f
           el.setAttribute('style', value);
         } else {
           (el as any)[key] = value;
+        }
+      }
+    }
+  }
+
+  // Append children
+  if (children && children.length > 0) {
+    for (const child of children) {
+      if (child === null || child === undefined) {
+        // Skip null/undefined
+        continue;
+      } else if (child instanceof Node) {
+        // DOM node - append directly
+        el.appendChild(child);
+      } else if (typeof child === 'string' || typeof child === 'number') {
+        // Text content - create text node
+        el.appendChild(document.createTextNode(String(child)));
+      } else if (Array.isArray(child)) {
+        // Nested array - flatten and append
+        for (const nestedChild of child) {
+          if (nestedChild instanceof Node) {
+            el.appendChild(nestedChild);
+          } else if (typeof nestedChild === 'string' || typeof nestedChild === 'number') {
+            el.appendChild(document.createTextNode(String(nestedChild)));
+          }
         }
       }
     }
