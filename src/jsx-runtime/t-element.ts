@@ -93,7 +93,7 @@ export function t_element(
         }
       } else {
         // Static property - apply regardless of hydration to allow updates
-        if (key === 'className') {
+        if (key === 'className' || key === 'class') {
           el.setAttribute('class', String(value));
         } else if (key.startsWith('data-') || key.startsWith('aria-')) {
           el.setAttribute(key, String(value));
