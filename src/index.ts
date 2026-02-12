@@ -17,6 +17,9 @@ export type {
 export { t_element } from './jsx-runtime/t-element';
 export type { IElementAttributes } from './jsx-runtime/t-element';
 
+// Reactive insertion (SolidJS-inspired)
+export { insert } from './jsx-runtime/insert';
+
 // Reset signal ID counter for SSR
 export { resetSignalIdCounter } from './reactivity/signal/signal';
 

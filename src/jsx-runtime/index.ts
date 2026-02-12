@@ -7,6 +7,9 @@
 export { t_element } from './t-element';
 export type { IElementAttributes } from './t-element';
 
+// Reactive insertion (SolidJS-inspired)
+export { insert } from './insert';
+
 // Standard JSX runtime (backward compatibility)
 export { Fragment, jsx, jsxDEV, jsxs, jsxsDEV } from './jsx-runtime-standard';
 
