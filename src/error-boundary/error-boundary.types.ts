@@ -172,9 +172,13 @@ export interface ICatcherProps {
     | number;
 
   /**
-   * Children to render when no error
+   * Children to render when error occurs
+   * Can be:
+   * - Function(error, reset) => HTMLElement (JSX pattern)
+   * - Static content (fallback when no error)
    */
   children?:
+    | ((error: Error, reset: () => void) => HTMLElement | DocumentFragment | string | number)
     | HTMLElement
     | DocumentFragment
     | string

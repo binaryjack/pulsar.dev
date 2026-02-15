@@ -70,7 +70,29 @@ function renderError(container: HTMLElement, errorInfo: IErrorInfo, props: ICatc
   container.innerHTML = '';
   container.style.display = 'block';
 
-  // Use fallback if provided (React-like API)
+  // 1. Check for JSX children pattern (function with error, reset signature)
+  // This supports: <Catcher>{(error, reset) => <div>...</div>}</Catcher>
+  if (typeof props.children === 'function') {
+    // Find parent Tryer for reset function
+    const tryerContainer = findParentTryer(container);
+    const resetFn = () => {
+      if (tryerContainer) {
+        resetTryer(tryerContainer);
+      }
+    };
+
+    // Call children function with error and reset
+    const rendered = (props.children as any)(errorInfo.error, resetFn);
+
+    if (rendered instanceof HTMLElement || rendered instanceof DocumentFragment) {
+      container.appendChild(rendered);
+    } else if (typeof rendered === 'string' || typeof rendered === 'number') {
+      container.textContent = String(rendered);
+    }
+    return;
+  }
+
+  // 2. Use fallback if provided (React-like API)
   if (props.fallback) {
     const fallbackContent =
       typeof props.fallback === 'function' ? props.fallback(errorInfo.error) : props.fallback;
@@ -84,7 +106,7 @@ function renderError(container: HTMLElement, errorInfo: IErrorInfo, props: ICatc
     return;
   }
 
-  // Use custom renderer if provided
+  // 3. Use custom renderer if provided
   if (props.render) {
     const customElement = props.render(errorInfo);
     container.appendChild(customElement);
