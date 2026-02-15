@@ -29,6 +29,28 @@ export function ShowRegistry(props: IShowProps): HTMLElement {
   let whenElement: HTMLElement | null = null;
   let fallbackElement: HTMLElement | null = null;
 
+  const normalize = (child: any): HTMLElement | null => {
+    if (child === null || child === undefined || child === false || child === true) return null;
+    if (Array.isArray(child)) {
+        if (child.length === 0) return null;
+        if (child.length === 1) return normalize(child[0]);
+        const div = document.createElement('div');
+        div.style.display = 'contents';
+        child.forEach(c => {
+           const n = normalize(c);
+           if (n) div.appendChild(n);
+        });
+        return div;
+    }
+    if (typeof child === 'string' || typeof child === 'number') {
+        const span = document.createElement('span');
+        span.textContent = String(child);
+        return span;
+    }
+    if (child instanceof Node) return child as HTMLElement;
+    return null; // fallback
+  };
+
   // Wire the show/hide logic
   $REGISTRY.wire(container, '__showUpdate', () => {
     const condition = typeof props.when === 'function' ? props.when() : props.when;
@@ -37,30 +59,29 @@ export function ShowRegistry(props: IShowProps): HTMLElement {
       // Show "when" content
       if (!whenElement) {
         // Create when content once
-        if (typeof props.children === 'function') {
-          whenElement = props.children();
-        } else {
-          whenElement = props.children as HTMLElement;
-        }
+        const raw = typeof props.children === 'function' ? props.children() : props.children;
+        whenElement = normalize(raw);
       }
 
       // Swap if needed
-      if (currentElement !== whenElement && whenElement) {
-        // Remove fallback
-        if (fallbackElement && container.contains(fallbackElement)) {
+      if (currentElement !== whenElement) {
+        // Remove fallback if present
+        if (fallbackElement && fallbackElement.parentNode === container) {
           container.removeChild(fallbackElement);
         }
 
-        // Add when element
-        if (whenElement && !container.contains(whenElement)) {
+        // Add when element if missing
+        if (whenElement && whenElement.parentNode !== container) {
           container.appendChild(whenElement);
+        } else if (!whenElement && currentElement) {
+           // whenElement is null (empty), ensure nothing is shown
         }
 
         currentElement = whenElement;
       }
     } else {
-      // Hide "when" content - CRITICAL: Remove even if no fallback
-      if (whenElement && container.contains(whenElement)) {
+      // Hide "when" content
+      if (whenElement && whenElement.parentNode === container) {
         container.removeChild(whenElement);
       }
 
@@ -68,14 +89,14 @@ export function ShowRegistry(props: IShowProps): HTMLElement {
       if (props.fallback) {
         if (!fallbackElement) {
           // Create fallback once
-          fallbackElement =
-            typeof props.fallback === 'function'
+          const raw = typeof props.fallback === 'function'
               ? props.fallback()
-              : (props.fallback as HTMLElement);
+              : props.fallback;
+          fallbackElement = normalize(raw);
         }
 
         // Add fallback if not already in container
-        if (fallbackElement && !container.contains(fallbackElement)) {
+        if (fallbackElement && fallbackElement.parentNode !== container) {
           container.appendChild(fallbackElement);
         }
 

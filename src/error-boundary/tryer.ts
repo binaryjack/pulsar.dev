@@ -1,6 +1,6 @@
 /**
  * Tryer Component
- * 
+ *
  * Error boundary wrapper that catches errors in child components
  * and displays fallback UI. Named "Tryer" following user's naming convention.
  */
@@ -12,10 +12,10 @@ import { IErrorBoundaryContextInternal, IErrorInfo, ITryerProps } from './error-
 
 /**
  * Creates a Tryer (error boundary) component that catches errors in children
- * 
+ *
  * @param props - Tryer props with children and options
  * @returns Container element with error boundary protection
- * 
+ *
  * @example
  * ```typescript
  * Tryer({
@@ -30,24 +30,24 @@ import { IErrorBoundaryContextInternal, IErrorInfo, ITryerProps } from './error-
 export function Tryer(props: ITryerProps): HTMLElement {
     const container = document.createElement('div');
     container.setAttribute('data-error-boundary', 'true');
-    
+
     // Get parent boundary (for nesting)
     const parentBoundary = getActiveErrorBoundary();
-    
+
     // Create error boundary context
     const errorBoundary = createErrorBoundaryContext(
         props.options,
         parentBoundary
     );
-    
+
     // Normalize children to array
-    const childElements = Array.isArray(props.children) 
-        ? props.children 
+    const childElements = Array.isArray(props.children)
+        ? props.children
         : [props.children];
-    
+
     // Store original children for reset
     (errorBoundary as IErrorBoundaryContextInternal)._originalChildren = childElements;
-    
+
     // Store error boundary on container
     Object.defineProperty(container, '__errorBoundary', {
         value: errorBoundary,
@@ -55,21 +55,21 @@ export function Tryer(props: ITryerProps): HTMLElement {
         enumerable: false,
         configurable: false
     });
-    
+
     // Wrap child rendering in try-catch
     try {
         // Set this boundary as active (for nested boundaries)
         const previousBoundary = getActiveErrorBoundary();
         setActiveErrorBoundary(errorBoundary);
-        
+
         // Append children
         childElements.forEach(child => {
             container.appendChild(child);
         });
-        
+
         // Restore previous boundary
         setActiveErrorBoundary(previousBoundary);
-        
+
     } catch (error) {
         // Catch synchronous errors during render
         errorBoundary.catchError(
@@ -77,14 +77,14 @@ export function Tryer(props: ITryerProps): HTMLElement {
             'Tryer',
             { phase: 'render' }
         );
-        
+
         // Show fallback
         renderFallback(container, errorBoundary as IErrorBoundaryContextInternal);
     }
-    
+
     // Setup global error handler for async errors
     setupErrorHandler(container, errorBoundary as IErrorBoundaryContextInternal);
-    
+
     return container;
 }
 
@@ -92,17 +92,17 @@ export function Tryer(props: ITryerProps): HTMLElement {
  * Renders error fallback UI
  */
 function renderFallback(
-    container: HTMLElement, 
+    container: HTMLElement,
     errorBoundary: IErrorBoundaryContextInternal
 ): void {
     const errorInfo = errorBoundary._errorInfo;
     const options = errorBoundary.options;
-    
+
     if (!errorInfo) return;
-    
+
     // Clear container
     container.innerHTML = '';
-    
+
     // Render fallback if provided
     if (options.fallback) {
         const fallback = options.fallback(errorInfo);
@@ -125,19 +125,19 @@ function createDefaultFallback(errorInfo: IErrorInfo): HTMLElement {
     wrapper.style.borderRadius = '8px';
     wrapper.style.backgroundColor = '#fff5f5';
     wrapper.style.color = '#cc0000';
-    
+
     const title = document.createElement('h3');
     title.textContent = '❌ Error Occurred';
     title.style.margin = '0 0 10px 0';
-    
+
     const message = document.createElement('p');
     message.textContent = errorInfo.error.message;
     message.style.margin = '0';
     message.style.fontFamily = 'monospace';
-    
+
     wrapper.appendChild(title);
     wrapper.appendChild(message);
-    
+
     if (DEV && errorInfo.componentName) {
         const component = document.createElement('p');
         component.textContent = `Component: ${errorInfo.componentName}`;
@@ -145,7 +145,7 @@ function createDefaultFallback(errorInfo: IErrorInfo): HTMLElement {
         component.style.color = '#666';
         wrapper.appendChild(component);
     }
-    
+
     return wrapper;
 }
 
@@ -153,28 +153,29 @@ function createDefaultFallback(errorInfo: IErrorInfo): HTMLElement {
  * Setup error event handler for catching async errors
  */
 function setupErrorHandler(
-    container: HTMLElement, 
+    container: HTMLElement,
     errorBoundary: IErrorBoundaryContextInternal
 ): void {
     // Store handler for cleanup
     const errorHandler = (event: ErrorEvent) => {
         // Check if error originated from this container's subtree
-        if (event.target && container.contains(event.target as Node)) {
+        // Guard: event.target must be a Node (not Window, etc.)
+        if (event.target && event.target instanceof Node && container.contains(event.target as Node)) {
             event.preventDefault();
             event.stopPropagation();
-            
+
             errorBoundary.catchError(
                 event.error || new Error(event.message),
                 'async',
                 { type: 'ErrorEvent' }
             );
-            
+
             renderFallback(container, errorBoundary);
         }
     };
-    
+
     window.addEventListener('error', errorHandler, true);
-    
+
     // Store for cleanup
     Object.defineProperty(container, '__errorHandler', {
         value: errorHandler,
@@ -186,7 +187,7 @@ function setupErrorHandler(
 
 /**
  * Cleanup error boundary
- * 
+ *
  * @param container - Tryer container element
  */
 export function cleanupTryer(container: HTMLElement): void {
@@ -198,16 +199,16 @@ export function cleanupTryer(container: HTMLElement): void {
 
 /**
  * Reset error boundary to retry rendering
- * 
+ *
  * @param container - Tryer container element
  */
 export function resetTryer(container: HTMLElement): void {
     const errorBoundary = (container as { __errorBoundary?: IErrorBoundaryContextInternal }).__errorBoundary;
     if (!errorBoundary) return;
-    
+
     // Reset error state
     errorBoundary.reset();
-    
+
     // Clear and restore children
     container.innerHTML = '';
     const originalChildren = errorBoundary._originalChildren;

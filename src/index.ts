@@ -22,6 +22,7 @@ export { insert } from './jsx-runtime/insert';
 
 // Reset signal ID counter for SSR
 export { resetSignalIdCounter } from './reactivity/signal/signal';
+export { component } from './component';
 
 // ========================================
 // CORE REACTIVITY (Updated for Registry)

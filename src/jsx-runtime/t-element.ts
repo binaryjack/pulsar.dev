@@ -1,5 +1,6 @@
 import type { ISignal } from '../reactivity/signal/signal.types';
 import { $REGISTRY } from '../registry/core';
+import { insert } from './insert';
 
 /**
  * Element attributes for t_element
@@ -115,14 +116,22 @@ export function t_element(
       } else if (child instanceof Node) {
         // DOM node - append directly
         el.appendChild(child);
+      } else if (typeof child === 'function') {
+        // Reactive child - use insert() for automatic effect wrapping
+        insert(el as HTMLElement, child);
       } else if (typeof child === 'string' || typeof child === 'number') {
         // Text content - create text node
         el.appendChild(document.createTextNode(String(child)));
       } else if (Array.isArray(child)) {
         // Nested array - flatten and append
         for (const nestedChild of child) {
-          if (nestedChild instanceof Node) {
+          if (nestedChild === null || nestedChild === undefined) {
+            continue;
+          } else if (nestedChild instanceof Node) {
             el.appendChild(nestedChild);
+          } else if (typeof nestedChild === 'function') {
+            // Reactive nested child
+            insert(el as HTMLElement, nestedChild);
           } else if (typeof nestedChild === 'string' || typeof nestedChild === 'number') {
             el.appendChild(document.createTextNode(String(nestedChild)));
           }
