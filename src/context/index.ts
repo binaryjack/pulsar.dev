@@ -91,7 +91,13 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
   // Soldiers can now find the signal even if commandant hasn't arrived yet
   contextRegistry.set(contextId, [getContextValue, setContextValue]);
 
-  const Provider = ({ value, children }: { value: TValue; children: HTMLElement }): HTMLElement => {
+  const Provider = ({
+    value,
+    children,
+  }: {
+    value: TValue;
+    children: HTMLElement | (() => HTMLElement);
+  }): HTMLElement => {
     // COMMANDANT ARRIVES!
     // Update context value with provider's value
     // Stack management for nested providers
@@ -134,9 +140,11 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
       };
     }, [value]);
 
-    // With registry pattern, children are always evaluated HTMLElements
-    // No need to defer evaluation anymore - registry handles timing
-    return children as HTMLElement;
+    // Support both deferred and immediate children evaluation
+    // If children is a function, evaluate it AFTER setting context value
+    // This ensures useContext() calls read the correct value
+    const evaluatedChildren = typeof children === 'function' ? children() : children;
+    return evaluatedChildren as HTMLElement;
   };
 
   // Expose setter so components can set context synchronously before rendering

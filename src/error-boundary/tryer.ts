@@ -37,11 +37,8 @@ export function Tryer(props: ITryerProps): HTMLElement {
   // Create error boundary context
   const errorBoundary = createErrorBoundaryContext(props.options, parentBoundary);
 
-  // Normalize children to array
-  const childElements = Array.isArray(props.children) ? props.children : [props.children];
-
-  // Store original children for reset
-  (errorBoundary as IErrorBoundaryContextInternal)._originalChildren = childElements;
+  // Store original children for reset (before evaluation)
+  (errorBoundary as IErrorBoundaryContextInternal)._originalChildren = props.children;
 
   // Store error boundary on container
   Object.defineProperty(container, '__errorBoundary', {
@@ -56,6 +53,13 @@ export function Tryer(props: ITryerProps): HTMLElement {
     // Set this boundary as active (for nested boundaries)
     const previousBoundary = getActiveErrorBoundary();
     setActiveErrorBoundary(errorBoundary);
+
+    // Evaluate children if it's a function (deferred evaluation)
+    // This must happen AFTER setting the error boundary so it can catch errors
+    const evaluatedChildren = typeof props.children === 'function' ? props.children() : props.children;
+    
+    // Normalize children to array
+    const childElements = Array.isArray(evaluatedChildren) ? evaluatedChildren : [evaluatedChildren];
 
     // Append children with validation
     childElements.forEach((child) => {
@@ -217,7 +221,14 @@ export function resetTryer(container: HTMLElement): void {
   // Clear and restore children
   container.innerHTML = '';
   const originalChildren = errorBoundary._originalChildren;
-  originalChildren.forEach((child) => {
-    container.appendChild(child);
+  
+  // Evaluate children if it's a function
+  const evaluatedChildren = typeof originalChildren === 'function' ? originalChildren() : originalChildren;
+  const childElements = Array.isArray(evaluatedChildren) ? evaluatedChildren : [evaluatedChildren];
+  
+  childElements.forEach((child) => {
+    if (child instanceof Node) {
+      container.appendChild(child);
+    }
   });
 }

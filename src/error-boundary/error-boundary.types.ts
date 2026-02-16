@@ -127,8 +127,9 @@ export interface IErrorBoundaryContextInternal extends IErrorBoundaryContext {
 
   /**
    * Children elements to restore on reset
+   * @internal
    */
-  _originalChildren: HTMLElement[];
+  _originalChildren: HTMLElement | HTMLElement[] | (() => HTMLElement | HTMLElement[]);
 
   /**
    * Error fallback element currently shown
@@ -142,8 +143,9 @@ export interface IErrorBoundaryContextInternal extends IErrorBoundaryContext {
 export interface ITryerProps {
   /**
    * Children to render and protect
+   * Can be HTMLElement(s) or a function returning HTMLElement for deferred evaluation
    */
-  children: HTMLElement | HTMLElement[];
+  children: HTMLElement | HTMLElement[] | (() => HTMLElement | HTMLElement[]);
 
   /**
    * Error boundary configuration
