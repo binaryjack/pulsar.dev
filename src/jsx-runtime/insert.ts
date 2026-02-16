@@ -3,9 +3,9 @@
  * Handles reactive JSX expression insertion with automatic effect wrapping
  */
 
-import type { ISignal } from '../reactivity/signal/signal.types'
-import { $REGISTRY } from '../registry/core'
-import type { IEffectOwner } from '../registry/core/registry.types'
+import type { ISignal } from '../reactivity/signal/signal.types';
+import { $REGISTRY } from '../registry/core';
+import type { IEffectOwner } from '../registry/core/registry.types';
 
 /**
  * Inserts content into a parent element with reactive tracking
@@ -17,7 +17,7 @@ import type { IEffectOwner } from '../registry/core/registry.types'
 export function insert(
   parent: HTMLElement,
   accessor: any,
-  marker?: Node | null,
+  marker?: Node | null
 ): (() => void) | void {
   // If marker is undefined, append to end
   if (marker === undefined) {
@@ -42,7 +42,7 @@ export function insert(
     _children: new Set<IEffectOwner>(),
     run() {
       const value = accessor(); // Tracks signal reads
-      
+
       // Handle different value types
       if (value === null || value === undefined) {
         // Remove current node if exists
@@ -82,19 +82,19 @@ export function insert(
           current = normalized;
         }
       } else if (Array.isArray(normalized)) {
-        // Handle array of nodes
-        // For simplicity, convert to text for now
-        const text = normalized.join('');
-        if (current instanceof Text) {
-          if (current.data !== text) {
-            current.data = text;
+        // Handle array of nodes - insert each item properly
+        if (current && current.parentNode) {
+          current.parentNode.removeChild(current);
+        }
+        current = undefined;
+
+        for (const item of normalized) {
+          const normalizedItem = normalizeIncomingValue(item);
+          if (normalizedItem instanceof Node) {
+            parent.insertBefore(normalizedItem, marker);
+          } else if (normalizedItem !== null && normalizedItem !== undefined) {
+            parent.insertBefore(document.createTextNode(String(normalizedItem)), marker);
           }
-        } else {
-          if (current && current.parentNode) {
-            current.parentNode.removeChild(current);
-          }
-          current = document.createTextNode(text);
-          parent.insertBefore(current, marker);
         }
       }
     },
@@ -133,11 +133,7 @@ export function insert(
 /**
  * Insert static expression (non-reactive)
  */
-function insertExpression(
-  parent: HTMLElement,
-  value: any,
-  marker: Node | null,
-): void {
+function insertExpression(parent: HTMLElement, value: any, marker: Node | null): void {
   if (value === null || value === undefined) {
     return;
   }
