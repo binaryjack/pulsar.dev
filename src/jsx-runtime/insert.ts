@@ -3,7 +3,9 @@
  * Handles reactive JSX expression insertion with automatic effect wrapping
  */
 
-import { $REGISTRY } from '../registry/core';
+import type { ISignal } from '../reactivity/signal/signal.types'
+import { $REGISTRY } from '../registry/core'
+import type { IEffectOwner } from '../registry/core/registry.types'
 
 /**
  * Inserts content into a parent element with reactive tracking
@@ -28,70 +30,104 @@ export function insert(
     return;
   }
 
-  // Reactive case: wrap in effect to track signal reads
+  // Reactive case: create standalone effect (not wired to a property)
   let current: Node | undefined;
 
-  const disposer = $REGISTRY.wire(parent, '_reactive_child', () => {
-    const value = accessor(); // Tracks signal reads
-    
-    // Handle different value types
-    if (value === null || value === undefined) {
-      // Remove current node if exists
-      if (current && current.parentNode) {
-        current.parentNode.removeChild(current);
-        current = undefined;
-      }
-      return;
-    }
+  // Store previous effect
+  const previousEffect = $REGISTRY._currentEffect;
 
-    const normalized = normalizeIncomingValue(value);
-
-    // Update or create text node
-    if (typeof normalized === 'string' || typeof normalized === 'number') {
-      if (current instanceof Text) {
-        // Update existing text node
-        if (current.data !== String(normalized)) {
-          current.data = String(normalized);
-        }
-      } else {
-        // Remove old node and create new text node
+  // Create effect for dependency tracking
+  const effect: IEffectOwner = {
+    _subs: new Set<ISignal<unknown>>(),
+    _children: new Set<IEffectOwner>(),
+    run() {
+      const value = accessor(); // Tracks signal reads
+      
+      // Handle different value types
+      if (value === null || value === undefined) {
+        // Remove current node if exists
         if (current && current.parentNode) {
           current.parentNode.removeChild(current);
+          current = undefined;
         }
-        current = document.createTextNode(String(normalized));
-        parent.insertBefore(current, marker);
+        return;
       }
-    } else if (normalized instanceof Node) {
-      // Replace with new DOM node
-      if (current && current !== normalized) {
-        if (current.parentNode) {
-          current.parentNode.removeChild(current);
+
+      const normalized = normalizeIncomingValue(value);
+
+      // Update or create text node
+      if (typeof normalized === 'string' || typeof normalized === 'number') {
+        if (current instanceof Text) {
+          // Update existing text node
+          if (current.data !== String(normalized)) {
+            current.data = String(normalized);
+          }
+        } else {
+          // Remove old node and create new text node
+          if (current && current.parentNode) {
+            current.parentNode.removeChild(current);
+          }
+          current = document.createTextNode(String(normalized));
+          parent.insertBefore(current, marker);
+        }
+      } else if (normalized instanceof Node) {
+        // Replace with new DOM node
+        if (current && current !== normalized) {
+          if (current.parentNode) {
+            current.parentNode.removeChild(current);
+          }
+        }
+        if (normalized !== current) {
+          parent.insertBefore(normalized, marker);
+          current = normalized;
+        }
+      } else if (Array.isArray(normalized)) {
+        // Handle array of nodes
+        // For simplicity, convert to text for now
+        const text = normalized.join('');
+        if (current instanceof Text) {
+          if (current.data !== text) {
+            current.data = text;
+          }
+        } else {
+          if (current && current.parentNode) {
+            current.parentNode.removeChild(current);
+          }
+          current = document.createTextNode(text);
+          parent.insertBefore(current, marker);
         }
       }
-      if (normalized !== current) {
-        parent.insertBefore(normalized, marker);
-        current = normalized;
-      }
-    } else if (Array.isArray(normalized)) {
-      // Handle array of nodes
-      // For simplicity, convert to text for now
-      const text = normalized.join('');
-      if (current instanceof Text) {
-        if (current.data !== text) {
-          current.data = text;
-        }
-      } else {
-        if (current && current.parentNode) {
-          current.parentNode.removeChild(current);
-        }
-        current = document.createTextNode(text);
-        parent.insertBefore(current, marker);
-      }
-    }
-  });
+    },
+    cleanup() {
+      this._subs.forEach((sig) => sig.unsubscribe?.(this.run));
+      this._subs.clear();
+      this._children.forEach((child) => child.dispose());
+      this._children.clear();
+    },
+    dispose() {
+      this.cleanup();
+    },
+  };
+
+  // Link to parent effect owner if exists
+  const parentOwner = $REGISTRY.getCurrentOwner();
+  if (parentOwner) {
+    parentOwner._children.add(effect);
+  }
+
+  // Set current effect for dependency tracking
+  $REGISTRY._currentEffect = effect;
+
+  // Run effect immediately (establishes subscriptions)
+  effect.run();
+
+  // Restore previous effect
+  $REGISTRY._currentEffect = previousEffect;
 
   // Return disposer for cleanup
-  return disposer;
+  return () => {
+    effect.dispose();
+  };
 }
 
 /**

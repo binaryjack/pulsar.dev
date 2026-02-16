@@ -1,5 +1,5 @@
-import type { ISignal } from '../../../reactivity/signal/signal.types';
-import type { ICoreRegistry, WireDisposer } from '../registry.types';
+import type { ISignal } from '../../../reactivity/signal/signal.types'
+import type { ICoreRegistry, WireDisposer } from '../registry.types'
 
 /**
  * Wire a signal or getter to a DOM property path
@@ -75,7 +75,6 @@ export const wire = function (
         property: path,
         runCount,
       });
-      debugger; // Break in debugger if dev tools open
       return; // Guard against infinite recursion
     }
 
@@ -85,7 +84,6 @@ export const wire = function (
         property: path,
         runCount,
       });
-      debugger;
       return;
     }
 
