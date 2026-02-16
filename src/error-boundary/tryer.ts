@@ -56,13 +56,17 @@ export function Tryer(props: ITryerProps): HTMLElement {
 
     // Evaluate children if it's a function (deferred evaluation)
     // This must happen AFTER setting the error boundary so it can catch errors
-    const evaluatedChildren =
-      typeof props.children === 'function' ? props.children() : props.children;
+    let evaluatedChildren = typeof props.children === 'function' ? props.children() : props.children;
 
     // Normalize children to array
-    const childElements = Array.isArray(evaluatedChildren)
+    let childElements = Array.isArray(evaluatedChildren)
       ? evaluatedChildren
       : [evaluatedChildren];
+
+    // Evaluate each child if it's a function (for array of deferred children)
+    childElements = childElements.map((child) =>
+      typeof child === 'function' ? child() : child
+    );
 
     // Append children with validation
     childElements.forEach((child) => {
@@ -226,9 +230,12 @@ export function resetTryer(container: HTMLElement): void {
   const originalChildren = errorBoundary._originalChildren;
 
   // Evaluate children if it's a function
-  const evaluatedChildren =
+  let evaluatedChildren =
     typeof originalChildren === 'function' ? originalChildren() : originalChildren;
-  const childElements = Array.isArray(evaluatedChildren) ? evaluatedChildren : [evaluatedChildren];
+  let childElements = Array.isArray(evaluatedChildren) ? evaluatedChildren : [evaluatedChildren];
+
+  // Evaluate each child if it's a function (for array of deferred children)
+  childElements = childElements.map((child) => (typeof child === 'function' ? child() : child));
 
   childElements.forEach((child) => {
     if (child instanceof Node) {
