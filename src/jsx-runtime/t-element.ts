@@ -87,10 +87,19 @@ export function t_element(
         // Reactive property - always wire, even if hydrated
         $REGISTRY.wire(el, key, value as ISignal<unknown> | (() => unknown));
       } else if (key === 'style' && typeof value === 'object') {
-        // Handle style object
-        const styleObj = value as Record<string, string>;
+        // Handle style object - check each property for reactivity
+        const styleObj = value as Record<string, any>;
         for (const [styleProp, styleValue] of Object.entries(styleObj)) {
-          (el as HTMLElement).style[styleProp as any] = styleValue;
+          const isStyleSignal = styleValue && typeof styleValue === 'object' && typeof styleValue[0] === 'function';
+          const isStyleGetter = typeof styleValue === 'function';
+          
+          if (isStyleSignal || isStyleGetter) {
+            // Reactive style property - wire it
+            $REGISTRY.wire(el, `style.${styleProp}`, styleValue as ISignal<unknown> | (() => unknown));
+          } else {
+            // Static style property - apply directly
+            (el as HTMLElement).style[styleProp as any] = styleValue;
+          }
         }
       } else {
         // Static property - apply regardless of hydration to allow updates
