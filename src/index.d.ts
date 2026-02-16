@@ -25,19 +25,19 @@ export type {
   IServiceLocator,
   IServiceManager,
   IServiceOptions,
+  SServiceManager,
   ServiceFactoryType,
   ServiceIdType,
   ServiceLifetimeType,
-  SServiceManager,
 } from './di';
 export {
   Catcher,
+  Tryer,
   cleanupTryer,
   createErrorBoundaryContext,
   getActiveErrorBoundary,
   resetTryer,
   setActiveErrorBoundary,
-  Tryer,
   updateCatcher,
 } from './error-boundary';
 export type {
@@ -66,7 +66,7 @@ export type {
   ValidatorMap,
 } from './formular';
 export * from './hooks';
-export { createHttpClient, HttpClient, useHttp, useHttpGet, useHttpPost } from './http';
+export { HttpClient, createHttpClient, useHttp, useHttpGet, useHttpPost } from './http';
 export type {
   ErrorInterceptor,
   ICacheEntry,
@@ -83,20 +83,20 @@ export type {
 } from './http';
 export * from './jsx-runtime';
 export * from './lifecycle';
-export { cleanupPortals, Portal, PortalSlot } from './portal';
+export { Portal, PortalSlot, cleanupPortals } from './portal';
 export type { IPortalProps, IPortalSlotProps } from './portal';
 export {
+  Effect,
+  Memo,
+  SEffect,
+  SMemo,
+  SSignal,
+  Signal,
   batch,
   createEffect,
   createMemo,
   createSignal,
-  Effect,
   isBatching,
-  Memo,
-  SEffect,
-  Signal,
-  SMemo,
-  SSignal,
   useSync,
 } from './reactivity';
 export type {
@@ -110,6 +110,7 @@ export type {
   SubscribeFunction,
 } from './reactivity';
 export {
+  Waiting,
   clearAll,
   createResource,
   createTrackedResource,
@@ -121,7 +122,6 @@ export {
   resolveWaiting,
   suspendWaiting,
   waitForAll,
-  Waiting,
 } from './resource';
 export type {
   IResource,
@@ -209,4 +209,13 @@ export type {
   TCleanupFunction,
 } from './testing';
 export type { Children, HtmlExtends, Pulsar } from './types/html-extends';
+export type {
+  Accessor,
+  Component,
+  ParentComponent,
+  PropsWithChildren,
+  PropsWithOptionalChildren,
+  Setter,
+  Signal,
+} from './types/pulsar-core';
 export { produce } from './utilities';
