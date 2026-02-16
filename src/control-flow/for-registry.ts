@@ -136,6 +136,9 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
           return;
         }
 
+        // Add data attribute for debugging
+        element.dataset.forKey = String(key);
+
         state.items.set(key, element);
 
         // Store cleanup function if children function supports it
