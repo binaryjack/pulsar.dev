@@ -60,10 +60,14 @@ export function Tryer(props: ITryerProps): HTMLElement {
       typeof props.children === 'function' ? props.children() : props.children;
 
     // Normalize children to array
-    let childElements: any[] = Array.isArray(evaluatedChildren) ? evaluatedChildren : [evaluatedChildren];
+    let childElements: any[] = Array.isArray(evaluatedChildren)
+      ? evaluatedChildren
+      : [evaluatedChildren];
 
     // Evaluate each child if it's a function (for array of deferred children)
-    childElements = childElements.map((child: any) => (typeof child === 'function' ? child() : child));
+    childElements = childElements.map((child: any) =>
+      typeof child === 'function' ? child() : child
+    );
 
     // Append children with validation
     childElements.forEach((child) => {
@@ -229,10 +233,14 @@ export function resetTryer(container: HTMLElement): void {
   // Evaluate children if it's a function
   let evaluatedChildren =
     typeof originalChildren === 'function' ? originalChildren() : originalChildren;
-  let childElements: any[] = Array.isArray(evaluatedChildren) ? evaluatedChildren : [evaluatedChildren];
+  let childElements: any[] = Array.isArray(evaluatedChildren)
+    ? evaluatedChildren
+    : [evaluatedChildren];
 
   // Evaluate each child if it's a function (for array of deferred children)
-  childElements = childElements.map((child: any) => (typeof child === 'function' ? child() : child));
+  childElements = childElements.map((child: any) =>
+    typeof child === 'function' ? child() : child
+  );
 
   childElements.forEach((child) => {
     if (child instanceof Node) {

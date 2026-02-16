@@ -90,12 +90,17 @@ export function t_element(
         // Handle style object - check each property for reactivity
         const styleObj = value as Record<string, any>;
         for (const [styleProp, styleValue] of Object.entries(styleObj)) {
-          const isStyleSignal = styleValue && typeof styleValue === 'object' && typeof styleValue[0] === 'function';
+          const isStyleSignal =
+            styleValue && typeof styleValue === 'object' && typeof styleValue[0] === 'function';
           const isStyleGetter = typeof styleValue === 'function';
-          
+
           if (isStyleSignal || isStyleGetter) {
             // Reactive style property - wire it
-            $REGISTRY.wire(el, `style.${styleProp}`, styleValue as ISignal<unknown> | (() => unknown));
+            $REGISTRY.wire(
+              el,
+              `style.${styleProp}`,
+              styleValue as ISignal<unknown> | (() => unknown)
+            );
           } else {
             // Static style property - apply directly
             (el as HTMLElement).style[styleProp as any] = styleValue;
