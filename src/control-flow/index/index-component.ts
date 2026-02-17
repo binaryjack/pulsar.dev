@@ -70,7 +70,7 @@ export function Index<T>(props: IIndexProps<T>): HTMLElement {
   createEffect(() => {
     // Evaluate array
     const array = typeof props.each === 'function' ? props.each() : props.each;
-    
+
     // console.log('[Index] Evaluating array. Length:', array ? array.length : 'null');
 
     // Handle empty array
