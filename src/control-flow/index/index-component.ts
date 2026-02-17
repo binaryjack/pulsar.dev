@@ -57,6 +57,9 @@ export function Index<T>(props: IIndexProps<T>): HTMLElement {
   const container = document.createElement('div');
   container.style.display = 'contents'; // Don't add extra wrapper
 
+  // DEBUG: Track Index mounting
+  // console.log('[Index] Mounted with props:', props);
+
   const state: IIndexState<T> = {
     items: new Map(),
     signals: new Map(),
@@ -67,6 +70,8 @@ export function Index<T>(props: IIndexProps<T>): HTMLElement {
   createEffect(() => {
     // Evaluate array
     const array = typeof props.each === 'function' ? props.each() : props.each;
+    
+    // console.log('[Index] Evaluating array. Length:', array ? array.length : 'null');
 
     // Handle empty array
     if (!array || array.length === 0) {
@@ -124,6 +129,7 @@ function createItem<T>(
   value: T,
   index: number
 ): void {
+  // console.log(`[Index] Creating item ${index}`);
   // Create signal for this item
   const [itemSignal, setItemSignal] = createSignal<T>(value);
 
@@ -132,6 +138,7 @@ function createItem<T>(
 
   // Create element using children function
   const element = props.children(itemSignal, index);
+  // console.log(`[Index] Created element for item ${index}:`, element);
 
   // Append to container
   state.container.appendChild(element);
