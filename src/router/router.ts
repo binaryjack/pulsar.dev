@@ -25,7 +25,18 @@ export const Router = ({ children, fallback }: IRouterProps): HTMLElement => {
 
   // Extract route configurations from children
   const routes: IRoute[] = [];
-  const childArray = Array.isArray(children) ? children : [children];
+
+  // Handle children - could be HTMLElement, array, or undefined
+  let childArray: HTMLElement[] = [];
+  if (children) {
+    if (Array.isArray(children)) {
+      childArray = children.filter((c) => c && typeof c === 'object') as HTMLElement[];
+    } else if (typeof children === 'object') {
+      childArray = [children as HTMLElement];
+    }
+  }
+
+  console.log('[Router] Children received:', childArray.length, childArray);
 
   childArray.forEach((child) => {
     if ((child as any).__routeConfig) {
