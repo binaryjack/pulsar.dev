@@ -6,7 +6,7 @@
 import type { ISignal } from '../reactivity/signal/signal.types';
 import { $REGISTRY } from '../registry/core';
 import type { IEffectOwner } from '../registry/core/registry.types';
-import type { ReactiveChildren, NormalizedValue } from './jsx-runtime.types';
+import type { NormalizedValue, ReactiveChildren } from './jsx-runtime.types';
 
 /**
  * Inserts content into a parent element with reactive tracking
@@ -161,7 +161,7 @@ function normalizeIncomingValue(value: ReactiveChildren): NormalizedValue | Norm
   if (typeof value === 'boolean') {
     return null;
   }
-  
+
   // Handle null/undefined
   if (value === null || value === undefined) {
     return null;

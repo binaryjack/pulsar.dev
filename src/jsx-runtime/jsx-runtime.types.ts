@@ -65,10 +65,7 @@ export type ReactiveValue<T> = T | (() => T);
 /**
  * A single child element (can be reactive)
  */
-export type ReactiveChild = 
-  | RenderablePrimitive
-  | Node
-  | ReactiveValue<RenderablePrimitive | Node>;
+export type ReactiveChild = RenderablePrimitive | Node | ReactiveValue<RenderablePrimitive | Node>;
 
 /**
  * Children can be single or array

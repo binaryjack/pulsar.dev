@@ -119,7 +119,7 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
         const indexSignal = () => {
           // Read from reactive source to establish dependency
           const currentArray = typeof props.each === 'function' ? props.each() : props.each;
-          
+
           // If array changes, cache is already rebuilt by wire callback above
           // Just return cached value for O(1) lookup
           return state.indexCache?.get(key) ?? -1;
