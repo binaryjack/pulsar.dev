@@ -74,6 +74,16 @@ export interface IForState<_T = unknown> {
    * Fallback element shown when array is empty
    */
   fallbackElement: HTMLElement | null;
+
+  /**
+   * Cache of key -> index for O(1) index lookups
+   */
+  indexCache?: Map<string | number, number>;
+
+  /**
+   * Cache version to detect when array changes
+   */
+  cacheVersion?: number;
 }
 
 /**

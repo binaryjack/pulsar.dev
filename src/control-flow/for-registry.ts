@@ -29,6 +29,8 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
     container,
     cleanups: new Map(),
     fallbackElement: null, // Track fallback element for cleanup
+    indexCache: new Map(), // NEW: Cache for O(1) index lookups
+    cacheVersion: 0, // NEW: Track when cache needs rebuild
   };
 
   // Use registry wire to track array changes
@@ -100,10 +102,11 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
     });
 
     // PHASE 2: Add new items and reorder existing items
-    // Create index cache for O(1) lookups
-    const indexCache = new Map<string | number, number>();
+    // Rebuild index cache ONCE per array change (O(n) once vs O(n) per index() call)
+    state.indexCache = new Map<string | number, number>();
+    state.cacheVersion = (state.cacheVersion || 0) + 1;
     newOrder.forEach(({ key }, idx) => {
-      indexCache.set(key, idx);
+      state.indexCache!.set(key, idx);
     });
 
     newOrder.forEach(({ key, item, index }, orderIndex) => {
@@ -112,21 +115,14 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
       // Create new element if doesn't exist
       if (!element) {
         // Create index signal that returns current position in array
-        // IMPORTANT: Must read from props.each to establish reactive dependency
+        // OPTIMIZED: Read from cached Map (O(1)) instead of rebuilding on every call
         const indexSignal = () => {
           // Read from reactive source to establish dependency
           const currentArray = typeof props.each === 'function' ? props.each() : props.each;
-          const keyFn = props.key || ((_, idx) => idx);
-
-          // PERFORMANCE FIX: Use cached Map for O(1) lookup instead of O(n) findIndex
-          // Rebuild cache only when array changes
-          const newKeysMap = new Map<string | number, number>();
-          currentArray.forEach((arrayItem, idx) => {
-            const itemKey = keyFn(arrayItem, idx);
-            newKeysMap.set(itemKey, idx);
-          });
-
-          return newKeysMap.get(key) ?? -1;
+          
+          // If array changes, cache is already rebuilt by wire callback above
+          // Just return cached value for O(1) lookup
+          return state.indexCache?.get(key) ?? -1;
         };
 
         element = props.children(item, indexSignal);

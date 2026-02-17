@@ -1,15 +1,10 @@
 import type { ISignal } from '../reactivity/signal/signal.types';
 import { $REGISTRY } from '../registry/core';
 import { insert } from './insert';
+import type { IElementAttributes, ReactiveChildren } from './jsx-runtime.types';
 
-/**
- * Element attributes for t_element
- */
-export interface IElementAttributes {
-  [key: string]: unknown;
-  'data-hid'?: string;
-  'data-comp-id'?: string;
-}
+// Re-export for public API
+export type { IElementAttributes, ReactiveChildren } from './jsx-runtime.types';
 
 /**
  * SSR-aware element creation helper
@@ -24,7 +19,7 @@ export interface IElementAttributes {
 export function t_element(
   tag: string,
   attrs: IElementAttributes = {},
-  children: any[] = [],
+  children: ReactiveChildren[] = [],
   isSSR = false
 ): Element {
   let el: Element;
@@ -36,7 +31,7 @@ export function t_element(
   if (shouldHydrate && attrs['data-hid']) {
     const hidValue = attrs['data-hid'];
     const existing = document.querySelector(`[data-hid="${hidValue}"]`);
-    if (existing && existing.tagName.toLowerCase() === tag.toLowerCase()) {
+    if (existing?.tagName.toLowerCase() === tag.toLowerCase()) {
       el = existing;
       // Mark as hydrated to avoid re-applying static props
       (el as any).__hydrated = true;
@@ -61,8 +56,8 @@ export function t_element(
 
   // CRITICAL: Apply data-hid FIRST for SSR (before any other attributes)
   // This ensures the attribute exists in server-rendered HTML for hydration
-  if (attrs['data-hid'] && !el.hasAttribute('data-hid')) {
-    el.setAttribute('data-hid', String(attrs['data-hid']));
+  if (attrs['data-hid'] && !(el as HTMLElement).dataset.hid) {
+    (el as HTMLElement).dataset.hid = String(attrs['data-hid']);
   }
 
   // Apply attributes
@@ -109,9 +104,13 @@ export function t_element(
       } else {
         // Static property - apply regardless of hydration to allow updates
         if (key === 'className' || key === 'class') {
-          el.setAttribute('class', String(value));
+          if (typeof value === 'string') {
+            el.setAttribute('class', value);
+          }
         } else if (key.startsWith('data-') || key.startsWith('aria-')) {
-          el.setAttribute(key, String(value));
+          if (typeof value === 'string' || typeof value === 'number') {
+            el.setAttribute(key, String(value));
+          }
         } else if (key === 'style' && typeof value === 'string') {
           el.setAttribute('style', value);
         } else {

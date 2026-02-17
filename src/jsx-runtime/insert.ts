@@ -6,6 +6,7 @@
 import type { ISignal } from '../reactivity/signal/signal.types';
 import { $REGISTRY } from '../registry/core';
 import type { IEffectOwner } from '../registry/core/registry.types';
+import type { ReactiveChildren, NormalizedValue } from './jsx-runtime.types';
 
 /**
  * Inserts content into a parent element with reactive tracking
@@ -16,7 +17,7 @@ import type { IEffectOwner } from '../registry/core/registry.types';
  */
 export function insert(
   parent: HTMLElement,
-  accessor: any,
+  accessor: ReactiveChildren,
   marker?: Node | null
 ): (() => void) | void {
   // If marker is undefined, append to end
@@ -46,7 +47,7 @@ export function insert(
       // Handle different value types
       if (value === null || value === undefined) {
         // Remove current node if exists
-        if (current && current.parentNode) {
+        if (current?.parentNode) {
           current.parentNode.removeChild(current);
           current = undefined;
         }
@@ -64,7 +65,7 @@ export function insert(
           }
         } else {
           // Remove old node and create new text node
-          if (current && current.parentNode) {
+          if (current?.parentNode) {
             current.parentNode.removeChild(current);
           }
           current = document.createTextNode(String(normalized));
@@ -83,7 +84,7 @@ export function insert(
         }
       } else if (Array.isArray(normalized)) {
         // Handle array of nodes - insert each item properly
-        if (current && current.parentNode) {
+        if (current?.parentNode) {
           current.parentNode.removeChild(current);
         }
         current = undefined;
@@ -133,7 +134,7 @@ export function insert(
 /**
  * Insert static expression (non-reactive)
  */
-function insertExpression(parent: HTMLElement, value: any, marker: Node | null): void {
+function insertExpression(parent: HTMLElement, value: ReactiveChildren, marker: Node | null): void {
   if (value === null || value === undefined) {
     return;
   }
@@ -155,17 +156,24 @@ function insertExpression(parent: HTMLElement, value: any, marker: Node | null):
 /**
  * Normalize incoming values to renderable types
  */
-function normalizeIncomingValue(value: any): any {
+function normalizeIncomingValue(value: ReactiveChildren): NormalizedValue | NormalizedValue[] {
   // Handle boolean values
   if (typeof value === 'boolean') {
-    return '';
+    return null;
+  }
+  
+  // Handle null/undefined
+  if (value === null || value === undefined) {
+    return null;
   }
 
   // Handle arrays
   if (Array.isArray(value)) {
-    return value.map(normalizeIncomingValue);
+    return value
+      .map((v) => normalizeIncomingValue(v))
+      .filter((v): v is NormalizedValue => v !== null);
   }
 
   // Pass through primitives and nodes
-  return value;
+  return value as NormalizedValue;
 }

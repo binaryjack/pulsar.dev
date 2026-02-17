@@ -48,6 +48,57 @@ export interface JSXSource {
   columnNumber: number;
 }
 
+// ============================================================================
+// STRICT TYPE DEFINITIONS (Zero `any` types)
+// ============================================================================
+
+/**
+ * Base primitive types that can be rendered
+ */
+export type RenderablePrimitive = string | number | boolean | null | undefined;
+
+/**
+ * A value that can be either static or reactive
+ */
+export type ReactiveValue<T> = T | (() => T);
+
+/**
+ * A single child element (can be reactive)
+ */
+export type ReactiveChild = 
+  | RenderablePrimitive
+  | Node
+  | ReactiveValue<RenderablePrimitive | Node>;
+
+/**
+ * Children can be single or array
+ */
+export type ReactiveChildren = ReactiveChild | ReadonlyArray<ReactiveChild>;
+
+/**
+ * Normalized value after processing (no functions)
+ */
+export type NormalizedValue = string | number | Node | null | undefined;
+
+/**
+ * Element attributes with strict types
+ */
+export interface IElementAttributes {
+  [key: string]: unknown;
+  'data-hid'?: string;
+  'data-comp-id'?: string;
+  class?: string;
+  className?: string;
+  style?: string | Record<string, ReactiveValue<string | number>>;
+}
+
+/**
+ * Style object with reactive values
+ */
+export type ReactiveStyle = {
+  [K in keyof CSSStyleDeclaration]?: ReactiveValue<string | number>;
+};
+
 /**
  * Fragment props
  */
