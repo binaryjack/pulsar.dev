@@ -29,23 +29,36 @@ export function ShowRegistry(props: IShowProps): HTMLElement {
   let whenElement: HTMLElement | null = null;
   let fallbackElement: HTMLElement | null = null;
 
+  /**
+   * Recursively calls __portalCleanup on an element and all its descendants.
+   * This unmounts any Portal content that was projected outside the tree.
+   * Also nulls out whenElement / fallbackElement so they are re-created on
+   * the next show cycle (Portal() must run again to re-mount content).
+   */
+  const callPortalCleanups = (el: HTMLElement): void => {
+    if ((el as any).__portalCleanup) {
+      (el as any).__portalCleanup();
+    }
+    Array.from(el.children).forEach((child) => callPortalCleanups(child as HTMLElement));
+  };
+
   const normalize = (child: any): HTMLElement | null => {
     if (child === null || child === undefined || child === false || child === true) return null;
     if (Array.isArray(child)) {
-        if (child.length === 0) return null;
-        if (child.length === 1) return normalize(child[0]);
-        const div = document.createElement('div');
-        div.style.display = 'contents';
-        child.forEach(c => {
-           const n = normalize(c);
-           if (n) div.appendChild(n);
-        });
-        return div;
+      if (child.length === 0) return null;
+      if (child.length === 1) return normalize(child[0]);
+      const div = document.createElement('div');
+      div.style.display = 'contents';
+      child.forEach((c) => {
+        const n = normalize(c);
+        if (n) div.appendChild(n);
+      });
+      return div;
     }
     if (typeof child === 'string' || typeof child === 'number') {
-        const span = document.createElement('span');
-        span.textContent = String(child);
-        return span;
+      const span = document.createElement('span');
+      span.textContent = String(child);
+      return span;
     }
     if (child instanceof Node) return child as HTMLElement;
     return null; // fallback
@@ -74,7 +87,7 @@ export function ShowRegistry(props: IShowProps): HTMLElement {
         if (whenElement && whenElement.parentNode !== container) {
           container.appendChild(whenElement);
         } else if (!whenElement && currentElement) {
-           // whenElement is null (empty), ensure nothing is shown
+          // whenElement is null (empty), ensure nothing is shown
         }
 
         currentElement = whenElement;
@@ -82,16 +95,18 @@ export function ShowRegistry(props: IShowProps): HTMLElement {
     } else {
       // Hide "when" content
       if (whenElement && whenElement.parentNode === container) {
+        callPortalCleanups(whenElement);
         container.removeChild(whenElement);
+        // Null out so Portal() re-runs (re-mounts) on next show cycle
+        whenElement = null;
+        currentElement = null;
       }
 
       // Show fallback content if provided
       if (props.fallback) {
         if (!fallbackElement) {
           // Create fallback once
-          const raw = typeof props.fallback === 'function'
-              ? props.fallback()
-              : props.fallback;
+          const raw = typeof props.fallback === 'function' ? props.fallback() : props.fallback;
           fallbackElement = normalize(raw);
         }
 
