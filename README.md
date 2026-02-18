@@ -716,18 +716,65 @@ See the complete [Getting Started Guide](./docs/getting-started.md) for detailed
 ### Quick Example
 
 ```typescript
-import { createSignal, useAppContext } from '@pulsar-framework/pulsar.dev';
+import { createSignal, createMemo, Show } from '@pulsar-framework/pulsar.dev';
 
-const Counter = ({ initialCount = 0 }) => {
-  const context = useAppContext();
+export const Counter = ({ initialCount = 0 }: { initialCount?: number }) => {
   const [count, setCount] = createSignal(initialCount);
+  
+  // Memoized computation - only re-runs when count changes
+  const doubleCount = createMemo(() => count() * 2);
+  
+  // Fine-grained updates: only this text node updates
+  const isPositive = createMemo(() => count() > 0);
 
   return (
-    <div className="counter">
-      <h1>{context.appName}</h1>
+    <div class="counter">
       <h2>Count: {count()}</h2>
-      <button onClick={() => setCount(count() + 1)}>Increment</button>
-      <button onClick={() => setCount(count() - 1)}>Decrement</button>
+      <h3>Double: {doubleCount()}</h3>
+      
+      {/* Conditional rendering with Show */}
+      <Show when={isPositive()}>
+        <p style="color: green;">Positive number! 🎉</p>
+      </Show>
+      
+      <div>
+        <button onClick={() => setCount(count() + 1)}>Increment</button>
+        <button onClick={() => setCount(count() - 1)}>Decrement</button>
+        <button onClick={() => setCount(0)}>Reset</button>
+      </div>
+    </div>
+  );
+};
+```
+
+**Portal Pattern Example:**
+
+```typescript
+import { createSignal, Show, Portal } from '@pulsar-framework/pulsar.dev';
+import { Modal } from '@pulsar-framework/ui';
+
+export const ModalExample = () => {
+  const [isOpen, setIsOpen] = createSignal(false);
+  const [data, setData] = createSignal('');
+
+  return (
+    <div>
+      <button onClick={() => setIsOpen(true)}>Open Modal</button>
+      
+      <Show when={isOpen()}>
+        <Modal id="example-modal" isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        
+        <Portal id="example-modal" target="body">
+          <input 
+            type="text"
+            value={data()}
+            onInput={(e) => setData(e.target.value)}
+            placeholder="Component-local state"
+          />
+          <p>Value: {data()}</p>
+        </Portal>
+      </Show>
+    </div>
     </div>
   )
 }
@@ -991,15 +1038,278 @@ packages/
 
 ## Real-World Examples
 
-Check out the demo applications:
+### Live Showcase
 
-- **Counter App** - State management, hooks, computed values
-- **Todo App** - Complex state, context, localStorage integration
-- **Showcase** - Component library built with Pulsar primitives
+**🎨 See it in action:** [pulsar-ui.dev showcase](https://github.com/binaryjack/pulsar-ui.dev) - 80+ examples demonstrating advanced patterns
+
+### 1. Fine-Grained Reactivity
+
+```tsx
+// Signal-based state with automatic dependency tracking
+export const SignalDemo = ({ firstName, setFirstName, age, setAge }: Props) => {
+  return (
+    <div>
+      <div>
+        <strong>Name:</strong> {firstName()} {/* Auto-subscribes */}
+        <strong>Age:</strong> {age()}
+      </div>
+      <button onClick={() => setAge(age() + 1)}>
+        Increment Age
+      </button>
+    </div>
+  );
+};
+```
+
+**Key Features:**
+- Only subscribed DOM nodes update
+- No virtual DOM diffing
+- Surgical, fine-grained updates
+
+### 2. Portal/PortalSlot Architecture
+
+```tsx
+// Advanced pattern: Modal with content projection
+export component ModalDemo() {
+  const [isOpen, setIsOpen] = createSignal(false);
+  const [count, setCount] = createSignal(0);
+  
+  return (
+    <div>
+      <button onClick={() => setIsOpen(true)}>Open Modal</button>
+      
+      <Show when={isOpen()}>
+        {/* Modal provides PortalSlots */}
+        <Modal id="demo-modal" isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        
+        {/* Project content into slots while keeping logic local */}
+        <Portal id="demo-modal" target="header">
+          <h3>Modal Title</h3>
+        </Portal>
+        
+        <Portal id="demo-modal" target="body">
+          <p>State is maintained in component scope: {count()}</p>
+          <button onClick={() => setCount(count() + 1)}>
+            Increment ({count()})
+          </button>
+        </Portal>
+        
+        <Portal id="demo-modal" target="footer">
+          <button onClick={() => setIsOpen(false)}>Close</button>
+        </Portal>
+      </Show>
+    </div>
+  );
+}
+```
+
+**Benefits:**
+- UI projected globally (portal)
+- Logic stays local (component scope)
+- Clean separation of concerns
+
+### 3. Error Boundaries
+
+```tsx
+// Tryer/Catcher pattern for graceful error handling
+import { Tryer, Catcher } from '@pulsar-framework/pulsar.dev';
+
+export component ErrorBoundaryDemo() {
+  const [throwError, setThrowError] = createSignal(false);
+  
+  const BuggyComponent = () => {
+    if (throwError()) throw new Error('Component crash!');
+    return <div>All good ✅</div>;
+  };
+  
+  return (
+    <Tryer>
+      <BuggyComponent />
+      <Catcher>
+        {(error) => (
+          <div style="color: red;">
+            ⚠️ Error: {error.message}
+          </div>
+        )}
+      </Catcher>
+    </Tryer>
+  );
+}
+```
+
+**Features:**
+- Independent boundaries
+- Errors don't crash entire app
+- Fallback UI for failed sections
+
+### 4. Resources with Caching
+
+```tsx
+// createResource with stale-while-revalidate
+export const CacheDemo = () => {
+  const [fetchCount, setFetchCount] = createSignal(0);
+  
+  const cachedResource = createResource(() => {
+    setFetchCount(c => c + 1);
+    return fetchUser(1);
+  }, { staleTime: 5000 }); // Fresh for 5s
+  
+  return (
+    <div>
+      <button onClick={() => cachedResource.refetch()}>
+        Refetch
+      </button>
+      
+      <div>Network Requests: {fetchCount()}</div>
+      
+      <Show when={cachedResource.data}>
+        <div>
+          <h4>{cachedResource.data.name}</h4>
+          <p>{cachedResource.data.email}</p>
+          <p>
+            {Date.now() - cachedResource.fetchedAt < 5000 
+              ? '✅ Fresh' 
+              : '⚠️ Stale'}
+          </p>
+        </div>
+      </Show>
+    </div>
+  );
+};
+```
+
+**Caching Strategy:**
+- Instant cache hits within `staleTime`
+- Stale-while-revalidate after expiry
+- Automatic refetch management
+
+### 5. Dependency Injection
+
+```tsx
+// ServiceManager with lifetime management
+import { ServiceManager } from '@pulsar-framework/pulsar.dev';
+
+// Setup services
+const services = new ServiceManager();
+
+services.register('analytics', () => new Analytics(), {
+  lifetime: 'singleton'  // Single instance app-wide
+});
+
+services.register('logger', () => new Logger(), {
+  lifetime: 'transient'  // New instance each time
+});
+
+// Use in components
+export component MyComponent() {
+  const analytics = inject('analytics');
+  const logger = inject('logger');
+  
+  const trackEvent = () => {
+    analytics.track('button_clicked');
+    logger.log('Event tracked');
+  };
+  
+  return <button onClick={trackEvent}>Track Event</button>;
+}
+
+// Bootstrap with DI
+pulse(App, {
+  root: '#app',
+  services  // Available throughout app
+});
+```
+
+**Patterns:**
+- Singleton: Shared instances (API clients, config)
+- Transient: Fresh instances (loggers, factories)
+- Scoped: Per-request instances (sessions)
+
+### 6. Control Flow
+
+```tsx
+// Show - Conditional rendering
+<Show when={isLoggedIn()}>
+  <Dashboard />
+</Show>
+
+<Show when={user()} fallback={<Spinner />}>
+  {(u) => <Profile user={u} />}
+</Show>
+
+// For - Keyed lists (optimal updates)
+<For each={items()}>
+  {(item, index) => (
+    <div>
+      {index()}: {item.name}
+      <button onClick={() => removeItem(item.id)}>Remove</button>
+    </div>
+  )}
+</For>
+
+// Index - Index-based iteration
+<Index each={colors()}>
+  {(color, i) => (
+    <div style={`color: ${color()}`}>
+      Item {i}: {color()}
+    </div>
+  )}
+</Index>
+```
+
+**ForRegistry:**
+- Keyed by item ID
+- Minimal re-renders
+- Smooth animations
+
+**Index:**
+- Keyed by position
+- Useful for primitive arrays
+- Efficient reshuffling
+
+### 7. Advanced Patterns
+
+```tsx
+// Batch updates for performance
+import { batch } from '@pulsar-framework/pulsar.dev';
+
+const updateMultiple = () => {
+  batch(() => {
+    setFirstName('John');
+    setLastName('Doe');
+    setAge(30);
+    setEmail('john@example.com');
+  });
+  // Only ONE update cycle for all changes
+};
+
+// Memos for expensive computations
+const fullName = createMemo(() => {
+  console.log('Computing full name...');
+  return `${firstName()} ${lastName()}`;
+});
+
+// Effects for side effects
+createEffect(() => {
+  console.log(`User is now ${age()} years old`);
+  localStorage.setItem('age', String(age()));
+});
+```
+
+### Complete Examples
+
+**Demo Applications:**
+- [Counter App](https://github.com/binaryjack/pulsar-ui.dev/tree/main/src/showcase/reactivity) - State management, hooks, computed values
+- [Portal System](https://github.com/binaryjack/pulsar-ui.dev/tree/main/src/showcase/portal) - Modal, tooltip with PortalSlot architecture
+- [Error Boundaries](https://github.com/binaryjack/pulsar-ui.dev/tree/main/src/showcase/error-boundary) - Tryer/Catcher patterns
+- [Resource Caching](https://github.com/binaryjack/pulsar-ui.dev/tree/main/src/showcase/resource) - Async data with caching
+- [DI Patterns](https://github.com/binaryjack/pulsar-ui.dev/tree/main/src/showcase/di) - ServiceManager integration
+- [Control Flow](https://github.com/binaryjack/pulsar-ui.dev/tree/main/src/showcase/control-flow) - Show/For/Index examples
 
 ```bash
-cd packages/demo
-pnpm dev
+# Run the showcase
+cd packages/pulsar-ui.dev
+pnpm showcase:dev
 ```
 
 ---
