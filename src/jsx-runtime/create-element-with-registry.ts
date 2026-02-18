@@ -109,7 +109,13 @@ function createIntrinsicElement(
         // delegation walk introduces too much indirection for that contract.
         // All other events go through the registry delegator for O(1) dispatch.
         const DIRECT_BIND_EVENTS = new Set([
-          'dragover', 'drop', 'dragenter', 'dragleave', 'drag', 'dragstart', 'dragend',
+          'dragover',
+          'drop',
+          'dragenter',
+          'dragleave',
+          'drag',
+          'dragstart',
+          'dragend',
         ]);
         const elementId = element.__elementId;
 

@@ -1,11 +1,11 @@
-import { invariant, warn } from '../dev'
+import { invariant, warn } from '../dev';
 import {
   getLogicalParentId,
   getPhysicalParentId,
   registerPortalContent,
-} from '../registry/portal-registry'
-import { getPortalManager } from './create-portal-manager'
-import { IPortalProps, IPortalState } from './portal.types'
+} from '../registry/portal-registry';
+import { getPortalManager } from './create-portal-manager';
+import { IPortalProps, IPortalState } from './portal.types';
 
 /**
  * Normalize children to a single HTMLElement
@@ -114,8 +114,7 @@ export function Portal(props: IPortalProps): HTMLElement {
       const deferPlaceholder = document.createComment('portal:pending');
       deferWrapper.appendChild(deferPlaceholder);
 
-      const rawChildren =
-        typeof props.children === 'function' ? props.children() : props.children;
+      const rawChildren = typeof props.children === 'function' ? props.children() : props.children;
       const content = normalizeChildren(rawChildren);
 
       if (content) {
