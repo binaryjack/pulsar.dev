@@ -3,11 +3,11 @@
  * Utilities for integrating Portal with Element Registry
  */
 
-import { getCurrentAppRoot } from './app-root-context';
-import { generateId } from './id-generator';
-import type { IContextStackEntry } from './portal-context';
-import type { IElementEntry } from './types/element-entry.types';
-import { ElementType } from './types/element-type.enum';
+import { getCurrentAppRoot } from './app-root-context'
+import { generateId } from './id-generator'
+import type { IContextStackEntry } from './portal-context'
+import type { IElementEntry } from './types/element-entry.types'
+import { ElementType } from './types/element-type.enum'
 
 /**
  * Portal registration context
@@ -42,7 +42,7 @@ export function registerPortalContent(ctx: IPortalRegistrationContext): {
   }
 
   // Generate ID for portal content
-  const elementId = generateId(appRoot.idContext, ctx.parentId, undefined);
+  const elementId = generateId(appRoot.idContext, ctx.parentId);
 
   // Create registry entry
   const entry: IElementEntry = {
@@ -81,7 +81,9 @@ export function registerPortalContent(ctx: IPortalRegistrationContext): {
  * Get logical parent ID for current portal context
  * Walks up the DOM to find parent with __elementId
  */
-export function getLogicalParentId(element: HTMLElement): string | undefined {
+export function getLogicalParentId(element: HTMLElement | null): string | undefined {
+  if (!element) return undefined;
+
   let current: HTMLElement | null = element.parentElement;
 
   while (current) {
@@ -99,7 +101,9 @@ export function getLogicalParentId(element: HTMLElement): string | undefined {
  * Get physical parent ID for portal target
  * Checks if target has __elementId
  */
-export function getPhysicalParentId(target: HTMLElement): string | undefined {
+export function getPhysicalParentId(target: HTMLElement | null): string | undefined {
+  if (!target) return undefined;
+
   if ('__elementId' in target) {
     return (target as any).__elementId as string;
   }
