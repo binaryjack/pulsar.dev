@@ -78,7 +78,11 @@ export function t_element(
       const isSignal = typeof value === 'object' && '_isSignal' in value && value._isSignal;
       const isGetter = typeof value === 'function' && !isSignal;
 
-      if (isSignal || isGetter) {
+      if (isGetter && key === 'style') {
+        // String style getter: wire via cssText so el.style.cssText = newValue works
+        // el.style is a read-only CSSStyleDeclaration; direct assignment is a no-op
+        $REGISTRY.wire(el, 'style.cssText', value as () => unknown);
+      } else if (isSignal || isGetter) {
         // Reactive property - always wire, even if hydrated
         $REGISTRY.wire(el, key, value as ISignal<unknown> | (() => unknown));
       } else if (key === 'style' && typeof value === 'object') {
