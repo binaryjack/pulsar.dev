@@ -1,11 +1,72 @@
-import { invariant, warn } from '../dev';
+import { invariant, warn } from '../dev'
 import {
   getLogicalParentId,
   getPhysicalParentId,
   registerPortalContent,
-} from '../registry/portal-registry';
-import { getPortalManager } from './create-portal-manager';
-import { IPortalProps, IPortalState } from './portal.types';
+} from '../registry/portal-registry'
+import { getPortalManager } from './create-portal-manager'
+import { IPortalProps, IPortalState } from './portal.types'
+
+/**
+ * Normalize children to a single HTMLElement
+ * Handles arrays, primitives, and null values from JSX transformer
+ *
+ * @param child - Raw child value (single element, array, primitive, function result)
+ * @returns Single HTMLElement or null
+ */
+function normalizeChildren(child: any): HTMLElement | null {
+  // Handle null/undefined/boolean (JSX conditionals)
+  if (child === null || child === undefined || child === false || child === true) {
+    return null;
+  }
+
+  // Handle arrays (from JSX transformer)
+  if (Array.isArray(child)) {
+    // Empty array
+    if (child.length === 0) return null;
+
+    // Single child - unwrap and normalize recursively
+    if (child.length === 1) return normalizeChildren(child[0]);
+
+    // Multiple children - wrap in display:contents container
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'contents';
+    wrapper.dataset.portalWrapper = 'true';
+
+    child.forEach((c) => {
+      const normalized = normalizeChildren(c);
+      if (normalized) {
+        wrapper.appendChild(normalized);
+      }
+    });
+
+    // Return null if wrapper is empty after normalization
+    if (wrapper.childNodes.length === 0) return null;
+
+    return wrapper;
+  }
+
+  // Handle text/number (JSX text nodes)
+  if (typeof child === 'string' || typeof child === 'number') {
+    const span = document.createElement('span');
+    span.textContent = String(child);
+    return span;
+  }
+
+  // Handle DOM nodes
+  if (child instanceof Node) {
+    return child as HTMLElement;
+  }
+
+  // Unknown type - log warning and return null
+  warn({
+    message: `Portal received unsupported child type: ${typeof child}`,
+    component: 'Portal',
+    hint: 'Children should be HTMLElement, array, or primitive types',
+  });
+
+  return null;
+}
 
 /**
  * Portal component for rendering content outside parent hierarchy
@@ -69,8 +130,25 @@ export function Portal(props: IPortalProps): HTMLElement {
   // Create placeholder comment to mark position
   const placeholder = document.createComment('portal');
 
-  // Resolve children
-  const content = typeof props.children === 'function' ? props.children() : props.children;
+  // Resolve and normalize children
+  // JSX transformer passes children as array, normalize handles all cases
+  const rawChildren = typeof props.children === 'function' ? props.children() : props.children;
+  const content = normalizeChildren(rawChildren);
+
+  // Handle empty portal (no content after normalization)
+  if (!content) {
+    warn({
+      message: 'Portal has no content to render',
+      component: 'Portal',
+      hint: 'Check that children prop is not empty or null',
+    });
+
+    // Return empty wrapper (no cleanup needed)
+    const emptyWrapper = document.createElement('div');
+    emptyWrapper.style.display = 'none';
+    emptyWrapper.appendChild(placeholder);
+    return emptyWrapper;
+  }
 
   // Get logical parent ID (where Portal is in the component tree)
   const logicalParentId = getLogicalParentId(placeholder as any);
@@ -101,7 +179,7 @@ export function Portal(props: IPortalProps): HTMLElement {
     content,
     cleanup: () => {
       if (content && container.contains(content)) {
-        container.removeChild(content);
+        content.remove();
       }
       registryCleanup();
       manager.unregister(state);

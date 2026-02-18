@@ -8,8 +8,9 @@
 export interface IPortalProps {
   /**
    * Content to portal
+   * Supports single element, array of elements (from JSX), or function
    */
-  children: HTMLElement | (() => HTMLElement);
+  children: HTMLElement | HTMLElement[] | (() => HTMLElement) | (() => HTMLElement[]);
 
   /**
    * Target container to render into
