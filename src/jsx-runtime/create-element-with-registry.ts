@@ -103,23 +103,28 @@ function createIntrinsicElement(
       } else if (key === 'innerHTML') {
         element.innerHTML = props[key] as string;
       } else if (key.startsWith('on')) {
-        // Event handler - use registry event delegation if available
+        const eventName = key.toLowerCase().substring(2);
+        // Drag events MUST use direct addEventListener — they require synchronous
+        // preventDefault() before the browser checks drop eligibility.  The
+        // delegation walk introduces too much indirection for that contract.
+        // All other events go through the registry delegator for O(1) dispatch.
+        const DIRECT_BIND_EVENTS = new Set([
+          'dragover', 'drop', 'dragenter', 'dragleave', 'drag', 'dragstart', 'dragend',
+        ]);
         const elementId = element.__elementId;
 
-        if (elementId && appRoot) {
+        if (!DIRECT_BIND_EVENTS.has(eventName) && elementId && appRoot) {
           // Use registry event delegator
-          const eventName = key.toLowerCase().substring(2);
           appRoot.eventDelegator.registerHandler(elementId, eventName, props[key] as EventHandler);
         } else {
-          // Fallback to direct listener (no registry available)
-          const eventName = key.toLowerCase().substring(2);
+          // Direct listener: drag events (by design) or fallback when no registry
           element.addEventListener(eventName, props[key] as EventListener);
         }
       } else if (key.startsWith('aria-') || key.startsWith('data-') || key === 'role') {
         element.setAttribute(key, String(props[key]));
       } else if (key === 'style' && typeof props[key] === 'object') {
         Object.assign(element.style, props[key]);
-      } else if (typeof props[key] !== 'undefined' && props[key] !== null && key !== 'key') {
+      } else if (props[key] !== undefined && props[key] !== null && key !== 'key') {
         (element as any)[key] = props[key];
       }
     });

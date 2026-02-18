@@ -101,21 +101,19 @@ export function t_element(
             (el as HTMLElement).style[styleProp as any] = styleValue;
           }
         }
-      } else {
+      } else if (key === 'className' || key === 'class') {
         // Static property - apply regardless of hydration to allow updates
-        if (key === 'className' || key === 'class') {
-          if (typeof value === 'string') {
-            el.setAttribute('class', value);
-          }
-        } else if (key.startsWith('data-') || key.startsWith('aria-')) {
-          if (typeof value === 'string' || typeof value === 'number') {
-            el.setAttribute(key, String(value));
-          }
-        } else if (key === 'style' && typeof value === 'string') {
-          el.setAttribute('style', value);
-        } else {
-          (el as any)[key] = value;
+        if (typeof value === 'string') {
+          el.setAttribute('class', value);
         }
+      } else if (key.startsWith('data-') || key.startsWith('aria-')) {
+        if (typeof value === 'string' || typeof value === 'number') {
+          el.setAttribute(key, String(value));
+        }
+      } else if (key === 'style' && typeof value === 'string') {
+        el.setAttribute('style', value);
+      } else {
+        (el as any)[key] = value;
       }
     }
   }

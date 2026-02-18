@@ -20,8 +20,15 @@ export interface IShowProps {
 
   /**
    * Content to show when condition is true
+   * Accepts a lazy factory function (preferred — avoids eager Portal evaluation)
+   * or a pre-built element / array of elements.
    */
-  children: HTMLElement | (() => HTMLElement);
+  children:
+    | HTMLElement
+    | HTMLElement[]
+    | (() => HTMLElement)
+    | (() => HTMLElement[])
+    | (() => HTMLElement | HTMLElement[] | null);
 }
 
 /**

@@ -102,14 +102,70 @@ export function Portal(props: IPortalProps): HTMLElement {
     const selector = `#${props.id}-${props.target}`;
     const found = document.querySelector(selector);
 
-    invariant(
-      found instanceof HTMLElement,
-      `Portal mount target "${selector}" not found`,
-      'Portal',
-      `Make sure <PortalSlot id="${props.id}" name="${props.target}" /> exists`
-    );
+    if (found instanceof HTMLElement) {
+      container = found;
+    } else {
+      // Target slot not in DOM yet — this is expected when Portal is inside Show
+      // and the target PortalSlot is part of a sibling component rendered in the
+      // same synchronous batch.  Defer mounting to the next microtask, by which
+      // time Show will have appended the sibling Modal to the DOM.
+      const deferWrapper = document.createElement('div');
+      deferWrapper.style.display = 'none';
+      const deferPlaceholder = document.createComment('portal:pending');
+      deferWrapper.appendChild(deferPlaceholder);
 
-    container = found;
+      const rawChildren =
+        typeof props.children === 'function' ? props.children() : props.children;
+      const content = normalizeChildren(rawChildren);
+
+      if (content) {
+        queueMicrotask(() => {
+          const deferred = document.querySelector(selector);
+
+          if (deferred instanceof HTMLElement) {
+            const logicalParentId = getLogicalParentId(deferPlaceholder as any);
+            const physicalParentId = getPhysicalParentId(deferred);
+
+            const { cleanup: registryCleanup } = registerPortalContent({
+              parentId: logicalParentId,
+              physicalParentId,
+              content: content,
+              target: deferred,
+            });
+
+            const deferManager = getPortalManager();
+            const deferState: IPortalState = {
+              container: deferred,
+              placeholder: deferPlaceholder,
+              content,
+              cleanup: () => {
+                if (deferred.contains(content)) {
+                  content.remove();
+                }
+                registryCleanup();
+                deferManager.unregister(deferState);
+              },
+            };
+
+            deferManager.register(deferState);
+            deferred.appendChild(content);
+
+            Object.defineProperty(deferWrapper, '__portalCleanup', {
+              value: deferState.cleanup,
+              enumerable: false,
+            });
+          } else {
+            warn({
+              message: `Portal deferred mount: target "${selector}" still not found after microtask`,
+              component: 'Portal',
+              hint: `Make sure <PortalSlot id="${props.id}" name="${props.target}" /> is rendered before or at the same time as this Portal`,
+            });
+          }
+        });
+      }
+
+      return deferWrapper;
+    }
   } else if (!props.mount) {
     container = document.body;
   } else if (typeof props.mount === 'string') {
