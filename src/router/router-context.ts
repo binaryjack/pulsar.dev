@@ -156,13 +156,23 @@ Object.defineProperty(RouterContext.prototype, 'currentMatch', {
 
 /**
  * Get location information
+ * Returns an object with reactive getters for pathname
  */
 RouterContext.prototype.getLocation = function (this: IRouterContextInternal): ILocation {
+  const context = this;
   return {
-    pathname: window.location.pathname,
-    search: window.location.search,
-    hash: window.location.hash,
-    href: window.location.href,
+    get pathname(): string {
+      return context.currentPathSignal[0]();
+    },
+    get search(): string {
+      return window.location.search;
+    },
+    get hash(): string {
+      return window.location.hash;
+    },
+    get href(): string {
+      return window.location.href;
+    },
   };
 };
 

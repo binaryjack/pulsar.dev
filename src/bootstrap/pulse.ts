@@ -20,6 +20,7 @@
  */
 
 import type { IServiceManager } from '../di/service-manager.types';
+import { setCurrentAppRoot } from '../registry/app-root-context';
 import type { IApplicationRoot } from './application-root.interface';
 import { bootstrapApp } from './builder';
 
@@ -101,6 +102,10 @@ export function pulse(
 
   // Build and mount
   const app = builder.build();
+
+  // Set as current app root BEFORE creating component
+  // This ensures useService() and other hooks work during component creation
+  setCurrentAppRoot(app);
 
   // Handle both component function and instance
   const componentInstance = typeof component === 'function' ? component() : component;

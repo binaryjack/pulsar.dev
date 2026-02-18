@@ -77,7 +77,7 @@ export const useNavigate = () => {
  * console.log(location.pathname)
  */
 export const useLocation = (): ILocation => {
-  // This will be reactive because routerContext uses signals
+  // Returns an object with reactive getters that track router signals
   return routerContext.getLocation();
 };
 
