@@ -21,8 +21,8 @@ export type { IElementAttributes } from './jsx-runtime/t-element';
 export { insert } from './jsx-runtime/insert';
 
 // Reset signal ID counter for SSR
-export { resetSignalIdCounter } from './reactivity/signal/signal';
 export { component } from './component';
+export { resetSignalIdCounter } from './reactivity/signal/signal';
 
 // ========================================
 // CORE REACTIVITY (Updated for Registry)
@@ -141,7 +141,7 @@ export * from './hooks';
 export * from './lifecycle';
 
 // Export dependency injection
-export { ServiceLocator, ServiceManager } from './di';
+export { ServiceLocator, ServiceManager, useService, useServiceOptional } from './di';
 export type {
   IDisposableService,
   IServiceDescriptor,
@@ -162,6 +162,13 @@ export type {
   IBootstrapConfig,
   IPulseConfig,
 } from './bootstrap';
+
+// Export ApplicationRoot context for accessing services
+export {
+  clearCurrentAppRoot,
+  getCurrentAppRoot,
+  setCurrentAppRoot,
+} from './registry/app-root-context';
 
 // Export type utilities
 export type { Children, HtmlExtends, Pulsar } from './types/html-extends';
