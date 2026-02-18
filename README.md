@@ -7,10 +7,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.9.0--alpha-blue" alt="Version 0.9.0-alpha"/>
+  <img src="https://img.shields.io/badge/version-0.7.0--alpha-blue" alt="Version 0.7.0-alpha"/>
   <img src="https://img.shields.io/badge/TypeScript-5.0+-blue" alt="TypeScript 5.0+"/>
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"/>
-  <img src="https://img.shields.io/badge/status-production--ready-brightgreen" alt="Production Ready"/>
+  <img src="https://img.shields.io/badge/status-alpha-yellow" alt="Alpha"/>
 </p>
 
 <p align="center">
@@ -69,7 +69,7 @@ Pulsar combines:
 
 ## Core Features
 
-### ✅ Production Ready Features (v0.9.0-alpha)
+### ✅ Core Features (v0.7.0-alpha)
 
 <table>
   <tr>
@@ -422,13 +422,13 @@ export const Component = (props) => {
 
 ## **current**
 
-**Current Version**: v0.9.0-alpha ✅  
+**Current Version**: v0.7.0-alpha ✅  
  **Next Release**: v1.0.0-stable (Q2 2026)  
  **Last Updated**: January 27, 2026
 
 ### 🎯 Current Status
 
-**v0.9.0-alpha - COMPLETE ✅** (100%)
+**v0.7.0-alpha - IN PROGRESS** (85%)
 
 - ✅ formular.dev integration (`useFormular()` hook) - 41 tests passing
 - ✅ `produce()` utility (Immer-style API) - 29 tests passing
@@ -453,7 +453,7 @@ export const Component = (props) => {
 - Long-term support (LTS) commitment
 - Community contribution guidelines
 
-### 📊 What's Complete (v0.1.0-v0.9.0)
+### 📊 What's Complete (v0.1.0-v0.7.0)
 
 **✅ Core Runtime (100%)**
 

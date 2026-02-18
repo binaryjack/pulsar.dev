@@ -1,7 +1,0 @@
-
-> @pulsar-framework/pulsar.dev@0.7.0-alpha test E:\Sources\visual-schema-builder\packages\pulsar.dev
-> vitest run
-
-
-[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mE:/Sources/visual-schema-builder/packages/pulsar.dev[39m
-
