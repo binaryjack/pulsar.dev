@@ -29,6 +29,10 @@ export const Router = ({ children, fallback, base }: IRouterProps): HTMLElement 
   // Must happen before any getCurrentPath() or navigate() calls below.
   if (base !== undefined) {
     setRouterBase(base);
+    // Re-sync the path signal now that the base is known.
+    // The singleton was created before setRouterBase was called, so its
+    // initial updateLocation() returned the full pathname. Fix it now.
+    routerContext.syncLocation();
   }
   const container = document.createElement('div');
   container.className = 'router';

@@ -54,6 +54,8 @@ export interface IRouterContext {
   readonly currentMatch: IPathMatch | null;
 
   getLocation(): ILocation;
+  /** Re-sync currentPath signal from window.location after the base path is set. */
+  syncLocation(): void;
   navigate(path: string, options?: { replace?: boolean }): Promise<void>;
   beforeEach(guard: (to: string, from: string) => boolean | Promise<boolean>): () => void;
   afterEach(guard: (to: string, from: string) => void): () => void;

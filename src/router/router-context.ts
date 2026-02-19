@@ -183,6 +183,14 @@ Object.defineProperty(RouterContext.prototype, 'currentMatch', {
 });
 
 /**
+ * Re-sync the currentPath signal from window.location.
+ * Call after setRouterBase() so the signal reflects the stripped path.
+ */
+RouterContext.prototype.syncLocation = function (this: IRouterContextInternal): void {
+  updateLocation.call(this);
+};
+
+/**
  * Get location information
  * Returns an object with reactive getters for pathname
  */
