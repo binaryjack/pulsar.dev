@@ -113,9 +113,20 @@ export const RouterContext = function (this: IRouterContextInternal) {
 
   // Initialize event listeners
   initializeListeners.call(this);
-  // Sync the path signal with the actual current URL on first load
-  // (default signal value '/' would be wrong on hard refresh to a sub-route)
-  updateLocation.call(this);
+
+  // Seed the path signal from localStorage if a previous path was persisted.
+  // This fires the correct stripped path (e.g. '/di') BEFORE Router calls
+  // setRouterBase(), so active-highlight wires evaluate correctly on hard
+  // refresh — the user's idea: LS tracks path, fires signal on reload, removes entry.
+  try {
+    const saved = localStorage.getItem('__pulsar_path__');
+    if (saved) {
+      this.currentPathSignal[1](saved);
+      localStorage.removeItem('__pulsar_path__'); // one-shot: consumed, cleared
+    }
+  } catch { /* SSR / private browsing */ }
+  // Router calls syncLocation() after setRouterBase() to accurately re-read
+  // window.location once the base is known (handles first visit / no LS entry).
 } as unknown as { new (): IRouterContextInternal };
 
 /**
@@ -137,6 +148,8 @@ function initializeListeners(this: IRouterContextInternal): void {
 function updateLocation(this: IRouterContextInternal): void {
   const path = getCurrentPath.call(this);
   this.currentPathSignal[1](path);
+  // Persist stripped path so next hard refresh seeds the signal immediately.
+  try { localStorage.setItem('__pulsar_path__', path); } catch { /* SSR */ }
 }
 
 /**

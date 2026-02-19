@@ -29,8 +29,9 @@ export const Router = ({ children, fallback, base }: IRouterProps): HTMLElement 
   // Must happen before any getCurrentPath() or navigate() calls below.
   if (base !== undefined) {
     setRouterBase(base);
-    // syncLocation() is no longer needed: getLocation().pathname now strips
-    // the base at read-time, so isActive() is correct from the first render.
+    // Sync location now that base is known. Handles first visit (no LS entry):
+    // reads window.location, strips base, fires signal, writes path to LS.
+    routerContext.syncLocation();
   }
   const container = document.createElement('div');
   container.className = 'router';
