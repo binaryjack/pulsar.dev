@@ -67,7 +67,15 @@ export function t_element(
       continue;
     }
 
-    if (key.startsWith('on')) {
+    if (key === 'ref') {
+      // Ref callback - invoke with the element after creation
+      // Deferred via microtask so the element is fully configured before callback
+      if (typeof value === 'function') {
+        const refFn = value as (el: Element) => void;
+        Promise.resolve().then(() => refFn(el));
+      }
+      continue;
+    } else if (key.startsWith('on')) {
       // Event listener (e.g., onClick, onDrag)
       const eventName = key.toLowerCase().substring(2);
       if (typeof value === 'function') {

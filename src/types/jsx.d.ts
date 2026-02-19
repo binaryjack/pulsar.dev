@@ -358,8 +358,8 @@ declare namespace JSX {
     // Data attributes (allow any data-* attribute)
     [key: `data-${string}`]: any;
 
-    // Ref for DOM element access
-    ref?: any;
+    // Ref callback - called with the DOM element after creation
+    ref?: (el: Element) => void;
   }
 
   // Element children can be various types

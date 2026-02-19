@@ -87,6 +87,8 @@ export interface IElementAttributes {
   class?: string;
   className?: string;
   style?: string | Record<string, ReactiveValue<string | number>>;
+  /** Ref callback - called with the DOM element after creation */
+  ref?: (el: Element) => void;
 }
 
 /**
