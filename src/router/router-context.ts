@@ -17,11 +17,16 @@ import type {
 export type { ILocation, INavigationGuard } from './router-context.types'
 
 /**
- * Stored base path (without trailing slash).
- * Set once by the Router component via setRouterBase().
- * e.g. '/pulsar-ui.dev'
+ * Reactive base-path signal.
+ * Using a signal (instead of a plain let) means any reactive getter that
+ * reads getRouterBase() — e.g. location.pathname inside isActive() wires —
+ * will automatically re-run when setRouterBase() is called.
+ *
+ * This is critical because SidebarNav renders BEFORE Router, so the wires
+ * fire while _routerBase is still ''. When Router later calls setRouterBase,
+ * the signal fires and all active-highlight wires re-evaluate correctly.
  */
-let _routerBase = '';
+const [_getRouterBase, _setRouterBase] = createSignal<string>('');
 
 /**
  * Set the app base path. Call this once from the Router component,
@@ -30,12 +35,16 @@ let _routerBase = '';
  */
 export function setRouterBase(base: string): void {
   // Strip trailing slash, treat root '/' as empty string
-  _routerBase = base === '/' ? '' : base.replace(/\/$/, '');
+  _setRouterBase(base === '/' ? '' : base.replace(/\/$/, ''));
 }
 
-/** Returns the stored base path (no trailing slash). */
+/**
+ * Returns the stored base path (no trailing slash).
+ * ⚠ Reading this inside a $REGISTRY.wire() effect WILL subscribe the wire
+ * to base changes — that is intentional and required.
+ */
 export function getRouterBase(): string {
-  return _routerBase;
+  return _getRouterBase();
 }
 
 /**
