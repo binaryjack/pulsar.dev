@@ -1,5 +1,5 @@
-import type { IComponentContext, ICoreRegistry, WireDisposer } from '../registry.types';
 import { popContext, pushContext } from '../../../lifecycle/context-bus';
+import type { IComponentContext, ICoreRegistry, WireDisposer } from '../registry.types';
 
 /**
  * Execute a component factory within a tracked context
@@ -54,7 +54,11 @@ export const execute = function <T>(
     if (result instanceof HTMLElement) {
       // Mount callbacks: run immediately after element is created
       for (const fn of pending.mount) {
-        try { fn(); } catch (e) { console.error('[execute] onMount error:', e); }
+        try {
+          fn();
+        } catch (e) {
+          console.error('[execute] onMount error:', e);
+        }
       }
 
       // Cleanup callbacks: attach as wire disposers so disposeElement runs them

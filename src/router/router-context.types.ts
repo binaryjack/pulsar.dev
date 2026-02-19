@@ -3,9 +3,9 @@
  * Type definitions for router context
  */
 
-import type { IPathMatch } from './path-matcher';
-import type { IQueryParams } from './query-parser';
-import type { IRoute } from './route.interface';
+import type { IPathMatch } from './path-matcher'
+import type { IQueryParams } from './query-parser'
+import type { IRoute } from './route.interface'
 
 /**
  * Location information

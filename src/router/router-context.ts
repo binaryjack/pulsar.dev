@@ -3,18 +3,18 @@
  * Provides access to router state via dependency injection
  */
 
-import { createSignal } from '../reactivity/signal'
-import type { IPathMatch } from './path-matcher'
-import type { IQueryParams } from './query-parser'
-import type { IRoute } from './route.interface'
+import { createSignal } from '../reactivity/signal';
+import type { IPathMatch } from './path-matcher';
+import type { IQueryParams } from './query-parser';
+import type { IRoute } from './route.interface';
 import type {
   ILocation,
   INavigationGuard,
   IRouterContext,
   IRouterContextInternal,
-} from './router-context.types'
+} from './router-context.types';
 
-export type { ILocation, INavigationGuard } from './router-context.types'
+export type { ILocation, INavigationGuard } from './router-context.types';
 
 /**
  * Reactive base-path signal.
@@ -125,7 +125,9 @@ export const RouterContext = function (this: IRouterContextInternal) {
     if (saved) {
       this.currentPathSignal[1](saved);
     }
-  } catch { /* SSR / private browsing */ }
+  } catch {
+    /* SSR / private browsing */
+  }
   // Router calls syncLocation() after setRouterBase() to accurately re-read
   // window.location once the base is known (handles first visit / no LS entry).
 } as unknown as { new (): IRouterContextInternal };
@@ -150,7 +152,11 @@ function updateLocation(this: IRouterContextInternal): void {
   const path = getCurrentPath.call(this);
   this.currentPathSignal[1](path);
   // Persist stripped path so next hard refresh seeds the signal immediately.
-  try { localStorage.setItem('__pulsar_path__', path); } catch { /* SSR */ }
+  try {
+    localStorage.setItem('__pulsar_path__', path);
+  } catch {
+    /* SSR */
+  }
 }
 
 /**

@@ -32,8 +32,7 @@ export function Tryer(props: ITryerProps): HTMLElement {
     while (container.firstChild) container.removeChild(container.firstChild);
 
     try {
-      const raw =
-        typeof props.children === 'function' ? props.children() : props.children;
+      const raw = typeof props.children === 'function' ? props.children() : props.children;
       const arr: unknown[] = Array.isArray(raw) ? raw : [raw];
       for (const child of arr) {
         if (child instanceof Node) {
