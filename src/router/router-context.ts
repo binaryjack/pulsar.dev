@@ -17,6 +17,20 @@ import type {
 export type { ILocation, INavigationGuard } from './router-context.types';
 
 /**
+ * Returns the app base URL (without trailing slash).
+ * Uses import.meta.env.BASE_URL injected by Vite; falls back to '' (root).
+ * e.g. '/pulsar-ui.dev/' → '/pulsar-ui.dev',  '/' → ''
+ */
+function getRouterBase(): string {
+  try {
+    const base: string = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
+    return base === '/' ? '' : base.replace(/\/$/, '');
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Router context constructor
  * Manages global router state
  */
@@ -106,11 +120,14 @@ function updateLocation(this: IRouterContextInternal): void {
 }
 
 /**
- * Get current path from URL
+ * Get current path from URL, stripping the app base prefix.
+ * e.g. pathname '/pulsar-ui.dev/di' with base '/pulsar-ui.dev' → '/di'
  * @internal
  */
 function getCurrentPath(this: IRouterContextInternal): string {
-  return window.location.pathname || '/';
+  const raw = window.location.pathname || '/';
+  const base = getRouterBase();
+  return base && raw.startsWith(base) ? raw.slice(base.length) || '/' : raw;
 }
 
 // Reactive property getters
@@ -195,10 +212,12 @@ RouterContext.prototype.navigate = async function (
   }
 
   // Perform navigation using HTML5 History API
+  // Prepend app base so URLs stay under the configured base path.
+  const fullPath = getRouterBase() + path;
   if (options?.replace) {
-    window.history.replaceState({}, '', path);
+    window.history.replaceState({}, '', fullPath);
   } else {
-    window.history.pushState({}, '', path);
+    window.history.pushState({}, '', fullPath);
   }
 
   // Manually trigger location update since pushState doesn't fire popstate

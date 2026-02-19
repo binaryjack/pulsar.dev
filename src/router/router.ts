@@ -52,10 +52,18 @@ export const Router = ({ children, fallback }: IRouterProps): HTMLElement => {
   outlet.className = 'router-outlet';
   container.appendChild(outlet);
 
-  // Function to get current pathname
+  // Function to get current pathname, stripping the app base prefix.
   const getCurrentPath = (): string => {
-    const pathname = window.location.pathname || '/';
-    return pathname;
+    const raw = window.location.pathname || '/';
+    try {
+      const base: string = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
+      const normalizedBase = base === '/' ? '' : base.replace(/\/$/, '');
+      return normalizedBase && raw.startsWith(normalizedBase)
+        ? raw.slice(normalizedBase.length) || '/'
+        : raw;
+    } catch {
+      return raw;
+    }
   };
 
   // Function to get query string
