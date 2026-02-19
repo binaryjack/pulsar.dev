@@ -3,33 +3,39 @@
  * Provides access to router state via dependency injection
  */
 
-import { createSignal } from '../reactivity/signal';
-import type { IPathMatch } from './path-matcher';
-import type { IQueryParams } from './query-parser';
-import type { IRoute } from './route.interface';
+import { createSignal } from '../reactivity/signal'
+import type { IPathMatch } from './path-matcher'
+import type { IQueryParams } from './query-parser'
+import type { IRoute } from './route.interface'
 import type {
   ILocation,
   INavigationGuard,
   IRouterContext,
   IRouterContextInternal,
-} from './router-context.types';
+} from './router-context.types'
 
-export type { ILocation, INavigationGuard } from './router-context.types';
+export type { ILocation, INavigationGuard } from './router-context.types'
 
 /**
- * Returns the app base path (without trailing slash) by reading document.baseURI.
- * Vite injects <base href="/pulsar-ui.dev/"> into the HTML when base is configured.
- * Works from pre-built dist because it reads the DOM at call-time, not at build time.
- * e.g. document.baseURI = 'http://localhost:3000/pulsar-ui.dev/' → '/pulsar-ui.dev'
- *      document.baseURI = 'http://localhost:3000/'               → ''
+ * Stored base path (without trailing slash).
+ * Set once by the Router component via setRouterBase().
+ * e.g. '/pulsar-ui.dev'
  */
-function getRouterBase(): string {
-  try {
-    const pathname = new URL(document.baseURI).pathname;
-    return pathname === '/' ? '' : pathname.replace(/\/$/, '');
-  } catch {
-    return '';
-  }
+let _routerBase = '';
+
+/**
+ * Set the app base path. Call this once from the Router component,
+ * passing import.meta.env.BASE_URL from the consumer app
+ * (evaluated in the consumer's Vite context, not the library build).
+ */
+export function setRouterBase(base: string): void {
+  // Strip trailing slash, treat root '/' as empty string
+  _routerBase = base === '/' ? '' : base.replace(/\/$/, '');
+}
+
+/** Returns the stored base path (no trailing slash). */
+export function getRouterBase(): string {
+  return _routerBase;
 }
 
 /**

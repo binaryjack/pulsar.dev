@@ -4,21 +4,32 @@
  * Now with path parameters, query strings, and navigation guards
  */
 
-import { findMatchingRoute } from './path-matcher';
-import { QueryParams } from './query-parser';
-import type { IRoute } from './route.interface';
-import { routerContext } from './router-context';
+import { findMatchingRoute } from './path-matcher'
+import { QueryParams } from './query-parser'
+import type { IRoute } from './route.interface'
+import { routerContext, setRouterBase, getRouterBase } from './router-context'
 
 interface IRouterProps {
   children: HTMLElement | HTMLElement[];
   fallback?: () => HTMLElement;
+  /**
+   * App base URL. Pass import.meta.env.BASE_URL here so the router
+   * knows the static base path at runtime without baking it into the library dist.
+   * e.g. base={import.meta.env.BASE_URL}
+   */
+  base?: string;
 }
 
 /**
  * Router component - manages HTML5 History API routing
  * Expects Route components as children
  */
-export const Router = ({ children, fallback }: IRouterProps): HTMLElement => {
+export const Router = ({ children, fallback, base }: IRouterProps): HTMLElement => {
+  // Store the base once so navigate() and getCurrentPath() use it consistently.
+  // Must happen before any getCurrentPath() or navigate() calls below.
+  if (base !== undefined) {
+    setRouterBase(base);
+  }
   const container = document.createElement('div');
   container.className = 'router';
   container.setAttribute('data-router', 'active');
@@ -52,19 +63,13 @@ export const Router = ({ children, fallback }: IRouterProps): HTMLElement => {
   outlet.className = 'router-outlet';
   container.appendChild(outlet);
 
-  // Function to get current pathname, stripping the app base prefix.
-  // Reads document.baseURI at runtime (Vite injects <base href="..."> into served HTML).
+  // Function to get current pathname, stripping the stored app base prefix.
   const getCurrentPath = (): string => {
     const raw = window.location.pathname || '/';
-    try {
-      const base = new URL(document.baseURI).pathname;
-      const normalizedBase = base === '/' ? '' : base.replace(/\/$/, '');
-      return normalizedBase && raw.startsWith(normalizedBase)
-        ? raw.slice(normalizedBase.length) || '/'
-        : raw;
-    } catch {
-      return raw;
-    }
+    const normalizedBase = getRouterBase();
+    return normalizedBase && raw.startsWith(normalizedBase)
+      ? raw.slice(normalizedBase.length) || '/'
+      : raw;
   };
 
   // Function to get query string
