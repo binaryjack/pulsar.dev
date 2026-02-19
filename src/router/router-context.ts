@@ -17,14 +17,16 @@ import type {
 export type { ILocation, INavigationGuard } from './router-context.types';
 
 /**
- * Returns the app base URL (without trailing slash).
- * Uses import.meta.env.BASE_URL injected by Vite; falls back to '' (root).
- * e.g. '/pulsar-ui.dev/' → '/pulsar-ui.dev',  '/' → ''
+ * Returns the app base path (without trailing slash) by reading document.baseURI.
+ * Vite injects <base href="/pulsar-ui.dev/"> into the HTML when base is configured.
+ * Works from pre-built dist because it reads the DOM at call-time, not at build time.
+ * e.g. document.baseURI = 'http://localhost:3000/pulsar-ui.dev/' → '/pulsar-ui.dev'
+ *      document.baseURI = 'http://localhost:3000/'               → ''
  */
 function getRouterBase(): string {
   try {
-    const base: string = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
-    return base === '/' ? '' : base.replace(/\/$/, '');
+    const pathname = new URL(document.baseURI).pathname;
+    return pathname === '/' ? '' : pathname.replace(/\/$/, '');
   } catch {
     return '';
   }
@@ -96,6 +98,9 @@ export const RouterContext = function (this: IRouterContextInternal) {
 
   // Initialize event listeners
   initializeListeners.call(this);
+  // Sync the path signal with the actual current URL on first load
+  // (default signal value '/' would be wrong on hard refresh to a sub-route)
+  updateLocation.call(this);
 } as unknown as { new (): IRouterContextInternal };
 
 /**

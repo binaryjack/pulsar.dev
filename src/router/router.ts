@@ -53,10 +53,11 @@ export const Router = ({ children, fallback }: IRouterProps): HTMLElement => {
   container.appendChild(outlet);
 
   // Function to get current pathname, stripping the app base prefix.
+  // Reads document.baseURI at runtime (Vite injects <base href="..."> into served HTML).
   const getCurrentPath = (): string => {
     const raw = window.location.pathname || '/';
     try {
-      const base: string = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
+      const base = new URL(document.baseURI).pathname;
       const normalizedBase = base === '/' ? '' : base.replace(/\/$/, '');
       return normalizedBase && raw.startsWith(normalizedBase)
         ? raw.slice(normalizedBase.length) || '/'
