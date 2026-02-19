@@ -115,14 +115,15 @@ export const RouterContext = function (this: IRouterContextInternal) {
   initializeListeners.call(this);
 
   // Seed the path signal from localStorage if a previous path was persisted.
-  // This fires the correct stripped path (e.g. '/di') BEFORE Router calls
-  // setRouterBase(), so active-highlight wires evaluate correctly on hard
-  // refresh — the user's idea: LS tracks path, fires signal on reload, removes entry.
+  // Do NOT removeItem here — SidebarNav also reads the same key at render time
+  // to seed its selectedId signal. Clearing here would race and always reset
+  // the nav highlight to id=0 (Home) on hard refresh.
+  // The key is always overwritten by updateLocation() on every navigation, so
+  // it stays in sync without any manual cleanup.
   try {
     const saved = localStorage.getItem('__pulsar_path__');
     if (saved) {
       this.currentPathSignal[1](saved);
-      localStorage.removeItem('__pulsar_path__'); // one-shot: consumed, cleared
     }
   } catch { /* SSR / private browsing */ }
   // Router calls syncLocation() after setRouterBase() to accurately re-read
