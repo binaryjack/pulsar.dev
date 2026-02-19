@@ -142,13 +142,30 @@ export interface IErrorBoundaryContextInternal extends IErrorBoundaryContext {
  */
 export interface ITryerProps {
   /**
-   * Children to render and protect
-   * Can be HTMLElement(s) or a function returning HTMLElement for deferred evaluation
+   * Children to render and protect.
+   * Pass as a function so Tryer can reactively re-evaluate when
+   * signals inside the children change (and re-try after reset).
+   * Static HTMLElement(s) are also accepted for non-reactive cases.
    */
   children: HTMLElement | HTMLElement[] | (() => HTMLElement | HTMLElement[]);
 
   /**
-   * Error boundary configuration
+   * Fallback renderer — called with the caught error and a reset function.
+   * reset() forces Tryer to re-evaluate children (useful for retry patterns).
+   *
+   * @example
+   * fallback={(error, reset) => (
+   *   <div>
+   *     <p>Error: {error.message}</p>
+   *     <button onClick={reset}>Retry</button>
+   *   </div>
+   * )}
+   */
+  fallback?: (error: Error, reset: () => void) => HTMLElement;
+
+  /**
+   * @deprecated Use the `fallback` prop instead.
+   * Error boundary configuration with fallback, onError, etc.
    */
   options?: IErrorBoundaryOptions;
 }

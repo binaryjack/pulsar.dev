@@ -1,142 +1,112 @@
 /**
  * Tryer Component
  *
- * Error boundary wrapper that catches errors in child components
- * and displays fallback UI. Named "Tryer" following user's naming convention.
+ * Self-contained error boundary. Catches synchronous render errors in children
+ * and displays fallback UI. Uses the $REGISTRY.wire reactive loop so children
+ * stay reactive and errors are caught on every re-evaluation cycle.
+ *
+ * API:
+ *   <Tryer fallback={(error, reset) => <div>...</div>}>
+ *     <RiskyComponent />
+ *   </Tryer>
  */
 
 import { DEV } from '../dev/dev.types';
-import { createErrorBoundaryContext } from './create-error-boundary-context';
-import { getActiveErrorBoundary, setActiveErrorBoundary } from './error-boundary-context-manager';
-import { IErrorBoundaryContextInternal, IErrorInfo, ITryerProps } from './error-boundary.types';
+import { onCleanup } from '../lifecycle/lifecycle-hooks';
+import { createSignal } from '../reactivity/signal/create-signal';
+import { $REGISTRY } from '../registry/core';
+import { IErrorInfo, ITryerProps } from './error-boundary.types';
 
-/**
- * Creates a Tryer (error boundary) component that catches errors in children
- *
- * @param props - Tryer props with children and options
- * @returns Container element with error boundary protection
- *
- * @example
- * ```typescript
- * Tryer({
- *   children: riskyComponent(),
- *   options: {
- *     fallback: (errorInfo) => div({ textContent: `Error: ${errorInfo.error.message}` }),
- *     onError: (errorInfo) => logError(errorInfo)
- *   }
- * })
- * ```
- */
 export function Tryer(props: ITryerProps): HTMLElement {
   const container = document.createElement('div');
   container.setAttribute('data-error-boundary', 'true');
 
-  // Get parent boundary (for nesting)
-  const parentBoundary = getActiveErrorBoundary();
+  // Incrementing this token forces the wire to re-run (retry after error)
+  const [retryToken, setRetryToken] = createSignal(0);
+  const reset = (): void => setRetryToken((n) => n + 1);
 
-  // Create error boundary context
-  const errorBoundary = createErrorBoundaryContext(props.options, parentBoundary);
+  $REGISTRY.wire(container, '__tryerUpdate', () => {
+    retryToken(); // subscribe — reset() increments this, triggering re-run
 
-  // Store original children for reset (before evaluation)
-  (errorBoundary as IErrorBoundaryContextInternal)._originalChildren = props.children;
+    // Clear previous render
+    while (container.firstChild) container.removeChild(container.firstChild);
 
-  // Store error boundary on container
-  Object.defineProperty(container, '__errorBoundary', {
-    value: errorBoundary,
-    writable: false,
-    enumerable: false,
-    configurable: false,
+    try {
+      const raw =
+        typeof props.children === 'function' ? props.children() : props.children;
+      const arr: unknown[] = Array.isArray(raw) ? raw : [raw];
+      for (const child of arr) {
+        if (child instanceof Node) {
+          container.appendChild(child);
+        } else if (child !== null && child !== undefined) {
+          throw new Error(
+            `Invalid child type: expected Node, got ${typeof child}. Value: ${String(child)}`
+          );
+        }
+      }
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+
+      // Clear anything partially appended
+      container.innerHTML = '';
+
+      if (props.fallback) {
+        // New API: fallback prop
+        const fb = props.fallback(err, reset);
+        if (fb instanceof Node) container.appendChild(fb);
+      } else if (props.options?.fallback) {
+        // Deprecated: options.fallback for backward compat with existing tests
+        const errorInfo: IErrorInfo = {
+          error: err,
+          componentName: 'Tryer',
+          timestamp: Date.now(),
+          context: { phase: 'render' },
+        };
+        const fb = props.options.fallback(errorInfo);
+        if (fb instanceof Node) container.appendChild(fb);
+        props.options.onError?.(errorInfo);
+      } else {
+        container.appendChild(createDefaultFallback(err));
+      }
+    }
+
+    return null;
   });
 
-  // Wrap child rendering in try-catch
-  try {
-    // Set this boundary as active (for nested boundaries)
-    const previousBoundary = getActiveErrorBoundary();
-    setActiveErrorBoundary(errorBoundary);
+  // Expose reset for resetTryer() utility and external lab access
+  Object.defineProperty(container, '__tryerReset', {
+    value: reset,
+    writable: false,
+    enumerable: false,
+    configurable: true,
+  });
 
-    // Evaluate children if it's a function (deferred evaluation)
-    // This must happen AFTER setting the error boundary so it can catch errors
-    let evaluatedChildren =
-      typeof props.children === 'function' ? props.children() : props.children;
-
-    // Normalize children to array
-    let childElements: any[] = Array.isArray(evaluatedChildren)
-      ? evaluatedChildren
-      : [evaluatedChildren];
-
-    // Evaluate each child if it's a function (for array of deferred children)
-    childElements = childElements.map((child: any) =>
-      typeof child === 'function' ? child() : child
-    );
-
-    // Append children with validation
-    childElements.forEach((child) => {
-      // Validate child is a DOM node before appending
-      // This catches components that throw errors and return undefined/null
-      if (child instanceof Node) {
-        container.appendChild(child);
-      } else if (child === undefined || child === null) {
-        // Child component threw an error or returned invalid value
-        throw new Error(
-          'Component returned null/undefined. This usually means the component threw an error during render.'
-        );
-      } else {
-        // Invalid child type
-        throw new Error(
-          `Invalid child type: expected Node, got ${typeof child}. Value: ${String(child)}`
-        );
-      }
-    });
-
-    // Restore previous boundary
-    setActiveErrorBoundary(previousBoundary);
-  } catch (error) {
-    // Catch synchronous errors during render
-    errorBoundary.catchError(error instanceof Error ? error : new Error(String(error)), 'Tryer', {
-      phase: 'render',
-    });
-
-    // Show fallback
-    renderFallback(container, errorBoundary as IErrorBoundaryContextInternal);
-  }
-
-  // Setup global error handler for async errors
-  setupErrorHandler(container, errorBoundary as IErrorBoundaryContextInternal);
+  onCleanup(() => cleanupTryer(container));
 
   return container;
 }
 
 /**
- * Renders error fallback UI
+ * Imperatively reset a Tryer container — re-evaluates children.
  */
-function renderFallback(
-  container: HTMLElement,
-  errorBoundary: IErrorBoundaryContextInternal
-): void {
-  const errorInfo = errorBoundary._errorInfo;
-  const options = errorBoundary.options;
-
-  if (!errorInfo) return;
-
-  // Clear container
-  container.innerHTML = '';
-
-  // Render fallback if provided
-  if (options.fallback) {
-    const fallback = options.fallback(errorInfo);
-    errorBoundary._fallbackElement = fallback;
-    container.appendChild(fallback);
-  } else {
-    // Default fallback
-    const defaultFallback = createDefaultFallback(errorInfo);
-    container.appendChild(defaultFallback);
-  }
+export function resetTryer(container: HTMLElement): void {
+  const reset = (container as { __tryerReset?: () => void }).__tryerReset;
+  if (typeof reset === 'function') reset();
 }
 
 /**
- * Creates default error fallback UI
+ * Cleanup hook — no-op in new design (no window listeners).
+ * Kept for API compatibility.
  */
-function createDefaultFallback(errorInfo: IErrorInfo): HTMLElement {
+export function cleanupTryer(_container: HTMLElement): void {
+  // intentionally empty — $REGISTRY.wire disposes itself on element removal
+}
+
+// ---------------------------------------------------------------------------
+// Internals
+// ---------------------------------------------------------------------------
+
+function createDefaultFallback(error: Error): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.padding = '20px';
   wrapper.style.border = '2px solid #ff4444';
@@ -145,106 +115,26 @@ function createDefaultFallback(errorInfo: IErrorInfo): HTMLElement {
   wrapper.style.color = '#cc0000';
 
   const title = document.createElement('h3');
-  title.textContent = '❌ Error Occurred';
+  title.textContent = '\u274C Error Occurred';
   title.style.margin = '0 0 10px 0';
 
   const message = document.createElement('p');
-  message.textContent = errorInfo.error.message;
+  message.textContent = error.message;
   message.style.margin = '0';
   message.style.fontFamily = 'monospace';
 
   wrapper.appendChild(title);
   wrapper.appendChild(message);
 
-  if (DEV && errorInfo.componentName) {
-    const component = document.createElement('p');
-    component.textContent = `Component: ${errorInfo.componentName}`;
-    component.style.fontSize = '12px';
-    component.style.color = '#666';
-    wrapper.appendChild(component);
+  if (DEV) {
+    const stack = document.createElement('pre');
+    stack.textContent = error.stack ?? '';
+    stack.style.fontSize = '11px';
+    stack.style.color = '#888';
+    stack.style.marginTop = '10px';
+    stack.style.whiteSpace = 'pre-wrap';
+    wrapper.appendChild(stack);
   }
 
   return wrapper;
-}
-
-/**
- * Setup error event handler for catching async errors
- */
-function setupErrorHandler(
-  container: HTMLElement,
-  errorBoundary: IErrorBoundaryContextInternal
-): void {
-  // Store handler for cleanup
-  const errorHandler = (event: ErrorEvent) => {
-    // Check if error originated from this container's subtree
-    // Guard: event.target must be a Node (not Window, etc.)
-    if (event.target && event.target instanceof Node && container.contains(event.target as Node)) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      errorBoundary.catchError(event.error || new Error(event.message), 'async', {
-        type: 'ErrorEvent',
-      });
-
-      renderFallback(container, errorBoundary);
-    }
-  };
-
-  window.addEventListener('error', errorHandler, true);
-
-  // Store for cleanup
-  Object.defineProperty(container, '__errorHandler', {
-    value: errorHandler,
-    writable: false,
-    enumerable: false,
-    configurable: false,
-  });
-}
-
-/**
- * Cleanup error boundary
- *
- * @param container - Tryer container element
- */
-export function cleanupTryer(container: HTMLElement): void {
-  const errorHandler = (container as { __errorHandler?: EventListener }).__errorHandler;
-  if (errorHandler) {
-    window.removeEventListener('error', errorHandler, true);
-  }
-}
-
-/**
- * Reset error boundary to retry rendering
- *
- * @param container - Tryer container element
- */
-export function resetTryer(container: HTMLElement): void {
-  const errorBoundary = (container as { __errorBoundary?: IErrorBoundaryContextInternal })
-    .__errorBoundary;
-  if (!errorBoundary) return;
-
-  // Reset error state
-  errorBoundary.reset();
-
-  // Clear and restore children
-  container.innerHTML = '';
-  const originalChildren = errorBoundary._originalChildren;
-
-  // Evaluate children if it's a function
-  let evaluatedChildren =
-    typeof originalChildren === 'function' ? originalChildren() : originalChildren;
-  let childElements: any[] = Array.isArray(evaluatedChildren)
-    ? evaluatedChildren
-    : [evaluatedChildren];
-
-  // Evaluate each child if it's a function (for array of deferred children)
-  childElements = childElements.map((child: any) =>
-    typeof child === 'function' ? child() : child
-  );
-
-  childElements.forEach((child) => {
-    if (child instanceof Node) {
-      container.appendChild(child);
-    }
-  });
 }

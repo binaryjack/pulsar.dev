@@ -153,41 +153,49 @@ describe('Error Boundary System', () => {
       }
     });
 
-    test('should have error boundary stored on container', () => {
+    test('should expose reset function on container', () => {
       const child = document.createElement('div');
       const container = Tryer({ children: child });
 
-      const errorBoundary = (container as { __errorBoundary?: unknown }).__errorBoundary;
-      expect(errorBoundary).toBeDefined();
+      // New design: __tryerReset exposes the signal-based reset
+      const tryerReset = (container as { __tryerReset?: unknown }).__tryerReset;
+      expect(typeof tryerReset).toBe('function');
     });
   });
 
   describe('resetTryer', () => {
-    test('should restore original children after reset', () => {
+    test('should call __tryerReset on the container', () => {
       const child = document.createElement('div');
       child.textContent = 'Original child';
 
       const container = Tryer({ children: child });
 
-      // Simulate error and fallback
-      container.innerHTML = '';
-      const fallback = document.createElement('div');
-      fallback.textContent = 'Error occurred';
-      container.appendChild(fallback);
+      const spy = vi.fn();
+      Object.defineProperty(container, '__tryerReset', {
+        value: spy,
+        configurable: true,
+        writable: false,
+        enumerable: false,
+      });
 
       resetTryer(container);
 
-      expect(container.contains(child)).toBe(true);
-      expect(container.textContent).toContain('Original child');
+      expect(spy).toHaveBeenCalledOnce();
+    });
+
+    test('should be a no-op on a container without __tryerReset', () => {
+      const container = document.createElement('div');
+      expect(() => resetTryer(container)).not.toThrow();
     });
   });
 
   describe('Catcher component', () => {
-    test('should render nothing when no error', () => {
+    test('should render an empty hidden div (deprecated no-op)', () => {
       const catcher = Catcher();
 
-      // Without error boundary, shows warning
-      expect(catcher.textContent).toContain('Catcher requires Tryer parent');
+      // Catcher is now a deprecation stub — hidden empty div
+      expect(catcher.style.display).toBe('none');
+      expect(catcher.textContent).toBe('');
     });
 
     test('should warn when used without Tryer', () => {
@@ -321,19 +329,16 @@ describe('Error Boundary System', () => {
   });
 
   describe('Cleanup', () => {
-    test('should cleanup event handlers', () => {
+    test('should be a no-op (no window listeners in new design)', () => {
       const child = document.createElement('div');
       const container = Tryer({ children: child });
 
-      // Event handler should be attached
+      // New design: no window error listener — __errorHandler is not set
       const errorHandler = (container as { __errorHandler?: unknown }).__errorHandler;
-      expect(errorHandler).toBeDefined();
+      expect(errorHandler).toBeUndefined();
 
-      // Cleanup
-      cleanupTryer(container);
-
-      // Handler still exists on container but removed from window
-      // (we can't easily test window.removeEventListener was called)
+      // cleanupTryer is a no-op; should not throw
+      expect(() => cleanupTryer(container)).not.toThrow();
     });
   });
 });
