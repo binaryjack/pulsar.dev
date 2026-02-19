@@ -7,7 +7,7 @@
 import { findMatchingRoute } from './path-matcher'
 import { QueryParams } from './query-parser'
 import type { IRoute } from './route.interface'
-import { routerContext, setRouterBase, getRouterBase } from './router-context'
+import { getRouterBase, routerContext, setRouterBase } from './router-context'
 
 interface IRouterProps {
   children: HTMLElement | HTMLElement[];
@@ -29,10 +29,8 @@ export const Router = ({ children, fallback, base }: IRouterProps): HTMLElement 
   // Must happen before any getCurrentPath() or navigate() calls below.
   if (base !== undefined) {
     setRouterBase(base);
-    // Re-sync the path signal now that the base is known.
-    // The singleton was created before setRouterBase was called, so its
-    // initial updateLocation() returned the full pathname. Fix it now.
-    routerContext.syncLocation();
+    // syncLocation() is no longer needed: getLocation().pathname now strips
+    // the base at read-time, so isActive() is correct from the first render.
   }
   const container = document.createElement('div');
   container.className = 'router';

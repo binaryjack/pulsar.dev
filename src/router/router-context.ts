@@ -198,7 +198,12 @@ RouterContext.prototype.getLocation = function (this: IRouterContextInternal): I
   const context = this;
   return {
     get pathname(): string {
-      return context.currentPathSignal[0]();
+      // Read signal for reactivity subscription, then strip base at read-time.
+      // This ensures isActive() comparisons work correctly on the very first
+      // render of SidebarNav (which runs before Router calls syncLocation()).
+      const raw = context.currentPathSignal[0]();
+      const base = getRouterBase();
+      return base && raw.startsWith(base) ? raw.slice(base.length) || '/' : raw;
     },
     get search(): string {
       return window.location.search;
