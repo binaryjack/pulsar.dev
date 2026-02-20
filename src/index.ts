@@ -209,13 +209,16 @@ export type {
 
 // Export SSR
 export {
+  bootFromState,
   createHydrationScript,
   createSSRContext,
   deserializeData,
+  dumpState,
   escapeAttribute,
   escapeHtml,
   extractHydrationState,
   generateStatic,
+  getHydrationScript,
   hydrate,
   renderToString,
   serializeData,
