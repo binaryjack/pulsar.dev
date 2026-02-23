@@ -13,3 +13,6 @@ export type { BatchFn, IBatchManager } from './batch';
 
 export { useSync } from './sync';
 export type { SnapshotFunction, SubscribeFunction } from './sync';
+
+export { createRenderEffect } from './create-render-effect';
+export { untrack } from './untrack';

@@ -40,8 +40,10 @@ export {
   createEffect,
   createEffectWithOwner,
   createMemo,
+  createRenderEffect,
   createSignal,
   isBatching,
+  untrack,
   useSync,
 } from './reactivity';
 export type {
