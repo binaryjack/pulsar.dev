@@ -1,15 +1,15 @@
 /**
  * Context system for Pulsar Framework
- * Registry-based context API with stack support for nested providers
+ * Call-stack based context with reactive signal support
  *
- * Key features:
- * - Wait list pattern: children register first, Provider notifies when it arrives
- * - No deferred children needed (registry available immediately)
- * - Supports nested providers (same context used multiple times)
- * - Simple cleanup via useEffect
+ * Key design:
+ * - Sync call-stack (_syncStack) on each context object: Provider pushes before
+ *   children(), pops after. No module-level mutable state — survives HMR and
+ *   any number of module re-evaluations.
+ * - Reactive signal: updated by Provider for any reactive subscriptions that
+ *   fire after the initial synchronous render (effects, re-renders).
  */
 
-import { useEffect } from '../hooks/use-effect';
 import { createSignal } from '../reactivity/signal/create-signal';
 
 /**
@@ -19,7 +19,7 @@ export interface IContext<TValue> {
   /**
    * Provider component that wraps children and provides context value
    */
-  Provider: (props: { value: TValue; children: HTMLElement }) => HTMLElement;
+  Provider: (props: { value: TValue; children: HTMLElement | (() => HTMLElement) }) => HTMLElement;
 
   /**
    * Default value for the context
@@ -36,166 +36,89 @@ export interface IContext<TValue> {
    * Allows components to set context before children execute
    */
   setValue: (value: TValue) => void;
+
+  /**
+   * Internal synchronous call-stack.
+   * Provider pushes before children(), pops after.
+   * Do not read directly — use useContext().
+   */
+  _syncStack: TValue[];
 }
 
 /**
- * Global context registry - stores current active signal for each context
- * Stores tuple of [getter, setter] for each context
+ * Global context registry — reactive signal per context for post-render access.
  */
 const contextRegistry = new Map<symbol, [() => any, (value: any) => void]>();
 
-/**
- * Context stack - tracks nested providers for the same context
- * Enables proper cleanup when inner providers unmount
- */
-const contextStack = new Map<symbol, unknown[]>();
-
-/**
- * Wait list pattern - tracks components waiting for context that hasn't arrived yet
- * When Provider arrives, it notifies all waiting soldiers (children)
- * Each soldier gets a callback to receive the value when commandant arrives
- */
-const contextWaitList = new Map<symbol, Set<(value: unknown) => void>>();
-
-/**
- * Creates a new context
- * @param defaultValue - Default value when no provider is found
- * @returns Context object with Provider component
- *
- * @example
- * ```tsx
- * interface IAppContext {
- *     appName: string
- *     version: string
- * }
- *
- * const AppContext = createContext({
- *     appName: 'My App',
- *     version: '1.0.0'
- * })
- *
- * // Use in component
- * <AppContext.Provider value={{ appName: 'Todo App', version: '2.0.0' }}>
- *     {children}
- * </AppContext.Provider>
- * ```
- */
 export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
   const contextId = Symbol('Context');
 
-  // Create a signal to hold the context value
-  // This allows reactive updates when Provider arrives
+  // Reactive signal — for effects and re-renders that run outside the
+  // synchronous Provider→children() call chain.
   const [getContextValue, setContextValue] = createSignal<TValue>(defaultValue);
-
-  // REGISTER THE SIGNAL IMMEDIATELY!
-  // Soldiers can now find the signal even if commandant hasn't arrived yet
   contextRegistry.set(contextId, [getContextValue, setContextValue]);
 
-  const Provider = ({
+  const contextObj: IContext<TValue> = {
+    defaultValue,
+    _id: contextId,
+    _syncStack: [],
+    Provider: null as any,
+    setValue: null as any,
+  };
+
+  contextObj.Provider = ({
     value,
     children,
   }: {
     value: TValue;
     children: HTMLElement | (() => HTMLElement);
   }): HTMLElement => {
-    // COMMANDANT ARRIVES!
-    // Update context value with provider's value
-    // Stack management for nested providers
-    if (!contextStack.has(contextId)) {
-      contextStack.set(contextId, []);
-    }
-    contextStack.get(contextId)!.push(value);
+    // 1. Push onto sync call-stack before children() — all synchronous
+    //    useContext() calls inside children() see the correct value.
+    contextObj._syncStack.push(value);
 
-    // Update the signal value - this will trigger all reactive dependencies!
+    // 2. Evaluate children BEFORE writing the signal.
+    //    This prevents $REGISTRY.execute's reactive tracking scope from
+    //    registering a dependency on the context signal, which would cause
+    //    a deferred re-run of consumer components (e.g. TextField) after
+    //    the stack is already popped.
+    const evaluated = typeof children === 'function' ? children() : children;
+
+    // 3. Pop immediately — synchronous children() execution is complete.
+    contextObj._syncStack.pop();
+
+    // 4. Update the reactive signal AFTER children() so that effects and
+    //    subscriptions created inside children see the correct value on
+    //    their next reactive re-run, without triggering an immediate
+    //    re-schedule during this render pass.
     setContextValue(value);
 
-    // NOTIFY ALL WAITING SOLDIERS!
-    // Get all soldiers waiting for this commandant
-    const waitingList = contextWaitList.get(contextId);
-    if (waitingList && waitingList.size > 0) {
-      // Notify each soldier that commandant has arrived with the value
-      waitingList.forEach((notifySoldier) => {
-        notifySoldier(value);
-      });
-      // Clear the wait list - soldiers have been notified
-      contextWaitList.delete(contextId);
-    }
-
-    // Cleanup when component unmounts
-    useEffect(() => {
-      return () => {
-        const stack = contextStack.get(contextId);
-        if (stack && stack.length > 0) {
-          stack.pop();
-
-          // Restore previous provider's value
-          if (stack.length > 0) {
-            const previousValue = stack[stack.length - 1] as TValue;
-            setContextValue(previousValue);
-          } else {
-            // No more providers, restore default value
-            setContextValue(defaultValue);
-          }
-        }
-      };
-    }, [value]);
-
-    // Support both deferred and immediate children evaluation
-    // If children is a function, evaluate it AFTER setting context value
-    // This ensures useContext() calls read the correct value
-    const evaluatedChildren = typeof children === 'function' ? children() : children;
-    return evaluatedChildren as HTMLElement;
+    return evaluated as HTMLElement;
   };
 
-  // Expose setter so components can set context synchronously before rendering
-  const setValue = (value: TValue) => {
-    console.log('[Context setValue] Setting value:', value, 'for context:', contextId);
+  contextObj.setValue = (value: TValue) => {
     setContextValue(value);
-    console.log('[Context setValue] Signal now returns:', getContextValue());
   };
 
-  return {
-    Provider,
-    defaultValue,
-    _id: contextId,
-    setValue, // Allow setting context value before Provider renders
-  };
+  return contextObj;
 }
 
-/**
- * Hook to access context value
- * @param context - The context created by createContext
- * @returns Current context value or default value
- *
- * @example
- * ```tsx
- * const AppContext = createContext({ appName: 'Default' })
- *
- * const MyComponent = () => {
- *     const appContext = useContext(AppContext)
- *     return <div>{appContext.appName}</div>
- * }
- * ```
- */
 export const useContext = function <TValue>(context: IContext<TValue>): TValue {
-  // Check if commandant (Provider) has already arrived and registered the signal
-  const signal = contextRegistry.get(context._id);
-
-  console.log('[useContext] Looking up context:', context._id);
-  console.log('[useContext] Found signal:', signal);
-
-  if (signal) {
-    // Signal exists, read its current value reactively
-    const [getValue] = signal as [() => TValue, (value: TValue) => void];
-    const value = getValue();
-    console.log('[useContext] Signal value:', value);
-    return value;
+  // 1. Sync call-stack — populated when we are inside a Provider's synchronous
+  //    children() execution. This is always current regardless of scheduler
+  //    batching because it uses a plain array push/pop.
+  if (context._syncStack.length > 0) {
+    return context._syncStack[context._syncStack.length - 1];
   }
 
-  // SOLDIER ARRIVES FIRST!
-  // Commandant hasn't arrived yet, return default value for now
-  // When Provider arrives, it will update the signal and trigger reactivity
+  // 2. Reactive signal — for cases where useContext runs outside the
+  //    Provider's synchronous call (effects, deferred renders, async code).
+  const signal = contextRegistry.get(context._id);
+  if (signal) {
+    const [getValue] = signal as [() => TValue, (value: TValue) => void];
+    return getValue();
+  }
 
-  console.log('[useContext] No signal found, returning default:', context.defaultValue);
+  // 3. No Provider in scope — return default.
   return context.defaultValue;
 };

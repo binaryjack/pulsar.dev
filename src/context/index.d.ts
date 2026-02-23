@@ -12,26 +12,29 @@
  * Context object interface
  */
 export interface IContext<TValue> {
-    /**
-     * Provider component that wraps children and provides context value
-     */
-    Provider: (props: {
-        value: TValue;
-        children: HTMLElement | (() => HTMLElement);
-    }) => HTMLElement;
-    /**
-     * Default value for the context
-     */
-    defaultValue: TValue;
-    /**
-     * Internal context identifier (unique symbol)
-     */
-    _id: symbol;
-    /**
-     * Set context value synchronously (before rendering)
-     * Allows components to set context before children execute
-     */
-    setValue: (value: TValue) => void;
+  /**
+   * Provider component that wraps children and provides context value
+   */
+  Provider: (props: { value: TValue; children: HTMLElement | (() => HTMLElement) }) => HTMLElement;
+  /**
+   * Default value for the context
+   */
+  defaultValue: TValue;
+  /**
+   * Internal context identifier (unique symbol)
+   */
+  _id: symbol;
+  /**
+   * Set context value synchronously (before rendering)
+   * Allows components to set context before children execute
+   */
+  setValue: (value: TValue) => void;
+  /**
+   * Internal synchronous call-stack.
+   * Provider pushes before children(), pops after.
+   * Do not read directly — use useContext().
+   */
+  _syncStack: TValue[];
 }
 /**
  * Creates a new context
