@@ -23,6 +23,7 @@
  * ```
  */
 
+import { onCleanup } from '../../lifecycle/lifecycle-hooks';
 import { createSignal } from '../signal';
 import { enterReactiveContext, exitReactiveContext } from './reactive-helpers';
 import type { SnapshotFunction, SubscribeFunction } from './use-sync.types';
@@ -55,11 +56,11 @@ export function useSync<T>(
     }
   });
 
-  // Note: We don't call onCleanup here because Pulsar components don't have
-  // automatic lifecycle management. The cleanup will be handled by the external
-  // reactive system (e.g., formular.dev's createEffect cleanup) when the parent
-  // component or effect is disposed.
-  // If you need explicit cleanup, store the returned cleanup function and call it manually.
+  // Register cleanup: when the component unmounts, unsubscribe from the external system.
+  // onCleanup is a no-op when called outside a component context (logs a warning only).
+  if (typeof cleanup === 'function') {
+    onCleanup(cleanup);
+  }
 
   return value;
 }
