@@ -3,8 +3,6 @@
  * Signal-based reactive form management
  */
 
-export { useFormular } from './use-formular';
-
 export type {
   AsyncValidatorMap,
   CustomValidatorMap,
@@ -13,8 +11,6 @@ export type {
   IFormularContext,
   IFormularField,
   IFormularFieldArray,
-  IFormularHook,
-  IFormularOptions,
   IFormularState,
   SubmitHandler,
   SuccessHandler,

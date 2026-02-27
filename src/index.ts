@@ -235,7 +235,6 @@ export type {
 } from './ssr';
 
 // Export formular.dev integration
-export { useFormular } from './formular';
 export type {
   AsyncValidatorMap,
   CustomValidatorMap,
@@ -244,8 +243,6 @@ export type {
   IFormularContext,
   IFormularField,
   IFormularFieldArray,
-  IFormularHook,
-  IFormularOptions,
   IFormularState,
   SubmitHandler,
   SuccessHandler,

@@ -48,7 +48,6 @@ export type {
   ITryerProps,
 } from './error-boundary';
 export * from './events';
-export { useFormular } from './formular';
 export type {
   AsyncValidatorMap,
   CustomValidatorMap,
@@ -57,8 +56,6 @@ export type {
   IFormularContext,
   IFormularField,
   IFormularFieldArray,
-  IFormularHook,
-  IFormularOptions,
   IFormularState,
   SubmitHandler,
   SuccessHandler,
