@@ -32,7 +32,20 @@ export function insert(
   }
 
   // Reactive case: create standalone effect (not wired to a property)
-  let current: Node | undefined;
+  // Track ALL currently-inserted nodes so array results are fully cleaned up on re-run.
+  let currentNodes: Node[] = [];
+
+  const clearCurrent = (): void => {
+    for (const node of currentNodes) {
+      node.parentNode?.removeChild(node);
+    }
+    currentNodes = [];
+  };
+
+  const trackInsert = (node: Node): void => {
+    parent.insertBefore(node, marker);
+    currentNodes.push(node);
+  };
 
   // Store previous effect
   const previousEffect = $REGISTRY._currentEffect;
@@ -46,11 +59,7 @@ export function insert(
 
       // Handle different value types
       if (value === null || value === undefined) {
-        // Remove current node if exists
-        if (current?.parentNode) {
-          current.parentNode.removeChild(current);
-          current = undefined;
-        }
+        clearCurrent();
         return;
       }
 
@@ -58,43 +67,31 @@ export function insert(
 
       // Update or create text node
       if (typeof normalized === 'string' || typeof normalized === 'number') {
-        if (current instanceof Text) {
-          // Update existing text node
-          if (current.data !== String(normalized)) {
-            current.data = String(normalized);
+        // Optimise: reuse an existing single Text node to avoid DOM churn
+        if (currentNodes.length === 1 && currentNodes[0] instanceof Text) {
+          if (currentNodes[0].data !== String(normalized)) {
+            currentNodes[0].data = String(normalized);
           }
         } else {
-          // Remove old node and create new text node
-          if (current?.parentNode) {
-            current.parentNode.removeChild(current);
-          }
-          current = document.createTextNode(String(normalized));
-          parent.insertBefore(current, marker);
+          clearCurrent();
+          trackInsert(document.createTextNode(String(normalized)));
         }
       } else if (normalized instanceof Node) {
-        // Replace with new DOM node
-        if (current && current !== normalized) {
-          if (current.parentNode) {
-            current.parentNode.removeChild(current);
-          }
+        // Optimise: skip if same node is already present
+        if (currentNodes.length === 1 && currentNodes[0] === normalized) {
+          return;
         }
-        if (normalized !== current) {
-          parent.insertBefore(normalized, marker);
-          current = normalized;
-        }
+        clearCurrent();
+        trackInsert(normalized);
       } else if (Array.isArray(normalized)) {
-        // Handle array of nodes - insert each item properly
-        if (current?.parentNode) {
-          current.parentNode.removeChild(current);
-        }
-        current = undefined;
-
+        // Clear ALL previously inserted nodes before inserting the new set
+        clearCurrent();
         for (const item of normalized) {
           const normalizedItem = normalizeIncomingValue(item);
           if (normalizedItem instanceof Node) {
-            parent.insertBefore(normalizedItem, marker);
+            trackInsert(normalizedItem);
           } else if (normalizedItem !== null && normalizedItem !== undefined) {
-            parent.insertBefore(document.createTextNode(String(normalizedItem)), marker);
+            trackInsert(document.createTextNode(String(normalizedItem)));
           }
         }
       }
