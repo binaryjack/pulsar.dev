@@ -1,5 +1,6 @@
 import type { ISignal } from '../reactivity/signal/signal.types';
 import { $REGISTRY } from '../registry/core';
+import { SVG_NAMESPACE, isSvgElement, isSvgTag } from '../utils/svg-tags';
 import { insert } from './insert';
 import type { IElementAttributes, ReactiveChildren } from './jsx-runtime.types';
 
@@ -45,11 +46,15 @@ export function t_element(
           `[t_element] SSR hydration: Could not find element with data-hid="${hidValue}"`
         );
       }
-      el = document.createElement(tag);
+      el = isSvgTag(tag)
+        ? document.createElementNS(SVG_NAMESPACE, tag)
+        : document.createElement(tag);
     }
   } else {
     // Normal creation
-    el = document.createElement(tag);
+    el = isSvgTag(tag)
+      ? document.createElementNS(SVG_NAMESPACE, tag)
+      : document.createElement(tag);
   }
 
   const isHydrated = (el as any).__hydrated || false;
@@ -124,6 +129,12 @@ export function t_element(
         }
       } else if (key === 'style' && typeof value === 'string') {
         el.setAttribute('style', value);
+      } else if (isSvgElement(el)) {
+        // SVG elements: arbitrary property assignment silently fails for
+        // geometry attributes (cx, cy, r, d, points, etc.) because those
+        // properties are read-only SVGAnimated* objects on the DOM interface.
+        // Fall back to setAttribute for safe, universal attribute setting.
+        el.setAttribute(key, String(value));
       } else {
         (el as any)[key] = value;
       }

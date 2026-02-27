@@ -37,17 +37,23 @@ export {
   SSignal,
   Signal,
   batch,
+  cancelFrame,
+  clearFrames,
   createEffect,
   createEffectWithOwner,
   createMemo,
   createRenderEffect,
   createSignal,
+  flushFrames,
   isBatching,
+  scheduleFrame,
   untrack,
   useSync,
 } from './reactivity';
 export type {
   BatchFn,
+  FrameCallback,
+  FrameKey,
   IEffect,
   IMemo,
   ISignal,
@@ -331,6 +337,16 @@ export type {
 
 // Utility functions
 export { shallowEqual } from './utils';
+export {
+  SVG_ATTR_MAP,
+  SVG_DOM_PROPERTIES,
+  SVG_NAMESPACE,
+  SVG_TAGS,
+  isSvgAttributePath,
+  isSvgElement,
+  isSvgTag,
+  resolveSvgAttrName,
+} from './utils';
 
 // Lazy loading utilities (separate import path: 'pulsar/lazy-loading')
 // export * from './lazy-loading';

@@ -1,4 +1,5 @@
 import type { ISignal } from '../../../reactivity/signal/signal.types'
+import { isSvgAttributePath, resolveSvgAttrName } from '../../../utils/svg-tags'
 import type { ICoreRegistry, WireDisposer } from '../registry.types'
 
 /**
@@ -34,14 +35,22 @@ export const wire = function (
     const parts = path.split('.');
     const lastKey = parts.pop() as string;
 
-    // Navigate to target object
-    let target: any = el;
-    for (const p of parts) {
-      target = target[p];
-    }
+    if (isSvgAttributePath(el, path)) {
+      // SVG geometry attributes (cx, cy, r, d, points, transform, …) cannot be
+      // set via property assignment — the properties are read-only SVGAnimated*
+      // objects.  Use setAttribute with the canonical attribute name.
+      const attrName = resolveSvgAttrName(lastKey);
+      el.setAttribute(attrName, String(source));
+    } else {
+      // Navigate to target object (handles dotted paths like 'style.left')
+      let target: any = el;
+      for (const p of parts) {
+        target = target[p];
+      }
 
-    // Set static value once
-    target[lastKey] = source;
+      // Set static value once
+      target[lastKey] = source;
+    }
 
     // Return no-op disposer for consistency
     return () => {};
@@ -50,6 +59,11 @@ export const wire = function (
   // Split property path (e.g., "style.left" -> ["style", "left"])
   const parts = path.split('.');
   const lastKey = parts.pop() as string;
+
+  // Pre-compute SVG attribute routing (el and path are immutable after wire creation).
+  // When true the write path uses setAttribute instead of property assignment.
+  const isSvgAttr = isSvgAttributePath(el, path);
+  const svgAttrName = isSvgAttr ? resolveSvgAttrName(lastKey) : lastKey;
 
   // Create the effect that updates the DOM
   let runCount = 0;
@@ -93,15 +107,35 @@ export const wire = function (
       // Get the value from signal or getter
       const val = isSignal ? (source as ISignal<unknown>).read() : (source as () => unknown)();
 
-      // Navigate to the target object
-      let target: any = el;
-      for (const p of parts) {
-        target = target[p];
-      }
+      if (isSvgAttr) {
+        // SVG geometry attributes require setAttribute.
+        // Guard against null/undefined — setting those would write the literal
+        // string "null" / "undefined" as an attribute value.
+        if (val === null || val === undefined) {
+          console.warn(
+            `[WIRE] SVG attribute "${svgAttrName}" received ${String(val)}. ` +
+              'Skipping update. Ensure the source returns a valid string or number.',
+            { element: el, attribute: svgAttrName, path }
+          );
+          return;
+        }
+        // Change-detection via getAttribute avoids redundant DOM mutations.
+        // SVGAnimated* properties cannot be used for equality checks.
+        const strVal = String(val);
+        if (el.getAttribute(svgAttrName) !== strVal) {
+          el.setAttribute(svgAttrName, strVal);
+        }
+      } else {
+        // Standard HTML property path (may include dots: "style.left").
+        let target: any = el;
+        for (const p of parts) {
+          target = target[p];
+        }
 
-      // Only update if value changed (avoid unnecessary DOM thrashing)
-      if (target[lastKey] !== val) {
-        target[lastKey] = val;
+        // Only update if value changed (avoid unnecessary DOM thrashing)
+        if (target[lastKey] !== val) {
+          target[lastKey] = val;
+        }
       }
     } finally {
       isRunning = false;
