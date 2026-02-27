@@ -313,13 +313,10 @@ describe('SVG Reactive Drawing — Integration', () => {
       for (let i = 1; i <= 50; i++) {
         const capturedX = i * 5;
         const capturedY = i * 3;
-        scheduleFrame(
-          () => {
-            setCx(capturedX);
-            setCy(capturedY);
-          },
-          'drag:circle'
-        );
+        scheduleFrame(() => {
+          setCx(capturedX);
+          setCy(capturedY);
+        }, 'drag:circle');
       }
 
       // Verify: no updates have been applied yet (rAF hasn't fired)

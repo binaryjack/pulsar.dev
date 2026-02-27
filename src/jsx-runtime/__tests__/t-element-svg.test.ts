@@ -6,11 +6,11 @@
  * assignment, both for static and reactive values.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t_element } from '../t-element';
-import { SVG_NAMESPACE } from '../../utils/svg-tags';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createSignal } from '../../reactivity/signal';
 import { $REGISTRY } from '../../registry/core';
+import { SVG_NAMESPACE } from '../../utils/svg-tags';
+import { t_element } from '../t-element';
 
 describe('t_element — SVG namespace support', () => {
   beforeEach(() => {

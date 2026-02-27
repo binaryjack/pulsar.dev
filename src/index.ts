@@ -336,7 +336,6 @@ export type {
 } from './testing';
 
 // Utility functions
-export { shallowEqual } from './utils';
 export {
   SVG_ATTR_MAP,
   SVG_DOM_PROPERTIES,
@@ -346,6 +345,7 @@ export {
   isSvgElement,
   isSvgTag,
   resolveSvgAttrName,
+  shallowEqual,
 } from './utils';
 
 // Lazy loading utilities (separate import path: 'pulsar/lazy-loading')

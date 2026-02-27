@@ -78,11 +78,7 @@ export const SVG_TAGS: ReadonlySet<string> = new Set([
  * assignment.  These are excluded from the setAttribute path in wire() so
  * they continue to behave as standard DOM properties.
  */
-export const SVG_DOM_PROPERTIES: ReadonlySet<string> = new Set([
-  'textContent',
-  'innerHTML',
-  'id',
-]);
+export const SVG_DOM_PROPERTIES: ReadonlySet<string> = new Set(['textContent', 'innerHTML', 'id']);
 
 /**
  * Maps JSX prop names to their SVG attribute equivalents.

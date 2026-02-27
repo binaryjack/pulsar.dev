@@ -11,13 +11,8 @@
  *   SSR fallback     — synchronous execution when rAF is unavailable
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  cancelFrame,
-  clearFrames,
-  flushFrames,
-  scheduleFrame,
-} from '../frame-scheduler';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cancelFrame, clearFrames, flushFrames, scheduleFrame } from '../frame-scheduler';
 
 // ---------------------------------------------------------------------------
 // Helpers

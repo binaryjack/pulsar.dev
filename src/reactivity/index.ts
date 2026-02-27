@@ -17,10 +17,5 @@ export type { SnapshotFunction, SubscribeFunction } from './sync';
 export { createRenderEffect } from './create-render-effect';
 export { untrack } from './untrack';
 
-export {
-  cancelFrame,
-  clearFrames,
-  flushFrames,
-  scheduleFrame,
-} from './frame-scheduler';
+export { cancelFrame, clearFrames, flushFrames, scheduleFrame } from './frame-scheduler';
 export type { FrameCallback, FrameKey } from './frame-scheduler';
