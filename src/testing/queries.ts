@@ -4,7 +4,12 @@
  */
 
 import { waitForElement } from './async-utils';
-import type { IAccessibilityQueries, IAsyncQueries, IQueryOptions, IWaitForOptions } from './testing.types';
+import type {
+  IAccessibilityQueries,
+  IAsyncQueries,
+  IQueryOptions,
+  IWaitForOptions,
+} from './testing.types';
 
 /**
  * Creates query functions for a container

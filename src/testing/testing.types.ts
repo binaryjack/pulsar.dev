@@ -71,14 +71,32 @@ export type TCleanupFunction = () => void;
 
 export interface IAsyncQueries {
   findByRole: (role: string, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement>;
-  findAllByRole: (role: string, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement[]>;
+  findAllByRole: (
+    role: string,
+    options?: IQueryOptions & IWaitForOptions
+  ) => Promise<HTMLElement[]>;
 
-  findByLabelText: (text: string | RegExp, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement>;
-  findAllByLabelText: (text: string | RegExp, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement[]>;
+  findByLabelText: (
+    text: string | RegExp,
+    options?: IQueryOptions & IWaitForOptions
+  ) => Promise<HTMLElement>;
+  findAllByLabelText: (
+    text: string | RegExp,
+    options?: IQueryOptions & IWaitForOptions
+  ) => Promise<HTMLElement[]>;
 
-  findByText: (text: string | RegExp, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement>;
-  findAllByText: (text: string | RegExp, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement[]>;
+  findByText: (
+    text: string | RegExp,
+    options?: IQueryOptions & IWaitForOptions
+  ) => Promise<HTMLElement>;
+  findAllByText: (
+    text: string | RegExp,
+    options?: IQueryOptions & IWaitForOptions
+  ) => Promise<HTMLElement[]>;
 
   findByTestId: (testId: string, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement>;
-  findAllByTestId: (testId: string, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement[]>;
+  findAllByTestId: (
+    testId: string,
+    options?: IQueryOptions & IWaitForOptions
+  ) => Promise<HTMLElement[]>;
 }
