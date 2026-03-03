@@ -48,14 +48,21 @@ export interface IForProps<T> {
   key?: (item: T, index: number) => string | number;
 
   /**
-   * Render function for each item
+   * Render function for each item.
+   * Returns Element (covers both HTMLElement and SVGElement).
    */
-  children: (item: T, index: () => number) => HTMLElement;
+  children: (item: T, index: () => number) => Element;
 
   /**
    * Fallback content when array is empty
    */
-  fallback?: HTMLElement | (() => HTMLElement);
+  fallback?: Element | (() => Element);
+
+  /**
+   * Set to true when ForRegistry is used inside an SVG context.
+   * Causes the container to be a <g> element instead of a <div>.
+   */
+  isSvg?: boolean;
 }
 
 /**
@@ -63,14 +70,14 @@ export interface IForProps<T> {
  */
 export interface IForState<_T = unknown> {
   /**
-   * Map of key to DOM node
+   * Map of key to DOM node (Element covers HTMLElement and SVGElement)
    */
-  items: Map<string | number, HTMLElement>;
+  items: Map<string | number, Element>;
 
   /**
    * Container element
    */
-  container: HTMLElement;
+  container: Element;
 
   /**
    * Cleanup functions for each item
@@ -80,7 +87,7 @@ export interface IForState<_T = unknown> {
   /**
    * Fallback element shown when array is empty
    */
-  fallbackElement: HTMLElement | null;
+  fallbackElement: Element | null;
 
   /**
    * Cache of key -> index for O(1) index lookups

@@ -2,6 +2,8 @@ import { t_element } from '../jsx-runtime/t-element';
 import { $REGISTRY } from '../registry/core';
 import { IForProps, IForState } from './control-flow.types';
 
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
 /**
  * For component using Registry Pattern with proper reconciliation
  * Efficiently updates DOM when array changes with move detection
@@ -18,11 +20,12 @@ import { IForProps, IForState } from './control-flow.types';
  * </For>
  * ```
  */
-export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
-  // Use display:contents container to avoid extra wrapper
-  const container = t_element('div', {
-    style: 'display: contents',
-  }) as HTMLElement;
+export function ForRegistry<T>(props: IForProps<T>): Element {
+  // Use display:contents container to avoid extra wrapper.
+  // isSvg: true → <g> element (a <div> inside <svg> is structurally invalid).
+  const container: Element = props.isSvg
+    ? document.createElementNS(SVG_NS, 'g')
+    : (t_element('div', { style: 'display: contents' }) as HTMLElement);
 
   const state: IForState<T> = {
     items: new Map(),
@@ -54,7 +57,7 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
       // Show fallback if provided (and not already shown)
       if (props.fallback && !state.fallbackElement) {
         const fallback = typeof props.fallback === 'function' ? props.fallback() : props.fallback;
-        if (fallback instanceof HTMLElement) {
+        if (fallback instanceof Element) {
           container.appendChild(fallback);
           state.fallbackElement = fallback;
         }
@@ -127,13 +130,13 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
 
         element = props.children(item, indexSignal);
 
-        if (!(element instanceof HTMLElement)) {
-          console.warn('[ForRegistry] Child must return HTMLElement');
+        if (!(element instanceof Element)) {
+          console.warn('[ForRegistry] Child must return an Element (HTMLElement or SVGElement)');
           return;
         }
 
-        // Add data attribute for debugging
-        element.dataset.forKey = String(key);
+        // Tag element with key for debugging
+        element.setAttribute('data-for-key', String(key));
 
         state.items.set(key, element);
 
@@ -192,7 +195,7 @@ export function ForRegistry<T>(props: IForProps<T>): HTMLElement {
 /**
  * Helper: Insert element after reference node
  */
-function insertAfter(parent: HTMLElement, newNode: HTMLElement, referenceNode: HTMLElement): void {
+function insertAfter(parent: Element, newNode: Element, referenceNode: Element): void {
   if (referenceNode.nextSibling) {
     parent.insertBefore(newNode, referenceNode.nextSibling);
   } else {
