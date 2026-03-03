@@ -10,10 +10,14 @@ export interface IStore<T> {
   select<R>(selector: (state: T) => R): () => R;
 }
 
+import type { ISignal } from '../../reactivity/signal/signal.types';
+
 export interface IStoreInternal<T> extends IStore<T> {
   state: T;
   reducer: IStoreReducer<T>;
   middleware?: IStoreMiddleware<T>[];
+  /** Signal holding current state — enables reactive `getState()` reads inside effects/components. */
+  _stateSignal: ISignal<T>;
   subscribers: Set<IStoreSubscriber<T>>;
   devtools?: {
     send: (action: IStoreAction, state: T) => void;

@@ -32,6 +32,9 @@ export const dispatch = function <T>(this: IStoreInternal<T>, action: IStoreActi
 
   // Notify subscribers if state changed
   if (this.state !== prevState) {
+    // Write to signal first — propagates to reactive effects / component renders
+    this._stateSignal.write(this.state);
+    // Then notify imperative subscribers (backward compat)
     this.subscribers.forEach((subscriber) => subscriber(this.state));
   }
 };

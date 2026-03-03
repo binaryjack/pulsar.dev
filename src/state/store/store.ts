@@ -3,6 +3,8 @@
  * Redux-style state container with signal-based reactivity
  */
 
+import { Signal } from '../../reactivity/signal/signal.js';
+import type { ISignal } from '../../reactivity/signal/signal.types.js';
 import type {
   IStoreInternal,
   IStoreMiddleware,
@@ -43,6 +45,15 @@ export const Store = function <T>(
       configurable: false,
     });
   }
+
+  // Reactive signal — wraps state so reads inside effects/components are tracked
+  const sig = new (Signal as unknown as new <T>(v: T) => ISignal<T>)(initialState);
+  Object.defineProperty(this, '_stateSignal', {
+    value: sig,
+    writable: false,
+    enumerable: false,
+    configurable: false,
+  });
 
   // Subscribers
   Object.defineProperty(this, 'subscribers', {
