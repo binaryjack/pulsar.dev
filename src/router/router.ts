@@ -4,10 +4,10 @@
  * Now with path parameters, query strings, and navigation guards
  */
 
-import { findMatchingRoute } from './path-matcher'
-import { QueryParams } from './query-parser'
-import type { IRoute } from './route.interface'
-import { getRouterBase, routerContext, setRouterBase } from './router-context'
+import { findMatchingRoute } from './path-matcher';
+import { QueryParams } from './query-parser';
+import type { IRoute } from './route.interface';
+import { getRouterBase, routerContext, setRouterBase } from './router-context';
 
 interface IRouterProps {
   children: HTMLElement | HTMLElement[];
@@ -49,8 +49,6 @@ export const Router = ({ children, fallback, base }: IRouterProps): HTMLElement 
       childArray = [children as HTMLElement];
     }
   }
-
-  console.log('[Router] Children received:', childArray.length, childArray);
 
   childArray.forEach((child) => {
     if ((child as any).__routeConfig) {

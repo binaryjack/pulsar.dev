@@ -1,4 +1,4 @@
-import { registerCallback } from './context-bus';
+import { registerCallback, registerErrorCallback } from './context-bus';
 import { LifecycleManager } from './lifecycle-manager/lifecycle-manager';
 import { ILifecycleManager } from './lifecycle-manager/lifecycle-manager.types';
 
@@ -7,7 +7,7 @@ let globalLifecycleManager: ILifecycleManager | null = null;
 
 export function getLifecycleManager(): ILifecycleManager {
   if (!globalLifecycleManager) {
-    globalLifecycleManager = new (LifecycleManager as unknown as new () => ILifecycleManager)();
+    globalLifecycleManager = new LifecycleManager();
   }
   return globalLifecycleManager;
 }
@@ -45,6 +45,28 @@ export function onMount(callback: () => void | (() => void)): void {
 export function onCleanup(callback: () => void): void {
   if (!registerCallback('cleanup', callback)) {
     console.warn('onCleanup called outside of component context');
+  }
+}
+
+/**
+ * Hook to register a before-mount callback for the current component.
+ * Runs synchronously before the component factory body executes.
+ * Must be called synchronously during component factory execution.
+ */
+export function onBeforeMount(callback: () => void): void {
+  if (!registerCallback('beforeMount', callback)) {
+    console.warn('onBeforeMount called outside of component context');
+  }
+}
+
+/**
+ * Hook to register a component-level error handler.
+ * Called when the component factory or its children throw.
+ * Must be called synchronously during component factory execution.
+ */
+export function onError(callback: (error: unknown) => void): void {
+  if (!registerErrorCallback(callback)) {
+    console.warn('onError called outside of component context');
   }
 }
 

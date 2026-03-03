@@ -160,7 +160,6 @@ export async function prefetchRoutesWithOptions(
       connection &&
       (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g')
     ) {
-      console.log('Skipping prefetch on slow connection');
       return;
     }
   }
@@ -170,7 +169,6 @@ export async function prefetchRoutesWithOptions(
     await prefetchRoutes(routesToPrefetch);
   } else {
     // For other strategies, routes will be prefetched when appropriate events occur
-    console.log(`Routes configured for ${options.strategy} prefetch:`, options.routes);
   }
 }
 

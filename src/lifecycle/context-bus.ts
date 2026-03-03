@@ -9,14 +9,23 @@
  * and pops all collected callbacks on exit.
  */
 
-export type LifecycleType = 'mount' | 'cleanup' | 'update';
+export type LifecycleType = 'mount' | 'cleanup' | 'update' | 'beforeMount' | 'error';
 export type LifecycleCallback = () => void;
-export type PendingSlot = Record<LifecycleType, LifecycleCallback[]>;
+export type ErrorCallback = (error: unknown) => void;
+export type PendingSlot = {
+  mount: LifecycleCallback[];
+  cleanup: LifecycleCallback[];
+  update: LifecycleCallback[];
+  beforeMount: LifecycleCallback[];
+  error: ErrorCallback[];
+};
 
 // Parallel stacks - one per lifecycle type
 const mountStack: LifecycleCallback[][] = [];
 const cleanupStack: LifecycleCallback[][] = [];
 const updateStack: LifecycleCallback[][] = [];
+const beforeMountStack: LifecycleCallback[][] = [];
+const errorStack: ErrorCallback[][] = [];
 
 /**
  * Called by execute.ts BEFORE invoking the component factory.
@@ -26,6 +35,8 @@ export function pushContext(): void {
   mountStack.push([]);
   cleanupStack.push([]);
   updateStack.push([]);
+  beforeMountStack.push([]);
+  errorStack.push([]);
 }
 
 /**
@@ -37,6 +48,8 @@ export function popContext(): PendingSlot {
     mount: mountStack.pop() ?? [],
     cleanup: cleanupStack.pop() ?? [],
     update: updateStack.pop() ?? [],
+    beforeMount: beforeMountStack.pop() ?? [],
+    error: errorStack.pop() ?? [],
   };
 }
 
@@ -48,9 +61,24 @@ export function registerCallback(type: LifecycleType, fn: LifecycleCallback): bo
   let stack: LifecycleCallback[][];
   if (type === 'mount') stack = mountStack;
   else if (type === 'cleanup') stack = cleanupStack;
-  else stack = updateStack;
+  else if (type === 'update') stack = updateStack;
+  else if (type === 'beforeMount') stack = beforeMountStack;
+  else {
+    // 'error' uses a separate typed stack — handled by registerErrorCallback
+    return false;
+  }
 
   if (stack.length === 0) return false;
   stack[stack.length - 1].push(fn);
+  return true;
+}
+
+/**
+ * Register an error callback for the currently executing component.
+ * Returns false if called outside a component context.
+ */
+export function registerErrorCallback(fn: ErrorCallback): boolean {
+  if (errorStack.length === 0) return false;
+  errorStack[errorStack.length - 1].push(fn);
   return true;
 }

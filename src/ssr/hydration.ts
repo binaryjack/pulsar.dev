@@ -60,7 +60,6 @@ export function bootFromState(): void {
   }
 
   $REGISTRY.boot(initialState);
-  console.log('[Pulsar SSR] Registry hydrated from server state.');
 }
 
 /**

@@ -22,6 +22,7 @@ export { insert } from './jsx-runtime/insert';
 
 // Reset signal ID counter for SSR
 export { component } from './component';
+export type { ComponentProps, IPulsarComponent } from './component';
 export { resetSignalIdCounter } from './reactivity/signal/signal';
 
 // ========================================

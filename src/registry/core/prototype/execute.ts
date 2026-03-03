@@ -2,10 +2,8 @@ import { popContext, pushContext } from '../../../lifecycle/context-bus';
 import type { IComponentContext, ICoreRegistry, WireDisposer } from '../registry.types';
 
 /**
- * Execute a component factory within a tracked context
- * Creates a new component context and pushes it onto the stack.
- * Collects onMount / onCleanup / onUpdate registrations via context-bus
- * and binds them to the component's root element after the factory runs.
+ * Execute a component factory within a tracked context.
+ * Lifecycle order: beforeMount → factory → mount → (update on reactive re-run) → cleanup on dispose.
  */
 export const execute = function <T>(
   this: ICoreRegistry,
@@ -13,8 +11,6 @@ export const execute = function <T>(
   parentId: string | null,
   factory: () => T
 ): T {
-  console.log('[REGISTRY.execute] START:', id, 'parentId:', parentId);
-
   // Create component context
   const context: IComponentContext = {
     id,
@@ -28,7 +24,7 @@ export const execute = function <T>(
   // Push onto registry stack
   this._stack.push(context);
 
-  // Open a lifecycle collection slot (for onMount/onCleanup/onUpdate)
+  // Open a lifecycle collection slot (for all lifecycle callbacks)
   pushContext();
 
   // Track whether popContext was already called (success path)
@@ -38,26 +34,35 @@ export const execute = function <T>(
     // Execute factory in context
     const result = factory();
 
-    console.log(
-      '[REGISTRY.execute] RESULT:',
-      id,
-      'result:',
-      result,
-      'instanceof HTMLElement:',
-      result instanceof HTMLElement
-    );
-
     // Collect lifecycle callbacks registered during factory execution
     const pending = popContext();
     contextPopped = true;
 
     if (result instanceof HTMLElement) {
+      // beforeMount: run synchronously before the element is handed to caller
+      for (const fn of pending.beforeMount) {
+        fn();
+      }
+
       // Mount callbacks: run immediately after element is created
       for (const fn of pending.mount) {
         try {
           fn();
         } catch (e) {
-          console.error('[execute] onMount error:', e);
+          console.error('[Pulsar] onMount error in component', id, ':', e);
+        }
+      }
+
+      // Update callbacks: wire as wire disposers so reactive re-runs invoke them
+      if (pending.update.length > 0) {
+        let wireSet = this._nodes.get(result);
+        if (!wireSet) {
+          wireSet = new Set<WireDisposer>();
+          this._nodes.set(result, wireSet);
+        }
+        for (const fn of pending.update) {
+          // Wrap as a disposer-compatible function (disposers take no args)
+          wireSet.add(fn as WireDisposer);
         }
       }
 
@@ -75,6 +80,20 @@ export const execute = function <T>(
     }
 
     return result;
+  } catch (factoryError: unknown) {
+    // Collect error callbacks before re-throwing so they fire in context
+    if (!contextPopped) {
+      const pending = popContext();
+      contextPopped = true;
+      for (const fn of pending.error) {
+        try {
+          fn(factoryError);
+        } catch (_handlerError) {
+          // Error handlers must not throw — swallow silently
+        }
+      }
+    }
+    throw factoryError;
   } finally {
     // Keep stacks balanced: pop context-bus slot if factory threw before popContext
     if (!contextPopped) popContext();
