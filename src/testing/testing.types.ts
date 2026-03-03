@@ -3,11 +3,12 @@
  * Type definitions for testing framework
  */
 
-export interface IRenderResult<T = any> {
+export interface IRenderResult<T = any> extends IAccessibilityQueries, IAsyncQueries {
   container: HTMLElement;
   unmount: () => void;
   rerender: (props?: Partial<T>) => void;
   debug: () => void;
+  within: (element: HTMLElement) => IAccessibilityQueries & IAsyncQueries;
 }
 
 export interface IRenderOptions<T = Record<string, unknown>> {
@@ -67,3 +68,17 @@ export interface IAccessibilityQueries {
 }
 
 export type TCleanupFunction = () => void;
+
+export interface IAsyncQueries {
+  findByRole: (role: string, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement>;
+  findAllByRole: (role: string, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement[]>;
+
+  findByLabelText: (text: string | RegExp, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement>;
+  findAllByLabelText: (text: string | RegExp, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement[]>;
+
+  findByText: (text: string | RegExp, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement>;
+  findAllByText: (text: string | RegExp, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement[]>;
+
+  findByTestId: (testId: string, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement>;
+  findAllByTestId: (testId: string, options?: IQueryOptions & IWaitForOptions) => Promise<HTMLElement[]>;
+}

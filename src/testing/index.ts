@@ -22,7 +22,7 @@ export {
 } from './async-utils';
 
 // Queries
-export { createQueries, screen } from './queries';
+export { createQueries, screen, within } from './queries';
 
 // Mocks
 export {

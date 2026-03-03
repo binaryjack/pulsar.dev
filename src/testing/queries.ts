@@ -3,12 +3,13 @@
  * DOM querying utilities with accessibility support
  */
 
-import type { IAccessibilityQueries, IQueryOptions } from './testing.types';
+import { waitForElement } from './async-utils';
+import type { IAccessibilityQueries, IAsyncQueries, IQueryOptions, IWaitForOptions } from './testing.types';
 
 /**
  * Creates query functions for a container
  */
-export function createQueries(container: HTMLElement): IAccessibilityQueries {
+export function createQueries(container: HTMLElement): IAccessibilityQueries & IAsyncQueries {
   const matchText = (element: HTMLElement, text: string | RegExp): boolean => {
     const content = element.textContent || '';
     if (typeof text === 'string') {
@@ -183,6 +184,39 @@ export function createQueries(container: HTMLElement): IAccessibilityQueries {
     return getAllByTestId(testId, options);
   };
 
+  // ---------------------------------------------------------------------------
+  // findBy* — async variants (poll until element appears or timeout)
+  // ---------------------------------------------------------------------------
+  type WO = IQueryOptions & IWaitForOptions;
+
+  const findByRole = (role: string, opts?: WO) =>
+    waitForElement(() => queryByRole(role, opts), opts);
+  const findAllByRole = async (role: string, opts?: WO) => {
+    await findByRole(role, opts);
+    return getAllByRole(role, opts);
+  };
+
+  const findByLabelText = (text: string | RegExp, opts?: WO) =>
+    waitForElement(() => queryByLabelText(text, opts), opts);
+  const findAllByLabelText = async (text: string | RegExp, opts?: WO) => {
+    await findByLabelText(text, opts);
+    return getAllByLabelText(text, opts);
+  };
+
+  const findByText = (text: string | RegExp, opts?: WO) =>
+    waitForElement(() => queryByText(text, opts), opts);
+  const findAllByText = async (text: string | RegExp, opts?: WO) => {
+    await findByText(text, opts);
+    return getAllByText(text, opts);
+  };
+
+  const findByTestId = (testId: string, opts?: WO) =>
+    waitForElement(() => queryByTestId(testId, opts), opts);
+  const findAllByTestId = async (testId: string, opts?: WO) => {
+    await findByTestId(testId, opts);
+    return getAllByTestId(testId, opts);
+  };
+
   return {
     getByRole,
     getAllByRole,
@@ -200,7 +234,22 @@ export function createQueries(container: HTMLElement): IAccessibilityQueries {
     getAllByTestId,
     queryByTestId,
     queryAllByTestId,
+    findByRole,
+    findAllByRole,
+    findByLabelText,
+    findAllByLabelText,
+    findByText,
+    findAllByText,
+    findByTestId,
+    findAllByTestId,
   };
+}
+
+/**
+ * Scope queries to a specific element (mirrors @testing-library/dom `within()`).
+ */
+export function within(element: HTMLElement) {
+  return createQueries(element);
 }
 
 /**

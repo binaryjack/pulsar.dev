@@ -4,6 +4,7 @@
  */
 
 import { createApp } from '../bootstrap';
+import { createQueries, within } from './queries';
 import type { IRenderOptions, IRenderResult } from './testing.types';
 
 const cleanupFunctions: (() => void)[] = [];
@@ -69,6 +70,8 @@ export function render<T = any>(
     unmount: cleanup,
     rerender,
     debug,
+    within,
+    ...createQueries(container),
   };
 }
 
