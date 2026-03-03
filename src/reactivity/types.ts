@@ -27,6 +27,9 @@ export interface IMemoInternal<T> extends IMemo<T> {
   isDirty: boolean;
   dependencies: Set<ISignal<unknown>>;
   memoEffect?: IEffectOwner;
+  /** Effects that subscribed to THIS memo (not to raw signal deps). Fired by
+   *  memoEffect.run after marking dirty so the memo acts as a reactive barrier. */
+  outerSubscribers?: Set<() => void>;
 }
 
 /**

@@ -1,6 +1,6 @@
-import type { ISignal } from '../../../reactivity/signal/signal.types'
-import { isSvgAttributePath, resolveSvgAttrName } from '../../../utils/svg-tags'
-import type { ICoreRegistry, WireDisposer } from '../registry.types'
+import type { ISignal } from '../../../reactivity/signal/signal.types';
+import { isSvgAttributePath, resolveSvgAttrName } from '../../../utils/svg-tags';
+import type { ICoreRegistry, WireDisposer } from '../registry.types';
 
 /**
  * Wire a signal or getter to a DOM property path
@@ -140,6 +140,10 @@ export const wire = function (
     } finally {
       isRunning = false;
       isFirstRun = false;
+      // Reset after every successful run: runCount is a burst/recursion guard,
+      // NOT a lifetime counter. Without this, any wire that reads a store selector
+      // (which fires on every dispatch) permanently dies after 100 dispatches.
+      runCount = 0;
     }
   };
 
