@@ -1,16 +1,28 @@
 /**
  * Context system for Pulsar Framework
- * Call-stack based context with reactive signal support
+ * Call-stack based context with plain-ref fallback
  *
  * Key design:
- * - Sync call-stack (_syncStack) on each context object: Provider pushes before
- *   children(), pops after. No module-level mutable state — survives HMR and
- *   any number of module re-evaluations.
- * - Reactive signal: updated by Provider for any reactive subscriptions that
- *   fire after the initial synchronous render (effects, re-renders).
+ * - Sync call-stack (_syncStack): Provider pushes before children(), pops after.
+ *   Fastest path — always correct for components rendered synchronously inside
+ *   the Provider's children() execution.
+ * - Plain mutable ref (_ref): written BEFORE children() so any component that
+ *   mounts after the synchronous pass (reactive slots, Show, lazy lists) reads
+ *   the correct value without registering a signal dependency.
+ *
+ * Why not a reactive signal:
+ *   insert.ts sets $REGISTRY._currentEffect before calling accessor(). Any
+ *   signal read inside that scope gets registered as a dependency. Using a
+ *   signal for context would cause every reactive slot that calls useContext
+ *   to re-evaluate whenever the context value changes — wrong semantics.
+ *   Context is a static carrier; reactivity lives inside the value it delivers.
  */
 
-import { createSignal } from '../reactivity/signal/create-signal';
+/**
+ * Global plain-ref registry — one mutable ref per context for post-render access.
+ * No signal tracking, no subscription, no re-render on context change.
+ */
+const contextRefs = new Map<symbol, { current: unknown }>();
 
 /**
  * Context object interface
@@ -32,8 +44,7 @@ export interface IContext<TValue> {
   _id: symbol;
 
   /**
-   * Set context value synchronously (before rendering)
-   * Allows components to set context before children execute
+   * Set context value (updates the plain ref — useful outside Provider)
    */
   setValue: (value: TValue) => void;
 
@@ -45,18 +56,12 @@ export interface IContext<TValue> {
   _syncStack: TValue[];
 }
 
-/**
- * Global context registry — reactive signal per context for post-render access.
- */
-const contextRegistry = new Map<symbol, [() => any, (value: any) => void]>();
-
 export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
   const contextId = Symbol('Context');
 
-  // Reactive signal — for effects and re-renders that run outside the
-  // synchronous Provider→children() call chain.
-  const [getContextValue, setContextValue] = createSignal<TValue>(defaultValue);
-  contextRegistry.set(contextId, [getContextValue, setContextValue]);
+  // Plain mutable ref — written before children(), read by any deferred consumer.
+  const ref: { current: TValue } = { current: defaultValue };
+  contextRefs.set(contextId, ref as { current: unknown });
 
   const contextObj: IContext<TValue> = {
     defaultValue,
@@ -73,52 +78,46 @@ export function createContext<TValue>(defaultValue: TValue): IContext<TValue> {
     value: TValue;
     children: HTMLElement | (() => HTMLElement);
   }): HTMLElement => {
-    // 1. Push onto sync call-stack before children() — all synchronous
-    //    useContext() calls inside children() see the correct value.
+    // 1. Write ref BEFORE children() so any component that mounts during or
+    //    after this render pass (reactive slots, deferred inserts) reads the
+    //    correct value even when _syncStack has already been popped.
+    ref.current = value;
+
+    // 2. Push onto sync call-stack — synchronous useContext() calls inside
+    //    children() take this faster path (no map lookup needed).
     contextObj._syncStack.push(value);
 
-    // 2. Evaluate children BEFORE writing the signal.
-    //    This prevents $REGISTRY.execute's reactive tracking scope from
-    //    registering a dependency on the context signal, which would cause
-    //    a deferred re-run of consumer components (e.g. TextField) after
-    //    the stack is already popped.
+    // 3. Evaluate children synchronously.
     const evaluated = typeof children === 'function' ? children() : children;
 
-    // 3. Pop immediately — synchronous children() execution is complete.
+    // 4. Pop immediately — synchronous children() execution is complete.
     contextObj._syncStack.pop();
-
-    // 4. Update the reactive signal AFTER children() so that effects and
-    //    subscriptions created inside children see the correct value on
-    //    their next reactive re-run, without triggering an immediate
-    //    re-schedule during this render pass.
-    setContextValue(value);
 
     return evaluated as HTMLElement;
   };
 
   contextObj.setValue = (value: TValue) => {
-    setContextValue(value);
+    ref.current = value;
   };
 
   return contextObj;
 }
 
 export const useContext = function <TValue>(context: IContext<TValue>): TValue {
-  // 1. Sync call-stack — populated when we are inside a Provider's synchronous
-  //    children() execution. This is always current regardless of scheduler
-  //    batching because it uses a plain array push/pop.
+  // 1. Sync call-stack — fastest path, always correct during Provider's
+  //    synchronous children() execution.
   if (context._syncStack.length > 0) {
     return context._syncStack[context._syncStack.length - 1];
   }
 
-  // 2. Reactive signal — for cases where useContext runs outside the
-  //    Provider's synchronous call (effects, deferred renders, async code).
-  const signal = contextRegistry.get(context._id);
-  if (signal) {
-    const [getValue] = signal as [() => TValue, (value: TValue) => void];
-    return getValue();
+  // 2. Plain ref — correct for deferred mounts (reactive slots, Show, lazy
+  //    lists) because it was written before children() ran. No signal
+  //    dependency registered — context is a static carrier, not reactive.
+  const ref = contextRefs.get(context._id);
+  if (ref) {
+    return ref.current as TValue;
   }
 
-  // 3. No Provider in scope — return default.
+  // 3. No Provider has ever rendered — return default.
   return context.defaultValue;
 };
