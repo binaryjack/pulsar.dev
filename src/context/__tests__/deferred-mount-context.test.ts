@@ -17,8 +17,8 @@
  *   every context value change — wrong semantics. Context is a static carrier.
  */
 
-import { createContext, useContext } from '@pulsar-framework/pulsar.dev';
-import { describe, expect, it } from 'vitest';
+import { createContext, useContext } from '@pulsar-framework/pulsar.dev'
+import { describe, expect, it } from 'vitest'
 
 describe('Context — deferred mount (plain ref fallback path)', () => {
   it('ref fallback: useContext returns correct value when called after Provider children() has returned', () => {
