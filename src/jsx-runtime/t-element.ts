@@ -18,18 +18,27 @@ export type { IElementAttributes, ReactiveChildren } from './jsx-runtime.types';
  * @returns DOM Element
  */
 export function t_element(
-  tag: string,
-  attrs: IElementAttributes | null = {},
-  children: ReactiveChildren[] = [],
-  isSSR = false
+  tag: string | Function,
+  attrs: IElementAttributes | null,
+  ...children: ReactiveChildren[]
 ): Element {
+  // If tag is a function (component), call it and return the result
+  if (typeof tag === 'function') {
+    const componentProps = { ...attrs, children };
+    const result = (tag as any)(componentProps);
+    return result;
+  }
+
+  // Handle string tags (HTML elements)
+  const tagName = tag as string;
   let el: Element;
+  const isSSR = false; // Default to false for client-side rendering
 
   // Normalize attrs to empty object if null (esbuild JSX factory passes null for no attributes)
   const normalizedAttrs = attrs || {};
 
   // Auto-detect SSR hydration mode if data-hid is present
-  const shouldHydrate = isSSR || !!normalizedAttrs['data-hid'];
+  const shouldHydrate = !!normalizedAttrs['data-hid'];
 
   // SSR Hydration: Pick existing node by data-hid
   if (shouldHydrate && normalizedAttrs['data-hid']) {
@@ -72,6 +81,11 @@ export function t_element(
   for (const [key, value] of Object.entries(normalizedAttrs)) {
     // Skip data-hid as it's already applied above
     if (key === 'data-hid') {
+      continue;
+    }
+
+    // Skip children - it's a read-only property and handled separately
+    if (key === 'children') {
       continue;
     }
 
