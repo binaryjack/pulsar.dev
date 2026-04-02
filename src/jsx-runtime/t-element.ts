@@ -19,18 +19,21 @@ export type { IElementAttributes, ReactiveChildren } from './jsx-runtime.types';
  */
 export function t_element(
   tag: string,
-  attrs: IElementAttributes = {},
+  attrs: IElementAttributes | null = {},
   children: ReactiveChildren[] = [],
   isSSR = false
 ): Element {
   let el: Element;
 
+  // Normalize attrs to empty object if null (esbuild JSX factory passes null for no attributes)
+  const normalizedAttrs = attrs || {};
+
   // Auto-detect SSR hydration mode if data-hid is present
-  const shouldHydrate = isSSR || !!attrs['data-hid'];
+  const shouldHydrate = isSSR || !!normalizedAttrs['data-hid'];
 
   // SSR Hydration: Pick existing node by data-hid
-  if (shouldHydrate && attrs['data-hid']) {
-    const hidValue = attrs['data-hid'];
+  if (shouldHydrate && normalizedAttrs['data-hid']) {
+    const hidValue = normalizedAttrs['data-hid'];
     const existing = document.querySelector(`[data-hid="${hidValue}"]`);
     if (existing?.tagName.toLowerCase() === tag.toLowerCase()) {
       el = existing;
@@ -61,12 +64,12 @@ export function t_element(
 
   // CRITICAL: Apply data-hid FIRST for SSR (before any other attributes)
   // This ensures the attribute exists in server-rendered HTML for hydration
-  if (attrs['data-hid'] && !(el as HTMLElement).dataset.hid) {
-    (el as HTMLElement).dataset.hid = String(attrs['data-hid']);
+  if (normalizedAttrs['data-hid'] && !(el as HTMLElement).dataset.hid) {
+    (el as HTMLElement).dataset.hid = String(normalizedAttrs['data-hid']);
   }
 
   // Apply attributes
-  for (const [key, value] of Object.entries(attrs)) {
+  for (const [key, value] of Object.entries(normalizedAttrs)) {
     // Skip data-hid as it's already applied above
     if (key === 'data-hid') {
       continue;
